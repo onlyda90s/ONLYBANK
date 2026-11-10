@@ -45,7 +45,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 4. 사이드바 접기/펼치기 (Collapse) 개선
+// 4. 사이드바 접기/펼치기 (Collapse)
 const sidebar = document.getElementById("sidebar");
 const sidebarHeader = document.getElementById("sidebarHeader");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
@@ -56,7 +56,7 @@ if (sidebarToggleBtn && sidebar) {
         const isCollapsed = sidebar.classList.contains("w-20");
         
         if (isCollapsed) {
-            // 사이드바 펼치기 (w-64)
+            // 펼치기
             sidebar.classList.remove("w-20");
             sidebar.classList.add("w-64");
             if (sidebarHeader) {
@@ -66,7 +66,7 @@ if (sidebarToggleBtn && sidebar) {
             sidebarTexts.forEach(el => el.style.display = "");
             sidebarToggleBtn.textContent = "◀";
         } else {
-            // 사이드바 접기 (w-20)
+            // 접기
             sidebar.classList.remove("w-64");
             sidebar.classList.add("w-20");
             if (sidebarHeader) {
@@ -117,9 +117,9 @@ menuBtns.forEach(btn => {
 // 6. 설정 화면 메뉴 ON/OFF 토글
 const toggleConfigs = [
     { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
-    { checkboxId: 'toggle-income', liId: 'li-income', key: 'onlybank_cfg_income' },
     { checkboxId: 'toggle-vehicle', liId: 'li-vehicle', key: 'onlybank_cfg_vehicle' },
-    { checkboxId: 'toggle-tax', liId: 'li-tax', key: 'onlybank_cfg_tax' }
+    { checkboxId: 'toggle-tax', liId: 'li-tax', key: 'onlybank_cfg_tax' },
+    { checkboxId: 'toggle-income', liId: 'group-income', key: 'onlybank_cfg_income' } // 전체 부수입 그룹 토글
 ];
 
 toggleConfigs.forEach(item => {
@@ -150,7 +150,7 @@ toggleConfigs.forEach(item => {
     }
 });
 
-// 7. 엑셀 다운로드 (기본 형태 유지)
+// 7. 엑셀 다운로드 (기본 유지)
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 if (exportCsvBtn) {
     exportCsvBtn.addEventListener('click', () => {
