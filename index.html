@@ -59,55 +59,66 @@
 
     <!-- 2. 메인 대시보드 화면 -->
     <div id="dashboardScreen" style="display: none;" class="w-full h-screen flex">
-        <!-- 좌측 사이드바 -->
-        <aside class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0">
-            <div class="p-6 border-b border-brand-border">
-                <h1 class="text-xl font-bold font-serif text-brand-ink">🏦 ONLYBANK</h1>
+        
+        <!-- 좌측 사이드바 (접기/펼치기 반응형) -->
+        <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
+            <!-- 로고 및 사이드바 접기 버튼 -->
+            <div class="p-5 border-b border-brand-border flex items-center justify-between">
+                <div class="flex items-center space-x-2 overflow-hidden">
+                    <span class="text-xl">🏦</span>
+                    <h1 class="text-lg font-bold font-serif text-brand-ink sidebar-text truncate">ONLYBANK</h1>
+                </div>
+                <button id="sidebarToggleBtn" class="w-8 h-8 rounded-lg hover:bg-black/5 text-brand-sub hover:text-brand-ink transition text-xs font-bold flex items-center justify-center shrink-0" title="사이드바 접기/펼치기">
+                    ◀
+                </button>
             </div>
             
-            <nav class="flex-1 overflow-y-auto p-4 space-y-6">
+            <nav class="flex-1 overflow-y-auto p-3 space-y-6">
                 <!-- 개인 공간 메뉴 -->
                 <div>
-                    <div class="flex items-center space-x-2 mb-2 px-3">
+                    <div class="flex items-center space-x-2 mb-2 px-2 sidebar-text">
                         <span class="text-[10px] font-bold text-brand-personal bg-brand-personal/10 px-2 py-0.5 rounded-full border border-brand-personal/20">나만 보임</span>
                     </div>
                     <ul class="space-y-1 text-sm font-medium">
-                        <li id="li-home"><a href="#" id="nav-home" class="menu-btn block px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm">홈</a></li>
-                        <li id="li-ledger"><a href="#" id="nav-ledger" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">가계부</a></li>
-                        <li id="li-assets"><a href="#" id="nav-assets" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">자산관리시트</a></li>
-                        <li id="li-cards"><a href="#" id="nav-cards" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">카드</a></li>
-                        <li id="li-income"><a href="#" id="nav-income" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">부수입 허브</a></li>
-                        <li id="li-vehicle"><a href="#" id="nav-vehicle" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">차량 관리</a></li>
-                        <li id="li-tax"><a href="#" id="nav-tax" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">연말정산</a></li>
+                        <li id="li-home"><a href="#" id="nav-home" class="menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm"><span class="text-base shrink-0">🏠</span><span class="sidebar-text ml-3 truncate">홈</span></a></li>
+                        <li id="li-ledger"><a href="#" id="nav-ledger" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📒</span><span class="sidebar-text ml-3 truncate">가계부</span></a></li>
+                        <li id="li-assets"><a href="#" id="nav-assets" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📊</span><span class="sidebar-text ml-3 truncate">자산관리시트</span></a></li>
+                        <li id="li-cards"><a href="#" id="nav-cards" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💳</span><span class="sidebar-text ml-3 truncate">카드</span></a></li>
+                        <li id="li-income"><a href="#" id="nav-income" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💰</span><span class="sidebar-text ml-3 truncate">부수입 허브</span></a></li>
+                        <li id="li-vehicle"><a href="#" id="nav-vehicle" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🚗</span><span class="sidebar-text ml-3 truncate">차량 관리</span></a></li>
+                        <li id="li-tax"><a href="#" id="nav-tax" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🧾</span><span class="sidebar-text ml-3 truncate">연말정산</span></a></li>
                     </ul>
                 </div>
 
                 <!-- 모임 공간 메뉴 -->
                 <div>
-                    <div class="flex items-center space-x-2 mb-2 px-3">
+                    <div class="flex items-center space-x-2 mb-2 px-2 sidebar-text">
                         <span class="text-[10px] font-bold text-brand-group bg-brand-group/10 px-2 py-0.5 rounded-full border border-brand-group/20">멤버 공유</span>
                     </div>
                     <ul class="space-y-1 text-sm font-medium">
-                        <li><a href="#" id="nav-group1" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">대학 동기계</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition">+ 모임 추가</a></li>
+                        <li id="li-group1"><a href="#" id="nav-group1" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">👥</span><span class="sidebar-text ml-3 truncate">대학 동기계</span></a></li>
+                        <li><a href="#" class="flex items-center px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition"><span class="text-base shrink-0">➕</span><span class="sidebar-text ml-3 truncate font-bold">모임 추가</span></a></li>
                     </ul>
                 </div>
             </nav>
 
             <!-- 하단 설정 및 로그아웃 -->
-            <div class="p-4 border-t border-brand-border">
-                <a href="#" id="nav-settings" class="menu-btn block px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:bg-black/5 transition">설정 · 계정</a>
-                <div class="flex items-center justify-between px-3 py-2 bg-black/5 rounded-xl">
+            <div class="p-3 border-t border-brand-border">
+                <a href="#" id="nav-settings" class="menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:bg-black/5 transition">
+                    <span class="text-sm shrink-0">⚙️</span>
+                    <span class="sidebar-text ml-3 truncate">설정 · 계정</span>
+                </a>
+                <div class="flex items-center justify-between px-2.5 py-2 bg-black/5 rounded-xl">
                     <div class="flex items-center space-x-2 overflow-hidden">
-                        <img id="userAvatar" src="" class="w-7 h-7 rounded-full border border-slate-300 bg-white">
-                        <p id="userName" class="text-xs font-bold truncate text-brand-ink"></p>
+                        <img id="userAvatar" src="" class="w-7 h-7 rounded-full border border-slate-300 bg-white shrink-0" alt="Avatar">
+                        <p id="userName" class="text-xs font-bold truncate text-brand-ink sidebar-text"></p>
                     </div>
-                    <button id="logoutBtn" class="text-xs text-brand-sub hover:text-brand-negative font-bold transition">로그아웃</button>
+                    <button id="logoutBtn" class="text-[11px] text-brand-sub hover:text-brand-negative font-bold transition sidebar-text shrink-0">로그아웃</button>
                 </div>
             </div>
         </aside>
 
-        <!-- 우측 메인 컨텐츠 영역 -->
+        <!-- 우측 메인 대시보드 본문 -->
         <main class="flex-1 overflow-y-auto p-10 bg-brand-cream/30">
             
             <!-- 1. 홈 화면 (벤토 대시보드) -->
@@ -121,7 +132,7 @@
                 </header>
 
                 <div class="grid grid-cols-4 gap-5">
-                    <!-- 상단 지표 4개 -->
+                    <!-- 상단 요약 카드 4개 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
                         <p class="text-xs text-brand-sub font-bold mb-2">연 수입</p>
                         <p class="text-2xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
@@ -146,24 +157,109 @@
                         </div>
                     </div>
 
-                    <!-- 12개월 막대 차트 (CSS로 그린 샘플 차트) -->
-                    <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[320px] flex flex-col">
-                        <h3 class="text-sm font-bold text-brand-ink mb-4">월별 수입·지출 현황</h3>
-                        <!-- 차트 영역 -->
-                        <div class="flex-1 flex items-end justify-between space-x-2 pt-4 border-b border-brand-border pb-2">
-                            <!-- 반복되는 월별 막대 (샘플) -->
-                            <div class="flex flex-col items-center w-full group"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 60%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 40%;"></div><span class="text-[10px] mt-2 text-brand-sub">1월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 70%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 45%;"></div><span class="text-[10px] mt-2 text-brand-sub">2월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 50%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 55%;"></div><span class="text-[10px] mt-2 text-brand-sub">3월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 80%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 30%;"></div><span class="text-[10px] mt-2 text-brand-sub">4월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 65%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 60%;"></div><span class="text-[10px] mt-2 text-brand-sub">5월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm" style="height: 55%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1" style="height: 40%;"></div><span class="text-[10px] mt-2 text-brand-sub">6월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm opacity-20" style="height: 20%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1 opacity-20" style="height: 20%;"></div><span class="text-[10px] mt-2 text-brand-border">7월</span></div>
-                            <div class="flex flex-col items-center w-full"><div class="w-4 bg-brand-positive rounded-t-sm opacity-20" style="height: 20%;"></div><div class="w-4 bg-brand-negative rounded-t-sm mt-1 opacity-20" style="height: 20%;"></div><span class="text-[10px] mt-2 text-brand-border">8월</span></div>
+                    <!-- 12개월 수입·지출 막대 차트 (높이와 막대 시각화 정상화) -->
+                    <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[340px] flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold text-brand-ink">월별 수입·지출 현황</h3>
+                            <div class="flex items-center space-x-4 text-xs font-medium text-brand-sub">
+                                <span class="flex items-center"><span class="w-3 h-3 bg-brand-positive rounded-sm mr-1.5"></span>수입</span>
+                                <span class="flex items-center"><span class="w-3 h-3 bg-brand-negative rounded-sm mr-1.5"></span>지출</span>
+                            </div>
                         </div>
-                        <div class="flex justify-center space-x-4 mt-4 text-xs font-medium text-brand-sub">
-                            <span class="flex items-center"><span class="w-2.5 h-2.5 bg-brand-positive rounded-sm mr-1.5"></span>수입</span>
-                            <span class="flex items-center"><span class="w-2.5 h-2.5 bg-brand-negative rounded-sm mr-1.5"></span>지출</span>
+
+                        <!-- 차트 영역: 고정 높이 180px 지정 -->
+                        <div class="flex-1 h-44 flex items-end justify-between gap-2 border-b border-brand-border pb-2 px-2">
+                            <!-- 1월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 75%;" title="1월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 45%;" title="1월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">1월</span>
+                            </div>
+                            <!-- 2월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 80%;" title="2월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 50%;" title="2월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">2월</span>
+                            </div>
+                            <!-- 3월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 65%;" title="3월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 60%;" title="3월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">3월</span>
+                            </div>
+                            <!-- 4월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 90%;" title="4월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 40%;" title="4월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">4월</span>
+                            </div>
+                            <!-- 5월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 70%;" title="5월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 55%;" title="5월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">5월</span>
+                            </div>
+                            <!-- 6월 -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive rounded-t" style="height: 60%;" title="6월 수입"></div>
+                                    <div class="w-3.5 bg-brand-negative rounded-t" style="height: 48%;" title="6월 지출"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 font-medium text-brand-sub">6월</span>
+                            </div>
+                            <!-- 7월~12월 (미래 월) -->
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">7월</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">8월</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">9월</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">10월</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">11월</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-1 h-36">
+                                    <div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div>
+                                    <div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div>
+                                </div>
+                                <span class="text-[11px] mt-2 text-brand-sub/50">12월</span>
+                            </div>
                         </div>
                     </div>
 
@@ -188,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- ★ 추가됨: 설정 화면 (토글 및 엑셀 다운로드) -->
+            <!-- 2. 설정 화면 (메뉴 스위치 및 백업 버튼) -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-8">
                     <h2 class="text-3xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
@@ -196,11 +292,9 @@
                 </header>
                 
                 <div class="grid grid-cols-2 gap-6">
-                    <!-- 메뉴 스위치 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm">
                         <h3 class="font-bold text-brand-ink mb-6 border-b border-brand-border pb-3">사이드바 메뉴 켜기/끄기</h3>
                         <ul class="space-y-4">
-                            <!-- 카드 토글 -->
                             <li class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-bold text-brand-ink">카드</p>
@@ -211,7 +305,6 @@
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                                 </label>
                             </li>
-                            <!-- 부수입 토글 -->
                             <li class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-bold text-brand-ink">부수입 허브</p>
@@ -222,7 +315,6 @@
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                                 </label>
                             </li>
-                            <!-- 차량 토글 -->
                             <li class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-bold text-brand-ink">차량 관리</p>
@@ -233,7 +325,6 @@
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                                 </label>
                             </li>
-                            <!-- 연말정산 토글 -->
                             <li class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm font-bold text-brand-ink">연말정산</p>
@@ -247,7 +338,6 @@
                         </ul>
                     </div>
 
-                    <!-- 엑셀 백업 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm h-fit">
                         <h3 class="font-bold text-brand-ink mb-4 border-b border-brand-border pb-3">데이터 백업</h3>
                         <p class="text-sm text-brand-sub mb-6">입력하신 가계부 및 자산 데이터를 엑셀(CSV) 형식으로 다운로드합니다.</p>
@@ -259,7 +349,7 @@
                 </div>
             </div>
 
-            <!-- 기타 미완성 화면 -->
+            <!-- 3. 기타 화면 플레이스홀더 -->
             <div id="view-placeholder" class="view-section" style="display: none;">
                 <header class="mb-8"><h2 id="placeholder-title" class="text-3xl font-bold font-serif text-brand-ink">메뉴</h2></header>
                 <div class="p-16 border border-dashed border-brand-line rounded-2xl text-center text-brand-sub bg-brand-surface">
