@@ -1,4 +1,4 @@
-// Firebase 모듈 불러오기
+// Firebase 모듈 불러오기 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
     getAuth, 
