@@ -62,111 +62,97 @@
         
         <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
-            <!-- 헤더 로고 -->
+            <!-- 최상단 로고 18px -->
             <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <span class="text-xl shrink-0 select-none">🏦</span>
-                    <h1 class="text-lg font-bold font-serif text-brand-ink sidebar-text truncate tracking-tight">ONLYBANK</h1>
+                    <h1 class="text-[18px] font-bold font-serif text-brand-ink sidebar-text truncate tracking-tight">ONLYBANK</h1>
                 </div>
                 <button id="sidebarToggleBtn" class="w-7 h-7 rounded-lg hover:bg-black/5 text-brand-sub hover:text-brand-ink transition text-xs font-bold flex items-center justify-center shrink-0" title="사이드바 접기/펼치기">◀</button>
             </div>
             
             <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-                <!-- 1. 개인 금융 -->
+                <!-- 1. 내 자산 관리 -->
                 <div>
-                    <div class="flex items-center justify-between mb-2 px-2.5 sidebar-text">
-                        <span class="text-xs font-bold text-brand-ink tracking-tight">개인 금융</span>
+                    <!-- 대분류 제목: 13px -->
+                    <div class="flex items-center justify-between mb-3 px-2 sidebar-text">
+                        <span class="text-[13px] font-bold text-brand-ink tracking-tight">내 자산 관리</span>
                         <span class="text-[10px] font-medium text-brand-personal/80 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">나만 보임</span>
                     </div>
 
-                    <div class="px-2.5 pt-2 pb-1 sidebar-text">
-                        <span class="text-[10px] font-semibold text-brand-sub/60 tracking-wider">자산 관리</span>
-                    </div>
-                    <ul class="space-y-0.5 text-[13px] font-medium">
+                    <!-- 개별 메뉴 버튼: 13px, 이모티콘 너비만큼 좌측 들여쓰기(pl-7) -->
+                    <ul class="space-y-0.5 font-medium">
                         <li id="li-home">
-                            <a href="#" id="nav-home" class="menu-btn active flex items-center px-2.5 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
-                                <span class="sidebar-text ml-3 truncate">연간 리포트</span>
+                            <a href="#" id="nav-home" class="menu-btn active flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]">
+                                <span class="sidebar-text truncate">연간 리포트</span>
                             </a>
                         </li>
                         <li id="li-ledger">
-                            <a href="#" id="nav-ledger" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-                                <span class="sidebar-text ml-3 truncate">가계부</span>
+                            <a href="#" id="nav-ledger" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">가계부</span>
                             </a>
                         </li>
                         <li id="li-assets">
-                            <a href="#" id="nav-assets" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-                                <span class="sidebar-text ml-3 truncate">자산현황</span>
+                            <a href="#" id="nav-assets" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">자산현황</span>
                             </a>
                         </li>
                         <li id="li-cards">
-                            <a href="#" id="nav-cards" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                                <span class="sidebar-text ml-3 truncate">카드관리</span>
+                            <a href="#" id="nav-cards" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">카드관리</span>
                             </a>
                         </li>
                         <li id="li-vehicle">
-                            <a href="#" id="nav-vehicle" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-                                <span class="sidebar-text ml-3 truncate">차량관리</span>
+                            <a href="#" id="nav-vehicle" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">차량관리</span>
                             </a>
                         </li>
                         <li id="li-tax">
-                            <a href="#" id="nav-tax" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-                                <span class="sidebar-text ml-3 truncate">연말정산</span>
+                            <a href="#" id="nav-tax" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">연말정산</span>
                             </a>
                         </li>
                     </ul>
 
-                    <!-- 부수입 관리 컨테이너 -->
-                    <div id="group-income-container">
-                        <!-- 부수입 3개가 모두 꺼지면 이 헤더도 자동으로 숨겨집니다 -->
-                        <div id="header-income" class="px-2.5 pt-4 pb-1 sidebar-text">
-                            <span class="text-[10px] font-semibold text-brand-sub/60 tracking-wider">부수입 관리</span>
-                        </div>
-                        <ul class="space-y-0.5 text-[13px] font-medium">
-                            <li id="li-ipo">
-                                <a href="#" id="nav-ipo" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
-                                    <span class="sidebar-text ml-3 truncate">공모주 정산</span>
-                                </a>
-                            </li>
-                            <li id="li-reward">
-                                <a href="#" id="nav-reward" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
-                                    <span class="sidebar-text ml-3 truncate">금융 리워드</span>
-                                </a>
-                            </li>
-                            <li id="li-extra">
-                                <a href="#" id="nav-extra" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                                    <span class="sidebar-text ml-3 truncate">부가소득</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <!-- 소분류 텍스트 대신 들어간 가벼운 구분선 (ㅡㅡㅡㅡㅡ) -->
+                    <div id="divider-income" class="my-3 mx-2 border-t border-brand-border/60"></div>
+
+                    <!-- 부수입 메뉴 목록 -->
+                    <ul class="space-y-0.5 font-medium">
+                        <li id="li-ipo">
+                            <a href="#" id="nav-ipo" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">공모주 정산</span>
+                            </a>
+                        </li>
+                        <li id="li-reward">
+                            <a href="#" id="nav-reward" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">금융 리워드</span>
+                            </a>
+                        </li>
+                        <li id="li-extra">
+                            <a href="#" id="nav-extra" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">부가소득</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- 2. 모임 금융 (그룹 전체 숨김 가능) -->
+                <!-- 2. 공용 자산 관리 -->
                 <div id="group-moim">
-                    <div class="flex items-center justify-between mb-2 px-2.5 sidebar-text">
-                        <span class="text-xs font-bold text-brand-ink tracking-tight">모임 금융</span>
+                    <!-- 대분류 제목: 13px -->
+                    <div class="flex items-center justify-between mb-3 px-2 sidebar-text">
+                        <span class="text-[13px] font-bold text-brand-ink tracking-tight">공용 자산 관리</span>
                         <span class="text-[10px] font-medium text-brand-group/80 bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">멤버 공유</span>
                     </div>
-                    <ul class="space-y-0.5 text-[13px] font-medium">
+                    <ul class="space-y-0.5 font-medium">
                         <li id="li-group1">
-                            <a href="#" id="nav-group1" class="menu-btn flex items-center px-2.5 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                <span class="sidebar-text ml-3 truncate">대학 동기계</span>
+                            <a href="#" id="nav-group1" class="menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                                <span class="sidebar-text truncate">대학 동기계</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center px-2.5 py-2 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                                <span class="sidebar-text ml-3 truncate font-semibold">모임 추가</span>
+                            <a href="#" class="flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]">
+                                <span class="sidebar-text truncate font-semibold">+ 모임 추가</span>
                             </a>
                         </li>
                     </ul>
@@ -175,9 +161,8 @@
 
             <!-- 하단 설정 및 프로필 -->
             <div class="p-3 border-t border-brand-border">
-                <a href="#" id="nav-settings" class="menu-btn flex items-center px-2.5 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <span class="sidebar-text ml-3 truncate">설정 · 계정</span>
+                <a href="#" id="nav-settings" class="menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors">
+                    <span class="sidebar-text truncate">⚙️ 설정 · 계정</span>
                 </a>
                 <div class="flex items-center justify-between px-2.5 py-2 bg-black/[0.03] rounded-xl border border-brand-border/40">
                     <div class="flex items-center space-x-2.5 overflow-hidden">
@@ -194,7 +179,6 @@
             
             <!-- 1. 홈 화면 (연간 리포트) -->
             <div id="view-home" class="view-section">
-                <!-- (기존 홈 화면 내용 동일 유지) -->
                 <header class="flex justify-between items-end mb-8">
                     <div><h2 class="text-3xl font-bold font-serif text-brand-ink">2026년 요약</h2><p class="text-sm text-brand-sub mt-1">개인 재무 현황 대시보드</p></div>
                     <span class="text-xs border border-brand-caution text-brand-caution bg-brand-cautionBg px-2.5 py-1 rounded-md font-bold">샘플 데이터</span>
@@ -264,7 +248,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 (7개 스위치로 세분화) -->
+            <!-- 2. 설정 화면 -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-8">
                     <h2 class="text-3xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
@@ -272,7 +256,6 @@
                 </header>
                 
                 <div class="grid grid-cols-2 gap-6">
-                    <!-- 메뉴 스위치 패널 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm">
                         <h3 class="font-bold text-brand-ink mb-5 border-b border-brand-border pb-3">사이드바 메뉴 켜기/끄기</h3>
                         <ul class="space-y-3">
@@ -319,7 +302,7 @@
                                 </label>
                             </li>
                             <li class="flex justify-between items-center pt-3 border-t border-brand-border/50">
-                                <div><p class="text-[13px] font-bold text-brand-group">모임 금융 탭 전체</p><p class="text-[11px] text-brand-sub">동기계, 데이트통장 등 멤버 공유 공간</p></div>
+                                <div><p class="text-[13px] font-bold text-brand-group">공용 자산 관리 탭 전체</p><p class="text-[11px] text-brand-sub">동기계, 데이트통장 등 멤버 공유 공간</p></div>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" id="toggle-moim" class="sr-only peer" checked>
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-group peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
@@ -328,7 +311,6 @@
                         </ul>
                     </div>
 
-                    <!-- 데이터 백업 패널 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm h-fit">
                         <h3 class="font-bold text-brand-ink mb-4 border-b border-brand-border pb-3">데이터 백업</h3>
                         <p class="text-sm text-brand-sub mb-6">입력하신 가계부 및 자산 데이터를 엑셀(CSV) 형식으로 다운로드합니다.</p>
