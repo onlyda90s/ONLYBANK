@@ -178,9 +178,9 @@ const renderYearData = (year) => {
     const ySavingsTxt = document.getElementById("y-savings-txt");
     const yExpenseTxt = document.getElementById("y-expense-txt");
 
-    if (yIncome) yIncome.innerHTML = `${data.income}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
-    if (ySavings) ySavings.innerHTML = `${data.savings}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
-    if (yExpense) yExpense.innerHTML = `${data.expense}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
+    if (yIncome) yIncome.innerHTML = `${data.income}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
+    if (ySavings) ySavings.innerHTML = `${data.savings}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
+    if (yExpense) yExpense.innerHTML = `${data.expense}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
     if (ySavingsBar) ySavingsBar.style.width = data.savingsRate;
     if (yExpenseBar) yExpenseBar.style.width = data.expenseRate;
     if (ySavingsTxt) ySavingsTxt.textContent = `저축 ${data.savingsRate}`;
@@ -197,17 +197,17 @@ const renderYearData = (year) => {
             const col = document.createElement("div");
             col.className = "flex-1 flex flex-col items-center h-full justify-end";
             col.innerHTML = `
-                <div class="w-full flex items-end justify-center gap-1 h-24">
+                <div class="w-full flex items-end justify-center gap-1.5 h-24">
                     <div class="flex flex-col items-center justify-end h-full">
-                        ${hasData ? `<span class="text-[9px] font-bold text-brand-positive mb-0.5 tabular-nums">${m.inc}</span>` : ''}
-                        <div class="w-3 ${hasData ? 'bg-brand-positive' : 'bg-brand-positive/15'} rounded-t transition-all duration-300" style="height: ${hasData ? incH : 10}%;"></div>
+                        ${hasData ? `<span class="text-[11px] font-bold text-brand-positive mb-0.5 tabular-nums">${m.inc}</span>` : ''}
+                        <div class="w-3.5 ${hasData ? 'bg-brand-positive' : 'bg-brand-positive/15'} rounded-t transition-all duration-300" style="height: ${hasData ? incH : 10}%;"></div>
                     </div>
                     <div class="flex flex-col items-center justify-end h-full">
-                        ${hasData ? `<span class="text-[9px] font-bold text-brand-negative mb-0.5 tabular-nums">${m.exp}</span>` : ''}
-                        <div class="w-3 ${hasData ? 'bg-brand-negative' : 'bg-brand-negative/15'} rounded-t transition-all duration-300" style="height: ${hasData ? expH : 10}%;"></div>
+                        ${hasData ? `<span class="text-[11px] font-bold text-brand-negative mb-0.5 tabular-nums">${m.exp}</span>` : ''}
+                        <div class="w-3.5 ${hasData ? 'bg-brand-negative' : 'bg-brand-negative/15'} rounded-t transition-all duration-300" style="height: ${hasData ? expH : 10}%;"></div>
                     </div>
                 </div>
-                <span class="text-[10px] mt-1.5 font-medium ${hasData ? 'text-brand-sub' : 'text-brand-sub/40'}">${monthNumber}월</span>
+                <span class="text-[11px] mt-1.5 font-medium ${hasData ? 'text-brand-sub' : 'text-brand-sub/40'}">${monthNumber}월</span>
             `;
             chartContainer.appendChild(col);
         });
