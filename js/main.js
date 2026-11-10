@@ -1,6 +1,5 @@
 import { auth, provider, signInWithPopup, signOut, onAuthStateChanged } from "./firebase.js";
 
-// DOM 요소 식별
 const loginScreen = document.getElementById("loginScreen");
 const dashboardScreen = document.getElementById("dashboardScreen");
 const loginBtn = document.getElementById("loginBtn");
@@ -10,47 +9,33 @@ const userAvatar = document.getElementById("userAvatar");
 const inviteCodeInput = document.getElementById("inviteCodeInput");
 const enterCodeBtn = document.getElementById("enterCodeBtn");
 
-// 1. Google 로그인
+// 1. Google 로그인 & 로그아웃
 if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error("로그인 에러:", error);
-            alert("로그인 중 문제가 발생했습니다: " + error.message);
-        }
+        try { await signInWithPopup(auth, provider); } 
+        catch (error) { alert("로그인 에러: " + error.message); }
     });
 }
-
-// 2. 로그아웃
 if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error("로그아웃 실패:", error);
-        }
+        try { await signOut(auth); } catch (error) { console.error("로그아웃 실패"); }
     });
 }
 
-// 3. 초대 코드 입력 처리
+// 2. 초대 코드
 if (enterCodeBtn) {
     enterCodeBtn.addEventListener("click", () => {
         const code = inviteCodeInput ? inviteCodeInput.value.trim() : "";
-        if (!code) {
-            alert("초대 코드를 입력해 주세요.");
-            return;
-        }
-        alert(`[${code}] 코드로 모임 대시보드 진입을 확인했습니다.`);
+        if (!code) { alert("초대 코드를 입력해 주세요."); return; }
+        alert(`[${code}] 코드로 모임 대시보드 진입을 시도합니다.`);
     });
 }
 
-// 4. 로그인 인증 상태 감시 및 대시보드 표시 전환
+// 3. 상태 감시
 onAuthStateChanged(auth, (user) => {
     if (user) {
         loginScreen.style.setProperty("display", "none", "important");
         dashboardScreen.style.setProperty("display", "flex", "important");
-        
         if (userName) userName.textContent = user.displayName || "사용자";
         if (userAvatar) userAvatar.src = user.photoURL || "https://via.placeholder.com/80";
     } else {
@@ -59,7 +44,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 5. 사이드바 메뉴 클릭 시 화면 전환(라우팅)
+// 4. 메뉴 라우팅
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -68,34 +53,78 @@ menuBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // 1) 모든 사이드바 버튼 색상을 기본 회색으로 초기화
+        // 버튼 색상 초기화
         menuBtns.forEach(b => {
             b.className = "menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition";
         });
         
-        // 2) 클릭된 메뉴 버튼 하이라이트 (모임 메뉴: 벽돌색 / 개인 메뉴: 네이비)
+        // 하이라이트 (모임 vs 개인 vs 설정)
         if (btn.id.includes('group')) {
             btn.className = "menu-btn block px-3 py-2.5 rounded-xl bg-brand-group text-white shadow-sm";
+        } else if (btn.id === 'nav-settings') {
+            btn.className = "menu-btn block px-3 py-2.5 mb-2 rounded-xl text-xs font-bold bg-slate-200 text-brand-ink shadow-sm";
         } else {
             btn.className = "menu-btn block px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm";
         }
 
-        // 3) 모든 우측 본문 화면 숨김
-        viewSections.forEach(section => {
-            section.style.display = 'none';
-        });
-
-        // 4) 타겟 화면 표시
+        // 화면 전환
+        viewSections.forEach(section => { section.style.display = 'none'; });
         const targetViewId = btn.id.replace('nav-', 'view-');
         const targetView = document.getElementById(targetViewId);
         
         if (targetView) {
             targetView.style.display = 'block';
         } else {
-            // 아직 상세 디자인이 안 들어간 메뉴는 임시 플레이스홀더 화면 표시
             const placeholder = document.getElementById('view-placeholder');
             if (placeholderTitle) placeholderTitle.textContent = btn.textContent.trim();
             if (placeholder) placeholder.style.display = 'block';
         }
     });
 });
+
+// =========================================
+// ★ 5. 설정 화면 로직 (메뉴 토글 & 엑셀 다운로드)
+// =========================================
+
+// 메뉴 토글 기능
+const toggles = [
+    { id: 'toggle-cards', targetLi: 'li-cards' },
+    { id: 'toggle-income', targetLi: 'li-income' },
+    { id: 'toggle-vehicle', targetLi: 'li-vehicle' },
+    { id: 'toggle-tax', targetLi: 'li-tax' }
+];
+
+toggles.forEach(item => {
+    const checkbox = document.getElementById(item.id);
+    const liElement = document.getElementById(item.targetLi);
+    if (checkbox && liElement) {
+        checkbox.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                liElement.style.display = 'block'; // 스위치 ON: 메뉴 표시
+            } else {
+                liElement.style.display = 'none';  // 스위치 OFF: 메뉴 숨김
+            }
+        });
+    }
+});
+
+// 엑셀(CSV) 다운로드 기능
+const exportCsvBtn = document.getElementById('exportCsvBtn');
+if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+        // 샘플 CSV 데이터 생성 (한글 깨짐 방지 위해 \uFEFF 추가)
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF날짜,구분,카테고리,결제수단,금액,메모\n"
+            + "2026-11-01,수입,급여,우리은행,3000000,11월 정기급여\n"
+            + "2026-11-02,지출,식비,신한카드,15000,점심식사\n"
+            + "2026-11-05,저축,주식,미래에셋,500000,삼성전자 매수";
+        
+        // 다운로드 트리거
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "onlybank_backup_202611.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
