@@ -236,14 +236,13 @@
             </div>
         </aside>
 
-        <!-- 우측 메인 본문: 스크롤 없는 1페이지 최적화(h-full flex flex-col justify-between) -->
-        <main class="flex-1 h-full overflow-hidden px-8 py-4 bg-brand-cream/30 flex flex-col justify-between">
+        <!-- 우측 메인 본문: 여백을 되찾은 1페이지 대시보드 -->
+        <main class="flex-1 h-full overflow-hidden px-8 py-5 bg-brand-cream/30 flex flex-col justify-between">
             
-            <!-- 1. 홈 화면 (연간 리포트 1페이지 뷰) -->
             <div id="view-home" class="view-section h-full flex flex-col justify-between">
                 
-                <!-- 헤더: 선명한 폰트 & 심플 연도 컨트롤러 -->
-                <header class="flex justify-between items-center shrink-0 mb-1">
+                <!-- 1. 헤더 영역 -->
+                <header class="flex justify-between items-center shrink-0">
                     <div>
                         <div class="flex items-center space-x-3">
                             <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트</h2>
@@ -257,31 +256,32 @@
                     </div>
                 </header>
 
-                <!-- 상단 지표: [이달 2×2] + [올해 2×2] (라벨 12px, 수치 22px로 확대) -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 shrink-0">
-                    <!-- 1. 이달의 현황 (2×2) -->
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center justify-between mb-2.5 px-1">
+                <!-- 2. 상단 지표 영역 (외곽 상자 테두리 삭제 & 독립 카드 배치) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 shrink-0">
+                    
+                    <!-- 좌측: 이달의 현황 (상단 타이틀 + 2x2 카드) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2 px-1">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2 h-2 rounded-full bg-brand-personal"></span>
                                 <h3 class="text-[13px] font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-normal text-brand-sub font-sans text-xs">(11월)</span></h3>
                             </div>
                             <span class="text-[11px] font-semibold text-brand-personal/90 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">가계부 실시간</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">이달 수입</p>
                                 <p id="m-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">4,800,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">이달 저축·투자</p>
                                 <p id="m-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">2,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">이달 지출</p>
                                 <p id="m-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">1,900,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs flex flex-col justify-center">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm flex flex-col justify-center">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">저축률 / 소비율</p>
                                 <div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-1.5">
                                     <div id="m-savings-bar" class="bg-brand-personal h-full" style="width: 42%;"></div>
@@ -295,29 +295,29 @@
                         </div>
                     </div>
 
-                    <!-- 2. 올해 누적 (2×2) -->
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center justify-between mb-2.5 px-1">
+                    <!-- 우측: 올해 누적 (상단 타이틀 + 2x2 카드) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2 px-1">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2 h-2 rounded-full bg-brand-ink"></span>
                                 <h3 class="text-[13px] font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-normal text-brand-sub font-sans text-xs">(2026년)</span></h3>
                             </div>
                             <span class="text-[11px] font-semibold text-brand-ink/80 bg-black/5 border border-black/10 px-2 py-0.5 rounded-full">연간 결산</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">올해 총 수입</p>
                                 <p id="y-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">올해 저축·투자</p>
                                 <p id="y-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">올해 총 지출</p>
                                 <p id="y-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-xl p-3 shadow-xs flex flex-col justify-center">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm flex flex-col justify-center">
                                 <p class="text-xs text-brand-sub font-semibold mb-1">누적 저축 / 소비율</p>
                                 <div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-1.5">
                                     <div id="y-savings-bar" class="bg-brand-personal h-full" style="width: 40%;"></div>
@@ -332,8 +332,8 @@
                     </div>
                 </div>
 
-                <!-- 메인 차트: 슬림 와이드 막대 차트 (가독성 상향) -->
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm shrink-0">
+                <!-- 3. 차트 패널 영역 (카드 바깥 상단에 제목과 범례 배치) -->
+                <div class="shrink-0">
                     <div class="flex justify-between items-center mb-2 px-1">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-[13px] font-bold text-brand-ink">월별 수입·지출 현황</h3>
@@ -344,13 +344,14 @@
                             <span class="flex items-center"><span class="w-2.5 h-2.5 bg-brand-negative rounded-xs mr-1.5"></span>지출</span>
                         </div>
                     </div>
-
-                    <div id="chartContainer" class="h-32 flex items-end justify-between gap-1 border-b border-brand-border pb-1 px-1">
-                        <!-- main.js에서 연도에 맞게 1~12월 동적 렌더링 -->
+                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                        <div id="chartContainer" class="h-32 flex items-end justify-between gap-1 border-b border-brand-border pb-1 px-1">
+                            <!-- main.js 동적 렌더링 -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- 하단 4분할 위젯 영역: 13px 폰트 & 가독성 최적화 -->
+                <!-- 4. 하단 4대 위젯 영역 (독립 카드 타일 4열) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
                     
                     <!-- 1. 다가오는 일정 -->
@@ -474,7 +475,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 -->
+            <!-- 설정 화면 -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-6">
                     <h2 class="text-2xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
@@ -562,7 +563,7 @@
                 </div>
             </div>
 
-            <!-- 3. 기타 화면 플레이스홀더 -->
+            <!-- 플레이스홀더 -->
             <div id="view-placeholder" class="view-section" style="display: none;">
                 <header class="mb-6"><h2 id="placeholder-title" class="text-2xl font-bold font-serif text-brand-ink">메뉴</h2></header>
                 <div class="p-12 border border-dashed border-brand-line rounded-2xl text-center text-brand-sub bg-brand-surface text-sm">
@@ -573,6 +574,6 @@
         </main>
     </div>
 
-    <script type="module" src="js/main.js?v=20261111_scale"></script>
+    <script type="module" src="js/main.js?v=20261111_airy"></script>
 </body>
 </html>
