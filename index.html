@@ -26,19 +26,50 @@
         }
     </script>
     <style>
-        /* 사이드바 접힘(Collapsed) 시 아이콘 중앙 정렬 */
-        aside.collapsed .menu-btn {
-            justify-content: center;
-            padding-left: 0;
-            padding-right: 0;
+        /* ★ 사이드바 축소(w-20) 시 메뉴 아이콘 중앙 축 정렬 */
+        #sidebar.w-20 .menu-btn {
+            width: 42px !important;
+            height: 42px !important;
+            padding: 0 !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
-        aside.collapsed .sidebar-header-box {
-            justify-content: center;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+        #sidebar.w-20 .menu-btn svg {
+            margin: 0 !important;
+            flex-shrink: 0 !important;
         }
-        aside.collapsed .category-header {
-            display: none;
+        #sidebar.w-20 .category-header {
+            display: none !important;
+        }
+        #sidebar.w-20 #divider-income {
+            width: 32px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        #sidebar.w-20 #sidebarHeader {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            justify-content: space-between !important;
+        }
+        #sidebar.w-20 #nav-settings {
+            width: 42px !important;
+            height: 42px !important;
+            padding: 0 !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        #sidebar.w-20 .user-profile-box {
+            justify-content: center !important;
+            padding: 0.5rem 0 !important;
+        }
+        #sidebar.w-20 .user-profile-box > div {
+            margin: 0 !important;
         }
     </style>
 </head>
@@ -84,7 +115,7 @@
         <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
             <!-- 최상단 로고 18px -->
-            <div id="sidebarHeader" class="sidebar-header-box h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
+            <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <span class="text-xl shrink-0 select-none">🏦</span>
                     <h1 class="text-[18px] font-bold font-serif text-brand-ink sidebar-text truncate tracking-tight">ONLYBANK</h1>
@@ -93,7 +124,7 @@
             </div>
             
             <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-                <!-- 1. 내 자산 관리 (13px) -->
+                <!-- 1. 내 자산 관리 -->
                 <div>
                     <div class="category-header flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">내 자산 관리</span>
@@ -101,7 +132,7 @@
                     </div>
 
                     <!-- 자산관리 메뉴 -->
-                    <ul class="space-y-0.5 font-medium">
+                    <ul class="space-y-1 font-medium">
                         <li id="li-home">
                             <a href="#" id="nav-home" title="연간 리포트" class="menu-btn active flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]">
                                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
@@ -143,8 +174,8 @@
                     <!-- 구분선 (ㅡㅡㅡㅡㅡ) -->
                     <div id="divider-income" class="my-3 mx-2 border-t border-brand-border/60"></div>
 
-                    <!-- 부수입 메뉴 (부가소득 -> 부수입 관리 반영) -->
-                    <ul class="space-y-0.5 font-medium">
+                    <!-- 부수입 관리 메뉴 -->
+                    <ul class="space-y-1 font-medium">
                         <li id="li-ipo">
                             <a href="#" id="nav-ipo" title="공모주 정산" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
                                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
@@ -166,13 +197,13 @@
                     </ul>
                 </div>
 
-                <!-- 2. 공용 자산 관리 (13px) -->
+                <!-- 2. 공용 자산 관리 -->
                 <div id="group-moim">
                     <div class="category-header flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">공용 자산 관리</span>
                         <span class="text-[10px] font-medium text-brand-group/80 bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">멤버 공유</span>
                     </div>
-                    <ul class="space-y-0.5 font-medium">
+                    <ul class="space-y-1 font-medium">
                         <li id="li-group1">
                             <a href="#" id="nav-group1" title="대학 동기계" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
                                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -180,9 +211,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" title="모임 추가" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]">
+                            <a href="#" id="nav-add-group" title="모임 추가" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]">
                                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                                <span class="sidebar-text ml-3 truncate font-semibold">+ 모임 추가</span>
+                                <span class="sidebar-text ml-3 truncate font-semibold">모임 추가</span>
                             </a>
                         </li>
                     </ul>
@@ -195,7 +226,7 @@
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                     <span class="sidebar-text ml-3 truncate">설정 · 계정</span>
                 </a>
-                <div class="flex items-center justify-between px-2.5 py-2 bg-black/[0.03] rounded-xl border border-brand-border/40">
+                <div class="user-profile-box flex items-center justify-between px-2.5 py-2 bg-black/[0.03] rounded-xl border border-brand-border/40">
                     <div class="flex items-center space-x-2.5 overflow-hidden">
                         <img id="userAvatar" src="" class="w-7 h-7 rounded-full border border-slate-300 bg-white shrink-0" alt="Avatar">
                         <p id="userName" class="text-xs font-semibold truncate text-brand-ink sidebar-text"></p>
@@ -279,7 +310,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 (부수입 관리 반영) -->
+            <!-- 2. 설정 화면 -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-8">
                     <h2 class="text-3xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
