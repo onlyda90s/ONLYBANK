@@ -1,4 +1,4 @@
-import { auth, provider, signInWithPopup, signOut, onAuthStateChanged } from "./firebase.js";
+import { auth, provider, signInWithPopup, signOut, onAuthStateChanged } from "./firebase.js"; 
 
 // 화면 HTML 요소 가져오기
 const loggedOutView = document.getElementById("loggedOutView");
