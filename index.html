@@ -74,13 +74,12 @@
             <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6">
                 <!-- 1. 내 자산 관리 -->
                 <div>
-                    <!-- 대분류 제목: 13px -->
                     <div class="flex items-center justify-between mb-3 px-2 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">내 자산 관리</span>
                         <span class="text-[10px] font-medium text-brand-personal/80 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">나만 보임</span>
                     </div>
 
-                    <!-- 개별 메뉴 버튼: 13px, 이모티콘 너비만큼 좌측 들여쓰기(pl-7) -->
+                    <!-- 개별 메뉴 버튼: 13px, pl-7 들여쓰기 -->
                     <ul class="space-y-0.5 font-medium">
                         <li id="li-home">
                             <a href="#" id="nav-home" class="menu-btn active flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]">
@@ -114,7 +113,7 @@
                         </li>
                     </ul>
 
-                    <!-- 소분류 텍스트 대신 들어간 가벼운 구분선 (ㅡㅡㅡㅡㅡ) -->
+                    <!-- 부수입 구분선 (ㅡㅡㅡㅡㅡ) -->
                     <div id="divider-income" class="my-3 mx-2 border-t border-brand-border/60"></div>
 
                     <!-- 부수입 메뉴 목록 -->
@@ -139,7 +138,6 @@
 
                 <!-- 2. 공용 자산 관리 -->
                 <div id="group-moim">
-                    <!-- 대분류 제목: 13px -->
                     <div class="flex items-center justify-between mb-3 px-2 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">공용 자산 관리</span>
                         <span class="text-[10px] font-medium text-brand-group/80 bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">멤버 공유</span>
@@ -248,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 -->
+            <!-- 2. 설정 화면 (즉각 반응하는 전체 행 클릭형 스위치) -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-8">
                     <h2 class="text-3xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
@@ -257,55 +255,76 @@
                 
                 <div class="grid grid-cols-2 gap-6">
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm">
-                        <h3 class="font-bold text-brand-ink mb-5 border-b border-brand-border pb-3">사이드바 메뉴 켜기/끄기</h3>
-                        <ul class="space-y-3">
-                            <li class="flex justify-between items-center">
+                        <h3 class="font-bold text-brand-ink mb-3 border-b border-brand-border pb-3">사이드바 메뉴 켜기/끄기</h3>
+                        <ul class="divide-y divide-brand-border/40">
+                            <!-- 1. 카드관리 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">카드관리</p><p class="text-[11px] text-brand-sub">보유 카드 및 실적·혜택 관리</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-cards" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-cards" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center">
+                            <!-- 2. 차량관리 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">차량관리</p><p class="text-[11px] text-brand-sub">소모품 교체 주기 및 유지비</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-vehicle" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-vehicle" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center">
+                            <!-- 3. 연말정산 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">연말정산</p><p class="text-[11px] text-brand-sub">소득공제 한도 및 달성률 점검</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-tax" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-tax" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center">
+                            <!-- 4. 공모주 정산 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">공모주 정산</p><p class="text-[11px] text-brand-sub">청약 일정 및 매도 수익 관리</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-ipo" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-ipo" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center">
+                            <!-- 5. 금융 리워드 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">금융 리워드</p><p class="text-[11px] text-brand-sub">카드 캐시백 및 앱테크 등</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-reward" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-reward" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center pb-2">
+                            <!-- 6. 부가소득 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-ink">부가소득</p><p class="text-[11px] text-brand-sub">중고거래, 배당금 등 추가 소득</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-extra" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-extra" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
-                            <li class="flex justify-between items-center pt-3 border-t border-brand-border/50">
+                            <!-- 7. 공용 자산 관리 -->
+                            <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
                                 <div><p class="text-[13px] font-bold text-brand-group">공용 자산 관리 탭 전체</p><p class="text-[11px] text-brand-sub">동기계, 데이트통장 등 멤버 공유 공간</p></div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-moim" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-group peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
+                                    <input type="checkbox" id="toggle-moim" class="peer sr-only" checked>
+                                    <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-group rounded-full transition-colors duration-200 relative block">
+                                        <span class="pointer-events-none absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 peer-checked:translate-x-5"></span>
+                                    </span>
                                 </label>
                             </li>
                         </ul>
