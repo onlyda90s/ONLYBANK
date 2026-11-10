@@ -1,43 +1,6 @@
-// ==========================================
-// 1. Firebase SDK 동적 로드 및 설정
-// ==========================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-    getAuth, 
-    GoogleAuthProvider, 
-    signInWithPopup, 
-    signOut, 
-    onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { auth, provider, signInWithPopup, signOut, onAuthStateChanged } from "./firebase.js";
 
-// Firebase 콘솔 설정값 (본인 프로젝트 키가 있다면 여기에 입력하세요)
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
-
-let auth = null;
-let provider = null;
-let isFirebaseReady = false;
-
-try {
-    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        provider = new GoogleAuthProvider();
-        isFirebaseReady = true;
-    }
-} catch (e) {
-    console.warn("Firebase 초기화 대기 (임시 모드로 전환):", e);
-}
-
-// ==========================================
-// 2. DOM 요소 연결
-// ==========================================
+// DOM 요소 식별
 const loginScreen = document.getElementById("loginScreen");
 const dashboardScreen = document.getElementById("dashboardScreen");
 const loginBtn = document.getElementById("loginBtn");
@@ -47,86 +10,57 @@ const userAvatar = document.getElementById("userAvatar");
 const inviteCodeInput = document.getElementById("inviteCodeInput");
 const enterCodeBtn = document.getElementById("enterCodeBtn");
 
-// 대시보드 화면 진입 함수
-const enterDashboard = (name = "지나", avatar = "https://via.placeholder.com/80") => {
-    if (loginScreen) loginScreen.style.setProperty("display", "none", "important");
-    if (dashboardScreen) dashboardScreen.style.setProperty("display", "flex", "important");
-    if (userName) userName.textContent = name;
-    if (userAvatar) userAvatar.src = avatar;
-    localStorage.setItem("onlybank_logged_in", "true");
-};
-
-// 로그인 화면 복귀 함수
-const exitDashboard = () => {
-    if (loginScreen) loginScreen.style.setProperty("display", "flex", "important");
-    if (dashboardScreen) dashboardScreen.style.setProperty("display", "none", "important");
-    localStorage.removeItem("onlybank_logged_in");
-};
-
-// ==========================================
-// 3. 로그인 / 로그아웃 이벤트 (절대 막히지 않는 로직)
-// ==========================================
-
-// Google 로그인 버튼
+// 1. Google 정식 팝업 로그인
 if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
-        if (!isFirebaseReady) {
-            // Firebase 키가 아직 입력되지 않은 상태인 경우 친절한 안내 후 즉시 입장
-            alert("Firebase 키 설정 전입니다. 테스트 계정(지나)으로 대시보드에 바로 진입합니다.");
-            enterDashboard("지나 (테스트)");
-            return;
-        }
-
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            enterDashboard(user.displayName || "사용자", user.photoURL || "https://via.placeholder.com/80");
+            await signInWithPopup(auth, provider);
         } catch (error) {
-            console.error("구글 로그인 실패:", error);
-            // 팝업이 닫히거나 도메인 미승인 에러가 나도 테스트를 이어갈 수 있도록 선택권 제공
-            const proceed = confirm(`Google 로그인 접속 오류 (${error.code || error.message})\n\n테스트 모드로 대시보드를 계속 둘러보시겠습니까?`);
-            if (proceed) {
-                enterDashboard("지나 (오프라인)");
-            }
+            console.error("Google 로그인 실패:", error);
+            alert(`로그인 오류: ${error.message}`);
         }
     });
 }
 
-// 초대 코드로 바로 입장 버튼
+// 2. 로그아웃
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("로그아웃 실패:", error);
+        }
+    });
+}
+
+// 3. 초대 코드 (필요 시 동작)
 if (enterCodeBtn) {
     enterCodeBtn.addEventListener("click", () => {
         const code = inviteCodeInput ? inviteCodeInput.value.trim() : "";
-        enterDashboard(code ? `지나 [${code}]` : "지나");
+        if (!code) {
+            alert("초대 코드를 입력해 주세요.");
+            return;
+        }
+        alert(`[${code}] 코드로 모임 권한을 확인합니다.`);
     });
 }
 
-// 로그아웃 버튼
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        if (isFirebaseReady && auth) {
-            try { await signOut(auth); } catch (e) {}
-        }
-        exitDashboard();
-    });
-}
-
-// Firebase 로그인 상태 감시 및 기존 로그인 세션 유지
-if (isFirebaseReady && auth) {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            enterDashboard(user.displayName || "사용자", user.photoURL || "https://via.placeholder.com/80");
-        }
-    });
-} else {
-    // 로컬 세션 확인
-    if (localStorage.getItem("onlybank_logged_in") === "true") {
-        enterDashboard("지나");
+// 4. Firebase 실제 인증 상태 감시 (화면 전환)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // 로그인 성공 시 메인 대시보드 표출
+        if (loginScreen) loginScreen.style.setProperty("display", "none", "important");
+        if (dashboardScreen) dashboardScreen.style.setProperty("display", "flex", "important");
+        if (userName) userName.textContent = user.displayName || "사용자";
+        if (userAvatar && user.photoURL) userAvatar.src = user.photoURL;
+    } else {
+        // 로그아웃 상태 시 로그인 대문 화면 표출
+        if (loginScreen) loginScreen.style.setProperty("display", "flex", "important");
+        if (dashboardScreen) dashboardScreen.style.setProperty("display", "none", "important");
     }
-}
+});
 
-// ==========================================
-// 4. 사이드바 접기/펼치기 (Collapse)
-// ==========================================
+// 5. 사이드바 접기/펼치기 (Collapse)
 const sidebar = document.getElementById("sidebar");
 const sidebarHeader = document.getElementById("sidebarHeader");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
@@ -157,9 +91,7 @@ if (sidebarToggleBtn && sidebar) {
     });
 }
 
-// ==========================================
-// 5. 메뉴 라우팅
-// ==========================================
+// 6. 메뉴 라우팅 (13px 폰트 및 pl-7 들여쓰기 유지)
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -167,6 +99,7 @@ const placeholderTitle = document.getElementById('placeholder-title');
 menuBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
+        
         menuBtns.forEach(b => {
             if (b.id === 'nav-settings') {
                 b.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors";
@@ -198,9 +131,7 @@ menuBtns.forEach(btn => {
     });
 });
 
-// ==========================================
-// 6. 설정 화면 메뉴 ON/OFF 토글
-// ==========================================
+// 7. 설정 화면 메뉴 ON/OFF 토글 (행 전체 클릭형 스위치)
 const toggleConfigs = [
     { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
     { checkboxId: 'toggle-vehicle', liId: 'li-vehicle', key: 'onlybank_cfg_vehicle' },
@@ -264,9 +195,7 @@ toggleConfigs.forEach(item => {
     }
 });
 
-// ==========================================
-// 7. 엑셀 다운로드
-// ==========================================
+// 8. 엑셀 다운로드
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 if (exportCsvBtn) {
     exportCsvBtn.addEventListener('click', () => {
