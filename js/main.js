@@ -91,20 +91,20 @@ menuBtns.forEach(btn => {
         
         menuBtns.forEach(b => {
             if (b.id === 'nav-settings') {
-                b.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors";
+                b.className = "menu-btn flex items-center px-3 py-1.5 mb-1.5 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors";
             } else if (b.id === 'nav-add-group') {
-                b.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]";
+                b.className = "menu-btn flex items-center px-3 py-2 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]";
             } else {
-                b.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]";
+                b.className = "menu-btn flex items-center px-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]";
             }
         });
         
         if (btn.id.includes('group')) {
-            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-group text-white shadow-sm font-semibold text-[13px]";
+            btn.className = "menu-btn flex items-center px-3 py-2 rounded-xl bg-brand-group text-white shadow-sm font-semibold text-[13px]";
         } else if (btn.id === 'nav-settings') {
-            btn.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs bg-slate-200 text-brand-ink shadow-sm font-semibold";
+            btn.className = "menu-btn flex items-center px-3 py-1.5 mb-1.5 rounded-xl text-xs bg-slate-200 text-brand-ink shadow-sm font-semibold";
         } else {
-            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]";
+            btn.className = "menu-btn flex items-center px-3 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]";
         }
 
         viewSections.forEach(section => { section.style.display = 'none'; });
@@ -123,37 +123,123 @@ menuBtns.forEach(btn => {
 });
 
 // ==========================================
-// ★ 7. 연간 리포트 상단 연도 컨트롤러
+// ★ 7. 연간 리포트 연도 데이터 세트 & 실시간 변경 기능
 // ==========================================
 let currentYear = 2026;
+
+// 연도별 데이터 세트
+const yearlyData = {
+    2025: {
+        income: "49,200,000", savings: "19,800,000", expense: "17,600,000",
+        savingsRate: "40%", expenseRate: "36%",
+        bars: [
+            { inc: 420, exp: 200 }, { inc: 450, exp: 210 }, { inc: 410, exp: 230 },
+            { inc: 510, exp: 180 }, { inc: 430, exp: 240 }, { inc: 400, exp: 210 },
+            { inc: 460, exp: 220 }, { inc: 390, exp: 190 }, { inc: 420, exp: 210 },
+            { inc: 440, exp: 230 }, { inc: 470, exp: 250 }, { inc: 520, exp: 260 }
+        ]
+    },
+    2026: {
+        income: "52,400,000", savings: "21,000,000", expense: "18,500,000",
+        savingsRate: "40%", expenseRate: "35%",
+        bars: [
+            { inc: 480, exp: 210 }, { inc: 510, exp: 240 }, { inc: 430, exp: 290 },
+            { inc: 590, exp: 190 }, { inc: 460, exp: 260 }, { inc: 410, exp: 220 },
+            { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 },
+            { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }
+        ]
+    },
+    2027: {
+        income: "0", savings: "0", expense: "0",
+        savingsRate: "0%", expenseRate: "0%",
+        bars: Array(12).fill({ inc: 0, exp: 0 })
+    }
+};
+
 const currentYearDisplay = document.getElementById("currentYearDisplay");
 const accumYearDisplay = document.getElementById("accumYearDisplay");
 const prevYearBtn = document.getElementById("prevYearBtn");
 const nextYearBtn = document.getElementById("nextYearBtn");
+const chartContainer = document.getElementById("chartContainer");
 
-const updateYearDisplay = () => {
-    if (currentYearDisplay) currentYearDisplay.textContent = `${currentYear}년`;
-    if (accumYearDisplay) accumYearDisplay.textContent = `(${currentYear}년)`;
+// 화면 업데이트 함수
+const renderYearData = (year) => {
+    // 1. 헤더 텍스트 갱신
+    if (currentYearDisplay) currentYearDisplay.textContent = `${year}년`;
+    if (accumYearDisplay) accumYearDisplay.textContent = `(${year}년)`;
+
+    const data = yearlyData[year] || {
+        income: "0", savings: "0", expense: "0", savingsRate: "0%", expenseRate: "0%",
+        bars: Array(12).fill({ inc: 0, exp: 0 })
+    };
+
+    // 2. 올해 누적 수치 갱신
+    const yIncome = document.getElementById("y-income");
+    const ySavings = document.getElementById("y-savings");
+    const yExpense = document.getElementById("y-expense");
+    const ySavingsBar = document.getElementById("y-savings-bar");
+    const yExpenseBar = document.getElementById("y-expense-bar");
+    const ySavingsTxt = document.getElementById("y-savings-txt");
+    const yExpenseTxt = document.getElementById("y-expense-txt");
+
+    if (yIncome) yIncome.innerHTML = `${data.income}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
+    if (ySavings) ySavings.innerHTML = `${data.savings}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
+    if (yExpense) yExpense.innerHTML = `${data.expense}<span class="text-[11px] font-sans ml-0.5 text-brand-ink">원</span>`;
+    if (ySavingsBar) ySavingsBar.style.width = data.savingsRate;
+    if (yExpenseBar) yExpenseBar.style.width = data.expenseRate;
+    if (ySavingsTxt) ySavingsTxt.textContent = `저축 ${data.savingsRate}`;
+    if (yExpenseTxt) yExpenseTxt.textContent = `소비 ${data.expenseRate}`;
+
+    // 3. 12개월 차트 렌더링
+    if (chartContainer) {
+        chartContainer.innerHTML = "";
+        data.bars.forEach((m, idx) => {
+            const monthNumber = idx + 1;
+            const incH = m.inc > 0 ? Math.min(Math.round((m.inc / 600) * 100), 95) : 0;
+            const expH = m.exp > 0 ? Math.min(Math.round((m.exp / 600) * 100), 95) : 0;
+            const hasData = m.inc > 0 || m.exp > 0;
+
+            const col = document.createElement("div");
+            col.className = "flex-1 flex flex-col items-center h-full justify-end";
+            col.innerHTML = `
+                <div class="w-full flex items-end justify-center gap-1 h-24">
+                    <div class="flex flex-col items-center justify-end h-full">
+                        ${hasData ? `<span class="text-[9px] font-bold text-brand-positive mb-0.5 tabular-nums">${m.inc}</span>` : ''}
+                        <div class="w-3 ${hasData ? 'bg-brand-positive' : 'bg-brand-positive/15'} rounded-t transition-all duration-300" style="height: ${hasData ? incH : 10}%;"></div>
+                    </div>
+                    <div class="flex flex-col items-center justify-end h-full">
+                        ${hasData ? `<span class="text-[9px] font-bold text-brand-negative mb-0.5 tabular-nums">${m.exp}</span>` : ''}
+                        <div class="w-3 ${hasData ? 'bg-brand-negative' : 'bg-brand-negative/15'} rounded-t transition-all duration-300" style="height: ${hasData ? expH : 10}%;"></div>
+                    </div>
+                </div>
+                <span class="text-[10px] mt-1.5 font-medium ${hasData ? 'text-brand-sub' : 'text-brand-sub/40'}">${monthNumber}월</span>
+            `;
+            chartContainer.appendChild(col);
+        });
+    }
 };
 
+// 버튼 이벤트 바인딩
 if (prevYearBtn) {
     prevYearBtn.addEventListener("click", () => {
         currentYear--;
-        updateYearDisplay();
+        renderYearData(currentYear);
     });
 }
 
 if (nextYearBtn) {
     nextYearBtn.addEventListener("click", () => {
         currentYear++;
-        updateYearDisplay();
+        renderYearData(currentYear);
     });
 }
 
+// 초기 로딩 시 차트 및 데이터 실행
+renderYearData(currentYear);
+
 // ==========================================
-// ★ 8. 하단 위젯 바로가기 라우팅
+// 8. 하단 위젯 바로가기 라우팅
 // ==========================================
-// D-Day 항목 클릭 시 해당 페이지로 전환
 const ddayItems = document.querySelectorAll(".dday-item");
 ddayItems.forEach(item => {
     item.addEventListener("click", () => {
@@ -163,8 +249,7 @@ ddayItems.forEach(item => {
     });
 });
 
-// 내 모임 요약 타일 클릭 시 대학 동기계 화면으로 전환
-const summaryMoimTile = document.getElementById("summary-moimTile" || "summary-moim-tile");
+const summaryMoimTile = document.getElementById("summary-moim-tile");
 if (summaryMoimTile) {
     summaryMoimTile.addEventListener("click", () => {
         const groupBtn = document.getElementById("nav-group1");
