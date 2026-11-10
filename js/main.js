@@ -56,7 +56,6 @@ if (sidebarToggleBtn && sidebar) {
         const isCollapsed = sidebar.classList.contains("w-20");
         
         if (isCollapsed) {
-            // 펼치기
             sidebar.classList.remove("w-20");
             sidebar.classList.add("w-64");
             if (sidebarHeader) {
@@ -66,7 +65,6 @@ if (sidebarToggleBtn && sidebar) {
             sidebarTexts.forEach(el => el.style.display = "");
             sidebarToggleBtn.textContent = "◀";
         } else {
-            // 접기
             sidebar.classList.remove("w-64");
             sidebar.classList.add("w-20");
             if (sidebarHeader) {
@@ -79,7 +77,7 @@ if (sidebarToggleBtn && sidebar) {
     });
 }
 
-// 5. 메뉴 라우팅 (화면 전환)
+// 5. 메뉴 라우팅
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -89,15 +87,19 @@ menuBtns.forEach(btn => {
         e.preventDefault();
         
         menuBtns.forEach(b => {
-            b.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition";
+            if (b.id === 'nav-settings') {
+                b.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors";
+            } else {
+                b.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]";
+            }
         });
         
         if (btn.id.includes('group')) {
-            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-group text-white shadow-sm";
+            btn.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-group text-white shadow-sm font-semibold text-[13px]";
         } else if (btn.id === 'nav-settings') {
-            btn.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-bold bg-slate-200 text-brand-ink shadow-sm";
+            btn.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs bg-slate-200 text-brand-ink shadow-sm font-semibold";
         } else {
-            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm";
+            btn.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]";
         }
 
         viewSections.forEach(section => { section.style.display = 'none'; });
@@ -108,49 +110,90 @@ menuBtns.forEach(btn => {
             targetView.style.display = 'block';
         } else {
             const placeholder = document.getElementById('view-placeholder');
-            if (placeholderTitle) placeholderTitle.textContent = btn.textContent.trim();
+            const menuName = btn.querySelector('.sidebar-text') ? btn.querySelector('.sidebar-text').textContent.trim() : btn.textContent.trim();
+            if (placeholderTitle) placeholderTitle.textContent = menuName;
             if (placeholder) placeholder.style.display = 'block';
         }
     });
 });
 
-// 6. 설정 화면 메뉴 ON/OFF 토글
+// ===============================================
+// ★ 6. 설정 화면 메뉴 ON/OFF 토글 (100% 신뢰성 보장)
+// ===============================================
 const toggleConfigs = [
     { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
     { checkboxId: 'toggle-vehicle', liId: 'li-vehicle', key: 'onlybank_cfg_vehicle' },
     { checkboxId: 'toggle-tax', liId: 'li-tax', key: 'onlybank_cfg_tax' },
-    { checkboxId: 'toggle-income', liId: 'group-income', key: 'onlybank_cfg_income' } // 전체 부수입 그룹 토글
+    { checkboxId: 'toggle-ipo', liId: 'li-ipo', key: 'onlybank_cfg_ipo' },
+    { checkboxId: 'toggle-reward', liId: 'li-reward', key: 'onlybank_cfg_reward' },
+    { checkboxId: 'toggle-extra', liId: 'li-extra', key: 'onlybank_cfg_extra' },
+    { checkboxId: 'toggle-moim', liId: 'group-moim', key: 'onlybank_cfg_moim' }
 ];
+
+// 부수입 3개 항목이 모두 꺼지면 구분선(ㅡㅡㅡㅡㅡ)도 함께 숨김 처리
+const checkIncomeDivider = () => {
+    const ipo = document.getElementById('toggle-ipo');
+    const reward = document.getElementById('toggle-reward');
+    const extra = document.getElementById('toggle-extra');
+    const divider = document.getElementById('divider-income');
+    
+    if (divider && ipo && reward && extra) {
+        if (!ipo.checked && !reward.checked && !extra.checked) {
+            divider.style.setProperty("display", "none", "important");
+        } else {
+            divider.style.setProperty("display", "block", "important");
+        }
+    }
+};
 
 toggleConfigs.forEach(item => {
     const checkbox = document.getElementById(item.checkboxId);
     const liElement = document.getElementById(item.liId);
+    if (!checkbox || !liElement) return;
 
-    const savedState = localStorage.getItem(item.key);
-    if (savedState !== null && checkbox) {
-        checkbox.checked = (savedState === 'true');
+    // 로컬 스토리지 상태 복원 (예외 안전 처리)
+    try {
+        const savedState = localStorage.getItem(item.key);
+        if (savedState !== null) {
+            checkbox.checked = (savedState === 'true');
+        }
+    } catch (e) {
+        console.warn("로컬스토리지 접근 제한:", e);
     }
 
+    // UI 동기화 함수
     const updateVisibility = () => {
-        if (!liElement || !checkbox) return;
         if (checkbox.checked) {
             liElement.style.setProperty("display", "block", "important");
         } else {
             liElement.style.setProperty("display", "none", "important");
         }
+        checkIncomeDivider();
     };
 
     updateVisibility();
 
-    if (checkbox) {
-        checkbox.addEventListener('change', () => {
+    // 1) 체크박스 자체의 change 이벤트
+    checkbox.addEventListener('change', () => {
+        try {
             localStorage.setItem(item.key, checkbox.checked);
-            updateVisibility();
+        } catch (e) {}
+        updateVisibility();
+    });
+
+    // 2) 행 전체(Row) 클릭 이벤트 보강: 텍스트 어디를 눌러도 토글 반응
+    const row = checkbox.closest('.toggle-row');
+    if (row) {
+        row.addEventListener('click', (e) => {
+            // 스위치 자체를 직접 클릭한 경우에는 이중 트리거 방지
+            if (e.target.tagName === 'INPUT' || e.target.closest('label')) return;
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
         });
     }
 });
 
-// 7. 엑셀 다운로드 (기본 유지)
+// 7. 엑셀 다운로드
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 if (exportCsvBtn) {
     exportCsvBtn.addEventListener('click', () => {
