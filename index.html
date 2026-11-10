@@ -100,7 +100,7 @@
                         <span class="text-[10px] font-medium text-brand-personal/80 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">나만 보임</span>
                     </div>
 
-                    <!-- 자산관리 메뉴 (아이콘 + 13px 텍스트) -->
+                    <!-- 자산관리 메뉴 -->
                     <ul class="space-y-0.5 font-medium">
                         <li id="li-home">
                             <a href="#" id="nav-home" title="연간 리포트" class="menu-btn active flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]">
@@ -140,10 +140,10 @@
                         </li>
                     </ul>
 
-                    <!-- 부수입 가벼운 구분선 (ㅡㅡㅡㅡㅡ) -->
+                    <!-- 구분선 (ㅡㅡㅡㅡㅡ) -->
                     <div id="divider-income" class="my-3 mx-2 border-t border-brand-border/60"></div>
 
-                    <!-- 부수입 메뉴 (아이콘 + 13px 텍스트) -->
+                    <!-- 부수입 메뉴 (부가소득 -> 부수입 관리 반영) -->
                     <ul class="space-y-0.5 font-medium">
                         <li id="li-ipo">
                             <a href="#" id="nav-ipo" title="공모주 정산" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
@@ -158,9 +158,9 @@
                             </a>
                         </li>
                         <li id="li-extra">
-                            <a href="#" id="nav-extra" title="부가소득" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
+                            <a href="#" id="nav-extra" title="부수입 관리" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
                                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                                <span class="sidebar-text ml-3 truncate">부가소득</span>
+                                <span class="sidebar-text ml-3 truncate">부수입 관리</span>
                             </a>
                         </li>
                     </ul>
@@ -279,7 +279,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 (행 전체 클릭 토글 스위치) -->
+            <!-- 2. 설정 화면 (부수입 관리 반영) -->
             <div id="view-settings" class="view-section" style="display: none;">
                 <header class="mb-8">
                     <h2 class="text-3xl font-bold font-serif text-brand-ink">설정 · 계정</h2>
@@ -336,7 +336,7 @@
                                 </label>
                             </li>
                             <li class="toggle-row flex justify-between items-center py-3 px-2 rounded-xl hover:bg-black/[0.02] cursor-pointer transition select-none">
-                                <div><p class="text-[13px] font-bold text-brand-ink">부가소득</p><p class="text-[11px] text-brand-sub">중고거래, 배당금 등 추가 소득</p></div>
+                                <div><p class="text-[13px] font-bold text-brand-ink">부수입 관리</p><p class="text-[11px] text-brand-sub">중고거래, 배당금 등 추가 소득</p></div>
                                 <label class="relative inline-flex items-center cursor-pointer w-11 h-6 shrink-0">
                                     <input type="checkbox" id="toggle-extra" class="peer sr-only" checked>
                                     <span class="pointer-events-none w-11 h-6 bg-slate-200 peer-checked:bg-brand-personal rounded-full transition-colors duration-200 relative block">
