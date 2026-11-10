@@ -22,7 +22,7 @@
                             cream: '#F7F3EA', surface: '#FFFDF8', border: '#E4DCC8',
                             ink: '#1E2A3A', sub: '#6B7280',
                             personal: '#1E3A5F', group: '#8F3D2A',
-                            positive: '#2F6B4F', negative: '#B3402A',
+                            positive: '#1E5E54', negative: '#B3402A',
                             caution: '#B8892B', cautionBg: '#F6EBCB', line: '#CFC6B2'
                         }
                     }
@@ -74,6 +74,16 @@
         }
         #sidebar.w-20 .user-profile-box > div {
             margin: 0 !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(30, 42, 58, 0.15);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
         }
     </style>
 </head>
@@ -236,20 +246,20 @@
             </div>
         </aside>
 
-        <!-- 우측 메인 본문: 여유롭고 쾌적한 상하 패딩(px-10 py-8)과 자연스러운 흐름 -->
+        <!-- 우측 메인 본문 -->
         <main class="flex-1 overflow-y-auto px-10 py-8 bg-brand-cream/30">
             
             <!-- 1. 홈 화면 (연간 리포트) -->
             <div id="view-home" class="view-section space-y-7 max-w-7xl mx-auto">
                 
-                <!-- 1) 헤더 영역: 좌측 타이틀 & 우측 정갈한 연도 컨트롤러 -->
+                <!-- 1) 헤더 영역 -->
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50">
                     <div>
                         <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트</h2>
                         <p class="text-sm text-brand-sub mt-1.5">한 해 동안의 수입과 지출, 자산 변화를 한눈에 요약해 드려요</p>
                     </div>
 
-                    <!-- 우측 연도 컨트롤러 (정갈한 전용 위젯) -->
+                    <!-- 우측 연도 컨트롤러 -->
                     <div class="flex items-center bg-brand-surface border border-brand-border/80 rounded-2xl px-2 py-1 shadow-xs">
                         <button id="prevYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold" title="이전 연도">◀</button>
                         <span id="currentYearDisplay" class="px-3 text-lg font-bold font-serif text-brand-ink tracking-tight select-none">2026년</span>
@@ -257,7 +267,7 @@
                     </div>
                 </header>
 
-                <!-- 2) 상단 지표 영역 (이달 2x2 vs 올해 2x2 독립 카드) -->
+                <!-- 2) 상단 지표 영역 (이달 2x2 vs 올해 2x2) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     
                     <!-- 좌측: 이달의 현황 -->
@@ -333,7 +343,7 @@
                     </div>
                 </div>
 
-                <!-- 3) 차트 패널 영역 (제목 외부 돌출 + 1줄 와이드 카드) -->
+                <!-- 3) 차트 패널 영역 (높이 20% 확대: h-44) -->
                 <div class="space-y-3">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center space-x-2">
@@ -346,134 +356,138 @@
                         </div>
                     </div>
                     <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
-                        <div id="chartContainer" class="h-36 flex items-end justify-between gap-1 border-b border-brand-border/70 pb-2 px-1">
+                        <div id="chartContainer" class="h-44 flex items-end justify-between gap-1 border-b border-brand-border/70 pb-2 px-1">
                             <!-- main.js 동적 렌더링 -->
                         </div>
                     </div>
                 </div>
 
-                <!-- 4) 하단 4대 위젯 영역 (모두 제목 외부 돌출 + 4열 독립 카드) -->
+                <!-- 4) 하단 4대 위젯 영역 (높이 188px & 시안 2종 완벽 반영) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-1">
                     
-                    <!-- 위젯 1: 다가오는 일정 -->
+                    <!-- 위젯 1: 다가오는 일정 (5개 기본 세팅 + 스크롤 지원) -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">다가오는 일정</h3>
                             <span class="text-xs text-brand-sub font-medium">D-Day</span>
                         </div>
-                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[155px] flex flex-col justify-center">
-                            <ul class="space-y-2 text-[13px]">
-                                <li data-goto="nav-group1" class="dday-item flex justify-between items-center py-0.5 px-1 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
+                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col">
+                            <ul class="space-y-2 text-[13px] overflow-y-auto pr-1 custom-scrollbar flex-1">
+                                <li data-goto="nav-group1" class="dday-item flex justify-between items-center py-1 px-1.5 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
                                     <span class="flex items-center text-brand-ink truncate font-medium"><span class="w-2 h-2 rounded-full bg-brand-group mr-2 shrink-0"></span>동기계 회비</span>
                                     <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-[11px]">D-2</span>
                                 </li>
-                                <li data-goto="nav-cards" class="dday-item flex justify-between items-center py-0.5 px-1 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <li data-goto="nav-cards" class="dday-item flex justify-between items-center py-1 px-1.5 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
                                     <span class="flex items-center text-brand-ink truncate font-medium"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2 shrink-0"></span>신한카드 대금</span>
                                     <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-[11px]">D-3</span>
                                 </li>
-                                <li data-goto="nav-vehicle" class="dday-item flex justify-between items-center py-0.5 px-1 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <li data-goto="nav-vehicle" class="dday-item flex justify-between items-center py-1 px-1.5 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
                                     <span class="flex items-center text-brand-sub truncate font-medium"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2 shrink-0"></span>엔진오일 교체</span>
                                     <span class="font-medium text-xs text-brand-sub">D-12</span>
                                 </li>
-                                <li data-goto="nav-tax" class="dday-item flex justify-between items-center py-0.5 px-1 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <li data-goto="nav-tax" class="dday-item flex justify-between items-center py-1 px-1.5 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
                                     <span class="flex items-center text-brand-sub truncate font-medium"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2 shrink-0"></span>자동차세 납부</span>
                                     <span class="font-medium text-xs text-brand-sub">D-28</span>
+                                </li>
+                                <li data-goto="nav-assets" class="dday-item flex justify-between items-center py-1 px-1.5 rounded-lg hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                    <span class="flex items-center text-brand-sub truncate font-medium"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2 shrink-0"></span>주택청약 납입</span>
+                                    <span class="font-medium text-xs text-brand-sub">D-30</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- 위젯 2: 내 모임 요약 -->
+                    <!-- 위젯 2: 내 모임 요약 (다중 모임 통합 뷰) -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center px-1">
-                            <h3 class="text-sm font-bold text-brand-ink">내 모임 요약</h3>
-                            <span class="text-[11px] font-semibold text-brand-group bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">대학 동기계</span>
+                            <h3 class="text-sm font-bold text-brand-ink">내 모임 현황</h3>
+                            <span class="text-[11px] font-semibold text-brand-group bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">참여 모임 2개</span>
                         </div>
-                        <div id="summary-moim-tile" class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[155px] flex flex-col justify-between hover:border-brand-group/40 cursor-pointer transition">
+                        <div id="summary-moim-tile" class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col justify-between hover:border-brand-group/40 cursor-pointer transition">
                             <div class="space-y-2.5 mt-1">
                                 <div class="flex justify-between items-center text-[13px]">
-                                    <span class="text-brand-sub font-medium">11월 회비 납부</span>
-                                    <span class="font-bold text-brand-positive bg-brand-positive/10 px-2 py-0.5 rounded text-[11px]">납부 완료</span>
+                                    <span class="text-brand-sub font-medium">이번 달 납부 현황</span>
+                                    <span class="font-bold text-brand-positive bg-brand-positive/10 px-2 py-0.5 rounded text-[11px]">모두 납부완료</span>
                                 </div>
                                 <div class="flex justify-between items-center text-[13px]">
-                                    <span class="text-brand-sub font-medium">모임 통장 잔액</span>
-                                    <span class="font-bold text-brand-ink font-serif tabular-nums text-sm">3,240,000원</span>
+                                    <span class="text-brand-sub font-medium">전체 모임 총 잔액</span>
+                                    <span class="font-bold text-brand-ink font-serif tabular-nums text-sm">4,850,000원</span>
+                                </div>
+                                <div class="pt-1 text-[11px] text-brand-sub space-y-1">
+                                    <div class="flex justify-between"><span>· 대학 동기계</span><span class="font-medium text-brand-ink">3,240,000원</span></div>
+                                    <div class="flex justify-between"><span>· 가족 여행계</span><span class="font-medium text-brand-ink">1,610,000원</span></div>
                                 </div>
                             </div>
                             <div class="pt-2 border-t border-brand-border/60 flex items-center justify-between text-xs text-brand-group font-bold px-0.5">
-                                <span>모임 장부 바로가기</span>
+                                <span>모임 장부 관리하기</span>
                                 <span>→</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 위젯 3: 지출 카테고리 TOP 5 -->
+                    <!-- 위젯 3: 지출 카테고리 (★ 이미지 1 시안 적용: % 제거, 금액 표기 + 다크 틸 게이지) -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center px-1">
-                            <h3 class="text-sm font-bold text-brand-ink">지출 카테고리 TOP 5</h3>
-                            <span class="text-xs text-brand-sub font-medium">11월</span>
+                            <h3 class="text-sm font-bold text-brand-ink">지출 카테고리</h3>
+                            <span class="text-xs text-brand-sub font-medium">연 누적 (원)</span>
                         </div>
-                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[155px] flex flex-col justify-center">
-                            <div class="space-y-2 text-xs">
+                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col justify-center">
+                            <div class="space-y-2.5 text-xs">
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>1. 식비 / 카페</span><span class="font-bold tabular-nums">40%</span>
+                                        <span>식비</span><span class="font-bold tabular-nums">6,300,000</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-negative h-full rounded-full" style="width: 40%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 65%;"></div></div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>2. 주거 / 통신</span><span class="font-bold tabular-nums">25%</span>
+                                        <span>주거 · 통신</span><span class="font-bold tabular-nums">5,400,000</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-negative/80 h-full rounded-full" style="width: 25%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 55%;"></div></div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>3. 쇼핑 / 뷰티</span><span class="font-bold tabular-nums">15%</span>
+                                        <span>차량</span><span class="font-bold tabular-nums">2,800,000</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-negative/60 h-full rounded-full" style="width: 15%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 30%;"></div></div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>4. 교통 / 차량</span><span class="font-bold tabular-nums">12%</span>
+                                        <span>쇼핑 · 기타</span><span class="font-bold tabular-nums">5,900,000</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-negative/40 h-full rounded-full" style="width: 12%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 60%;"></div></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 위젯 4: 결제수단별 비율 -->
+                    <!-- 위젯 4: 결제수단 및 카드 실적 (★ 이미지 2 시안 적용: 금액 + 이번달 실적 %) -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center px-1">
-                            <h3 class="text-sm font-bold text-brand-ink">결제수단별 비율</h3>
+                            <h3 class="text-sm font-bold text-brand-ink">결제수단 및 카드 실적</h3>
                             <span class="text-xs text-brand-sub font-medium">11월</span>
                         </div>
-                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[155px] flex flex-col justify-center">
-                            <div class="space-y-2 text-xs">
+                        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col justify-center">
+                            <div class="space-y-3 text-xs">
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>신한카드 (신용)</span><span class="font-bold tabular-nums text-brand-personal">60%</span>
+                                        <span>[카드 A]</span>
+                                        <span class="tabular-nums text-brand-sub text-[11px]">연 <span class="text-brand-ink font-semibold">4,820,000</span> · 이번달 실적 <span class="text-brand-positive font-bold">80%</span></span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-personal h-full rounded-full" style="width: 60%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 80%;"></div></div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>우리 ONE (체크)</span><span class="font-bold tabular-nums text-sky-600">25%</span>
+                                        <span>[카드 B]</span>
+                                        <span class="tabular-nums text-brand-sub text-[11px]">연 <span class="text-brand-ink font-semibold">3,100,000</span> · <span class="text-brand-positive font-bold">실적 충족</span></span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-sky-600/70 h-full rounded-full" style="width: 25%;"></div></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-positive h-full rounded-full" style="width: 100%;"></div></div>
                                 </div>
                                 <div>
-                                    <div class="flex justify-between text-brand-ink mb-1 font-medium">
-                                        <span>네이버페이</span><span class="font-bold tabular-nums text-emerald-600">10%</span>
+                                    <div class="flex justify-between text-brand-ink pt-0.5 font-medium">
+                                        <span>체크카드 · 현금</span>
+                                        <span class="tabular-nums text-brand-sub text-[11px]">연 <span class="text-brand-ink font-semibold">6,700,000</span></span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-emerald-600/70 h-full rounded-full" style="width: 10%;"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-brand-sub mb-1 font-medium">
-                                        <span>계좌이체 / 현금</span><span class="font-bold tabular-nums">5%</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-slate-300 h-full rounded-full" style="width: 5%;"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -482,7 +496,7 @@
                 </div>
             </div>
 
-            <!-- 2. 설정 화면 (동일한 넉넉한 헤더 여백 유지) -->
+            <!-- 2. 설정 화면 -->
             <div id="view-settings" class="view-section space-y-7 max-w-7xl mx-auto" style="display: none;">
                 <header class="pb-1 border-b border-brand-border/50">
                     <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">설정 · 계정</h2>
@@ -584,6 +598,6 @@
         </main>
     </div>
 
-    <script type="module" src="js/main.js?v=20261111_airy_v2"></script>
+    <script type="module" src="js/main.js?v=20261111_widgets_v3"></script>
 </body>
 </html>
