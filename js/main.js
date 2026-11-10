@@ -10,7 +10,7 @@ const userAvatar = document.getElementById("userAvatar");
 const inviteCodeInput = document.getElementById("inviteCodeInput");
 const enterCodeBtn = document.getElementById("enterCodeBtn");
 
-// 1. 구글 로그인 & 로그아웃
+// 1. Google 로그인 & 로그아웃
 if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
         try { await signInWithPopup(auth, provider); } 
@@ -45,8 +45,9 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 4. 사이드바 접기/펼치기 (Collapse) 로직
+// 4. 사이드바 접기/펼치기 (Collapse) 개선
 const sidebar = document.getElementById("sidebar");
+const sidebarHeader = document.getElementById("sidebarHeader");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
 const sidebarTexts = document.querySelectorAll(".sidebar-text");
 
@@ -58,12 +59,20 @@ if (sidebarToggleBtn && sidebar) {
             // 사이드바 펼치기 (w-64)
             sidebar.classList.remove("w-20");
             sidebar.classList.add("w-64");
+            if (sidebarHeader) {
+                sidebarHeader.classList.remove("px-2.5");
+                sidebarHeader.classList.add("px-4");
+            }
             sidebarTexts.forEach(el => el.style.display = "");
             sidebarToggleBtn.textContent = "◀";
         } else {
             // 사이드바 접기 (w-20)
             sidebar.classList.remove("w-64");
             sidebar.classList.add("w-20");
+            if (sidebarHeader) {
+                sidebarHeader.classList.remove("px-4");
+                sidebarHeader.classList.add("px-2.5");
+            }
             sidebarTexts.forEach(el => el.style.display = "none");
             sidebarToggleBtn.textContent = "▶";
         }
@@ -105,7 +114,7 @@ menuBtns.forEach(btn => {
     });
 });
 
-// 6. 설정 화면 메뉴 ON/OFF 토글 로직 (로컬 저장소 연동)
+// 6. 설정 화면 메뉴 ON/OFF 토글
 const toggleConfigs = [
     { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
     { checkboxId: 'toggle-income', liId: 'li-income', key: 'onlybank_cfg_income' },
@@ -117,13 +126,11 @@ toggleConfigs.forEach(item => {
     const checkbox = document.getElementById(item.checkboxId);
     const liElement = document.getElementById(item.liId);
 
-    // 저장된 설정 불러오기
     const savedState = localStorage.getItem(item.key);
     if (savedState !== null && checkbox) {
         checkbox.checked = (savedState === 'true');
     }
 
-    // 상태 반영 함수
     const updateVisibility = () => {
         if (!liElement || !checkbox) return;
         if (checkbox.checked) {
@@ -143,7 +150,7 @@ toggleConfigs.forEach(item => {
     }
 });
 
-// 7. 엑셀 다운로드 (기본 트리거 연결)
+// 7. 엑셀 다운로드 (기본 형태 유지)
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 if (exportCsvBtn) {
     exportCsvBtn.addEventListener('click', () => {
