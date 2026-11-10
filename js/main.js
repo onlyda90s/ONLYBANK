@@ -123,7 +123,7 @@ menuBtns.forEach(btn => {
 });
 
 // ==========================================
-// 7. 연간 리포트 연도 데이터 세트 & 실시간 갱신 기능
+// 7. 연간 리포트 우측 연도 컨트롤러 & 실시간 갱신 기능
 // ==========================================
 let currentYear = 2026;
 
@@ -197,17 +197,17 @@ const renderYearData = (year) => {
             const col = document.createElement("div");
             col.className = "flex-1 flex flex-col items-center h-full justify-end";
             col.innerHTML = `
-                <div class="w-full flex items-end justify-center gap-1.5 h-24">
+                <div class="w-full flex items-end justify-center gap-1.5 h-28">
                     <div class="flex flex-col items-center justify-end h-full">
-                        ${hasData ? `<span class="text-[11px] font-bold text-brand-positive mb-0.5 tabular-nums">${m.inc}</span>` : ''}
+                        ${hasData ? `<span class="text-[11px] font-bold text-brand-positive mb-1 tabular-nums">${m.inc}</span>` : ''}
                         <div class="w-3.5 ${hasData ? 'bg-brand-positive' : 'bg-brand-positive/15'} rounded-t transition-all duration-300" style="height: ${hasData ? incH : 10}%;"></div>
                     </div>
                     <div class="flex flex-col items-center justify-end h-full">
-                        ${hasData ? `<span class="text-[11px] font-bold text-brand-negative mb-0.5 tabular-nums">${m.exp}</span>` : ''}
+                        ${hasData ? `<span class="text-[11px] font-bold text-brand-negative mb-1 tabular-nums">${m.exp}</span>` : ''}
                         <div class="w-3.5 ${hasData ? 'bg-brand-negative' : 'bg-brand-negative/15'} rounded-t transition-all duration-300" style="height: ${hasData ? expH : 10}%;"></div>
                     </div>
                 </div>
-                <span class="text-[11px] mt-1.5 font-medium ${hasData ? 'text-brand-sub' : 'text-brand-sub/40'}">${monthNumber}월</span>
+                <span class="text-[11px] mt-2 font-medium ${hasData ? 'text-brand-sub' : 'text-brand-sub/40'}">${monthNumber}월</span>
             `;
             chartContainer.appendChild(col);
         });
