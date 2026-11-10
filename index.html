@@ -26,7 +26,7 @@
         }
     </script>
     <style>
-        /* ★ 사이드바 축소(w-20) 시 메뉴 아이콘 중앙 축 정렬 */
+        /* 사이드바 축소(w-20) 시 메뉴 아이콘 중앙 정렬 */
         #sidebar.w-20 .menu-btn {
             width: 42px !important;
             height: 42px !important;
@@ -114,7 +114,6 @@
         
         <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
-            <!-- 최상단 로고 18px -->
             <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <span class="text-xl shrink-0 select-none">🏦</span>
@@ -131,7 +130,6 @@
                         <span class="text-[10px] font-medium text-brand-personal/80 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">나만 보임</span>
                     </div>
 
-                    <!-- 자산관리 메뉴 -->
                     <ul class="space-y-1 font-medium">
                         <li id="li-home">
                             <a href="#" id="nav-home" title="연간 리포트" class="menu-btn active flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]">
@@ -171,10 +169,8 @@
                         </li>
                     </ul>
 
-                    <!-- 구분선 (ㅡㅡㅡㅡㅡ) -->
                     <div id="divider-income" class="my-3 mx-2 border-t border-brand-border/60"></div>
 
-                    <!-- 부수입 관리 메뉴 -->
                     <ul class="space-y-1 font-medium">
                         <li id="li-ipo">
                             <a href="#" id="nav-ipo" title="공모주 정산" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]">
@@ -239,74 +235,361 @@
         <!-- 우측 메인 본문 -->
         <main class="flex-1 overflow-y-auto p-10 bg-brand-cream/30">
             
-            <!-- 1. 홈 화면 (연간 리포트) -->
-            <div id="view-home" class="view-section">
-                <header class="flex justify-between items-end mb-8">
-                    <div><h2 class="text-3xl font-bold font-serif text-brand-ink">2026년 요약</h2><p class="text-sm text-brand-sub mt-1">개인 재무 현황 대시보드</p></div>
-                    <span class="text-xs border border-brand-caution text-brand-caution bg-brand-cautionBg px-2.5 py-1 rounded-md font-bold">샘플 데이터</span>
+            <!-- 1. 홈 화면 (연간 리포트 고도화) -->
+            <div id="view-home" class="view-section space-y-7">
+                
+                <!-- 헤더: 연도 컨트롤러 및 문구 (샘플 데이터 삭제 완료) -->
+                <header class="flex justify-between items-end pb-2">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-1.5">
+                            <h2 class="text-3xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트 :</h2>
+                            <div class="inline-flex items-center space-x-2 bg-brand-surface border border-brand-border px-3 py-1 rounded-xl shadow-sm">
+                                <button id="prevYearBtn" class="text-brand-sub hover:text-brand-ink font-bold transition px-1 text-sm select-none" title="이전 연도">◀</button>
+                                <span id="currentYearDisplay" class="text-xl font-bold font-serif text-brand-ink select-none tracking-tight">2026년</span>
+                                <button id="nextYearBtn" class="text-brand-sub hover:text-brand-ink font-bold transition px-1 text-sm select-none" title="다음 연도">▶</button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-brand-sub">한 해 동안의 수입과 지출, 자산 변화를 한눈에 요약해 드려요</p>
+                    </div>
                 </header>
-                <div class="grid grid-cols-4 gap-5">
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                        <p class="text-xs text-brand-sub font-bold mb-2">연 수입</p>
-                        <p class="text-2xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                    </div>
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                        <p class="text-xs text-brand-sub font-bold mb-2">연 저축·투자</p>
-                        <p class="text-2xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                    </div>
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                        <p class="text-xs text-brand-sub font-bold mb-2">연 지출 (소비)</p>
-                        <p class="text-2xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                    </div>
-                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm flex flex-col justify-center">
-                        <p class="text-xs text-brand-sub font-bold mb-2">저축률 / 소비율</p>
-                        <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden mb-1.5">
-                            <div class="bg-brand-personal h-full" style="width: 40%;"></div>
-                            <div class="bg-brand-negative h-full" style="width: 35%;"></div>
-                        </div>
-                        <div class="flex justify-between text-[11px] font-bold text-brand-sub">
-                            <span class="text-brand-personal">저축 40%</span><span class="text-brand-negative">소비 35%</span>
-                        </div>
-                    </div>
-                    <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[360px] flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
+
+                <!-- 상단 지표: [이달 2×2] + [올해 2×2] 블록 -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <!-- 1. 이달의 현황 (2×2) -->
+                    <div class="bg-brand-surface/70 border border-brand-border rounded-3xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 px-1">
                             <div class="flex items-center space-x-2">
-                                <h3 class="text-sm font-bold text-brand-ink">월별 수입·지출 현황</h3><span class="text-xs text-brand-sub font-normal">(단위: 만원)</span>
+                                <span class="w-2 h-2 rounded-full bg-brand-personal"></span>
+                                <h3 class="text-xs font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-normal text-brand-sub font-sans">(11월)</span></h3>
                             </div>
-                            <div class="flex items-center space-x-4 text-xs font-medium text-brand-sub">
-                                <span class="flex items-center"><span class="w-3 h-3 bg-brand-positive rounded-sm mr-1.5"></span>수입</span>
-                                <span class="flex items-center"><span class="w-3 h-3 bg-brand-negative rounded-sm mr-1.5"></span>지출</span>
-                            </div>
+                            <span class="text-[10px] font-medium text-brand-personal/80 bg-brand-personal/5 border border-brand-personal/15 px-2 py-0.5 rounded-full">가계부 실시간</span>
                         </div>
-                        <div class="flex-1 h-48 flex items-end justify-between gap-1 border-b border-brand-border pb-2 px-1">
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">480</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 75%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">210</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 45%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">1월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">510</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 80%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">240</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 50%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">2월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">430</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 65%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">290</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 60%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">3월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">590</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 90%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">190</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 40%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">4월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">460</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 70%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">260</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 55%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">5월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">410</span><div class="w-3.5 bg-brand-positive rounded-t" style="height: 60%;"></div></div><div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">220</span><div class="w-3.5 bg-brand-negative rounded-t" style="height: 48%;"></div></div></div><span class="text-[11px] mt-2.5 font-medium text-brand-sub">6월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">7월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">8월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">9월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">10월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">11월</span></div>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end"><div class="w-full flex items-end justify-center gap-1.5 h-36"><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div><div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div></div><span class="text-[11px] mt-2.5 text-brand-sub/50">12월</span></div>
+                        <div class="grid grid-cols-2 gap-3.5">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">이달 수입</p>
+                                <p class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">4,800,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">이달 저축·투자</p>
+                                <p class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">2,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">이달 지출</p>
+                                <p class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">1,900,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">저축률 / 소비율</p>
+                                <div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-1.5">
+                                    <div class="bg-brand-personal h-full" style="width: 42%;"></div>
+                                    <div class="bg-brand-negative h-full" style="width: 40%;"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] font-bold">
+                                    <span class="text-brand-personal">저축 42%</span>
+                                    <span class="text-brand-negative">소비 40%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-span-1 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm flex flex-col">
-                        <h3 class="text-sm font-bold text-brand-ink mb-4">다가오는 일정</h3>
-                        <ul class="space-y-4 text-sm flex-1">
-                            <li class="flex justify-between items-center">
-                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-group mr-2"></span>동기계 회비</span><span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-2</span>
+
+                    <!-- 2. 올해 누적 (2×2) -->
+                    <div class="bg-brand-surface/70 border border-brand-border rounded-3xl p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-3 px-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-brand-ink"></span>
+                                <h3 class="text-xs font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-normal text-brand-sub font-sans">(2026년)</span></h3>
+                            </div>
+                            <span class="text-[10px] font-medium text-brand-ink/70 bg-black/5 border border-black/10 px-2 py-0.5 rounded-full">연간 결산</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3.5">
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">올해 총 수입</p>
+                                <p class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">올해 저축·투자</p>
+                                <p class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">올해 총 지출</p>
+                                <p class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+                                <p class="text-[11px] text-brand-sub font-bold mb-1.5">누적 저축 / 소비율</p>
+                                <div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-1.5">
+                                    <div class="bg-brand-personal h-full" style="width: 40%;"></div>
+                                    <div class="bg-brand-negative h-full" style="width: 35%;"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] font-bold">
+                                    <span class="text-brand-personal">저축 40%</span>
+                                    <span class="text-brand-negative">소비 35%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 메인 차트: 12개월 와이드 막대 차트 -->
+                <div class="bg-brand-surface border border-brand-border rounded-3xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-bold text-brand-ink">월별 수입·지출 현황</h3>
+                            <span class="text-xs text-brand-sub font-normal">(단위: 만원)</span>
+                        </div>
+                        <div class="flex items-center space-x-5 text-xs font-medium text-brand-sub">
+                            <span class="flex items-center"><span class="w-3 h-3 bg-brand-positive rounded mr-1.5"></span>수입</span>
+                            <span class="flex items-center"><span class="w-3 h-3 bg-brand-negative rounded mr-1.5"></span>지출</span>
+                        </div>
+                    </div>
+
+                    <div class="h-52 flex items-end justify-between gap-1 border-b border-brand-border pb-2 px-2">
+                        <!-- 1월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">480</span><div class="w-4 bg-brand-positive rounded-t" style="height: 75%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">210</span><div class="w-4 bg-brand-negative rounded-t" style="height: 45%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">1월</span>
+                        </div>
+                        <!-- 2월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">510</span><div class="w-4 bg-brand-positive rounded-t" style="height: 80%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">240</span><div class="w-4 bg-brand-negative rounded-t" style="height: 50%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">2월</span>
+                        </div>
+                        <!-- 3월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">430</span><div class="w-4 bg-brand-positive rounded-t" style="height: 65%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">290</span><div class="w-4 bg-brand-negative rounded-t" style="height: 60%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">3월</span>
+                        </div>
+                        <!-- 4월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">590</span><div class="w-4 bg-brand-positive rounded-t" style="height: 90%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">190</span><div class="w-4 bg-brand-negative rounded-t" style="height: 40%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">4월</span>
+                        </div>
+                        <!-- 5월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">460</span><div class="w-4 bg-brand-positive rounded-t" style="height: 70%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">260</span><div class="w-4 bg-brand-negative rounded-t" style="height: 55%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">5월</span>
+                        </div>
+                        <!-- 6월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-positive mb-1 tabular-nums">410</span><div class="w-4 bg-brand-positive rounded-t" style="height: 60%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><span class="text-[10px] font-bold text-brand-negative mb-1 tabular-nums">220</span><div class="w-4 bg-brand-negative rounded-t" style="height: 48%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 font-medium text-brand-sub">6월</span>
+                        </div>
+                        <!-- 7월~12월 -->
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">7월</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">8월</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">9월</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">10월</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">11월</span>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center h-full justify-end">
+                            <div class="w-full flex items-end justify-center gap-1.5 h-40">
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
+                                <div class="flex flex-col items-center justify-end h-full"><div class="w-4 bg-brand-negative/20 rounded-t" style="height: 25%;"></div></div>
+                            </div>
+                            <span class="text-[11px] mt-2.5 text-brand-sub/50">12월</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 하단 4분할 위젯 영역 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    
+                    <!-- 1. 다가오는 일정 (클릭 시 해당 페이지 이동) -->
+                    <div class="bg-brand-surface border border-brand-border rounded-3xl p-5 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-center mb-3.5">
+                            <h3 class="text-xs font-bold text-brand-ink">다가오는 일정</h3>
+                            <span class="text-[10px] text-brand-sub">D-Day</span>
+                        </div>
+                        <ul class="space-y-3 text-[13px] flex-1">
+                            <li data-goto="nav-group1" class="dday-item flex justify-between items-center p-2 rounded-xl hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-group mr-2"></span>동기계 회비</span>
+                                <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-[11px]">D-2</span>
                             </li>
-                            <li class="flex justify-between items-center">
-                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>신한카드 대금</span><span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-3</span>
+                            <li data-goto="nav-cards" class="dday-item flex justify-between items-center p-2 rounded-xl hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>신한카드 대금</span>
+                                <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-[11px]">D-3</span>
                             </li>
-                            <li class="flex justify-between items-center text-brand-sub">
-                                <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2"></span>엔진오일 교체</span><span class="font-bold text-xs">D-12</span>
+                            <li data-goto="nav-vehicle" class="dday-item flex justify-between items-center p-2 rounded-xl hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <span class="flex items-center text-brand-sub"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2"></span>엔진오일 교체</span>
+                                <span class="font-bold text-xs text-brand-sub">D-12</span>
+                            </li>
+                            <li data-goto="nav-tax" class="dday-item flex justify-between items-center p-2 rounded-xl hover:bg-black/[0.03] cursor-pointer transition select-none">
+                                <span class="flex items-center text-brand-sub"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2"></span>자동차세 납부</span>
+                                <span class="font-bold text-xs text-brand-sub">D-28</span>
                             </li>
                         </ul>
                     </div>
+
+                    <!-- 2. 내 모임 요약 타일 (클릭 시 모임 화면 이동) -->
+                    <div id="summary-moim-tile" class="bg-brand-surface border border-brand-border rounded-3xl p-5 shadow-sm flex flex-col justify-between hover:border-brand-group/40 cursor-pointer transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-xs font-bold text-brand-ink">내 모임 요약</h3>
+                                <span class="text-[10px] font-medium text-brand-group bg-brand-group/5 border border-brand-group/15 px-2 py-0.5 rounded-full">대학 동기계</span>
+                            </div>
+                            <div class="space-y-2.5 mt-2">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-brand-sub">11월 회비 납부</span>
+                                    <span class="font-bold text-brand-positive bg-brand-positive/10 px-2 py-0.5 rounded text-[11px]">납부 완료</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-brand-sub">모임 통장 잔액</span>
+                                    <span class="font-bold text-brand-ink font-serif tabular-nums text-sm">3,240,000원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-[11px] text-brand-group font-bold mt-3">
+                            <span>모임 장부 바로가기</span>
+                            <span>→</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. 지출 카테고리 TOP 5 (카테고리 미지정 대응형) -->
+                    <div class="bg-brand-surface border border-brand-border rounded-3xl p-5 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-center mb-3.5">
+                            <h3 class="text-xs font-bold text-brand-ink">지출 카테고리 TOP 5</h3>
+                            <span class="text-[10px] text-brand-sub">11월</span>
+                        </div>
+                        <div class="space-y-2.5 text-xs flex-1">
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1 font-medium">
+                                    <span>1. 식비 / 카페</span>
+                                    <span class="font-bold tabular-nums">40%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-negative h-full rounded-full" style="width: 40%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1 font-medium">
+                                    <span>2. 주거 / 통신</span>
+                                    <span class="font-bold tabular-nums">25%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-negative/80 h-full rounded-full" style="width: 25%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1 font-medium">
+                                    <span>3. 쇼핑 / 뷰티</span>
+                                    <span class="font-bold tabular-nums">15%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-negative/60 h-full rounded-full" style="width: 15%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1 font-medium">
+                                    <span>4. 교통 / 차량</span>
+                                    <span class="font-bold tabular-nums">12%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-negative/40 h-full rounded-full" style="width: 12%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-sub mb-1 font-medium">
+                                    <span>5. 미분류 / 기타</span>
+                                    <span class="font-bold tabular-nums">8%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-slate-300 h-full rounded-full" style="width: 8%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. 결제수단별 비율 -->
+                    <div class="bg-brand-surface border border-brand-border rounded-3xl p-5 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-center mb-3.5">
+                            <h3 class="text-xs font-bold text-brand-ink">결제수단별 비율</h3>
+                            <span class="text-[10px] text-brand-sub">11월</span>
+                        </div>
+                        <div class="space-y-3 text-xs flex-1">
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1">
+                                    <span class="font-medium">신한카드 (신용)</span>
+                                    <span class="font-bold tabular-nums text-brand-personal">60%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-personal h-full rounded-full" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1">
+                                    <span class="font-medium">우리 ONE (체크)</span>
+                                    <span class="font-bold tabular-nums text-sky-600">25%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-sky-600/70 h-full rounded-full" style="width: 25%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-ink mb-1">
+                                    <span class="font-medium">네이버페이</span>
+                                    <span class="font-bold tabular-nums text-emerald-600">10%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-emerald-600/70 h-full rounded-full" style="width: 10%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-brand-sub mb-1">
+                                    <span class="font-medium">계좌이체 / 현금</span>
+                                    <span class="font-bold tabular-nums">5%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-slate-300 h-full rounded-full" style="width: 5%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
