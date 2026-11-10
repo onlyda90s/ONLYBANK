@@ -10,6 +10,11 @@
     <script>
         tailwind.config = {
             theme: {
+                screens: {
+                    'xs': '430px',   // 와이드폰, 폴드커버 (430px ~ 767px)
+                    'md': '768px',   // 태블릿, 폴드 펼침 (768px ~ 1023px)
+                    'lg': '1024px',  // PC 데스크톱 (1024px 이상)
+                },
                 extend: {
                     fontFamily: { sans: ['Pretendard', 'sans-serif'], serif: ['"Noto Serif KR"', 'serif'] },
                     colors: {
@@ -73,7 +78,7 @@
         }
     </style>
 </head>
-<body class="bg-brand-cream text-brand-ink min-h-screen antialiased overflow-hidden">
+<body class="bg-brand-cream text-brand-ink min-h-screen antialiased">
 
     <!-- 1. 로그인 대문 화면 -->
     <div id="loginScreen" class="flex items-center justify-center min-h-screen p-4">
@@ -232,14 +237,14 @@
             </div>
         </aside>
 
-        <!-- 우측 메인 본문 (스크롤 없는 1페이지 최적화 레이아웃) -->
-        <main class="flex-1 overflow-y-auto px-8 py-5 bg-brand-cream/30 flex flex-col justify-between">
+        <!-- 우측 메인 본문 -->
+        <main class="flex-1 overflow-y-auto px-8 py-5 bg-brand-cream/30">
             
-            <!-- 1. 홈 화면 (연간 리포트 컴팩트 뷰) -->
-            <div id="view-home" class="view-section space-y-3.5 flex-1 flex flex-col justify-between">
+            <!-- 1. 홈 화면 (연간 리포트 PC 최적화 레이아웃) -->
+            <div id="view-home" class="view-section space-y-4">
                 
-                <!-- 헤더: 콜론 삭제 & 네모 테두리 없는 미니멀 연도 선택기 -->
-                <header class="flex justify-between items-center shrink-0">
+                <!-- 헤더: 타이틀 & 미니멀 연도 선택기 -->
+                <header class="flex justify-between items-center">
                     <div>
                         <div class="flex items-center space-x-3">
                             <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트</h2>
@@ -253,8 +258,8 @@
                     </div>
                 </header>
 
-                <!-- 상단 지표: [이달 2×2] + [올해 2×2] 컴팩트 블록 -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 shrink-0">
+                <!-- 상단 지표: PC(lg)에서 2열 가로 대칭 유지 (이달 2x2 + 올해 2x2) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <!-- 1. 이달의 현황 (2×2) -->
                     <div class="bg-brand-surface/80 border border-brand-border rounded-2xl p-3.5 shadow-sm">
                         <div class="flex items-center justify-between mb-2 px-1">
@@ -328,8 +333,8 @@
                     </div>
                 </div>
 
-                <!-- 메인 차트: 슬림 와이드 막대 차트 -->
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm shrink-0">
+                <!-- 메인 차트: 슬림 와이드 막대 차트 (전체 너비) -->
+                <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-sm">
                     <div class="flex justify-between items-center mb-3">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-xs font-bold text-brand-ink">월별 수입·지출 현황</h3>
@@ -346,8 +351,8 @@
                     </div>
                 </div>
 
-                <!-- 하단 4분할 위젯 영역 (컴팩트 핏) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+                <!-- 하단 4분할 위젯 영역: PC(lg)에서 4열 가로 정렬 고정 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     
                     <!-- 1. 다가오는 일정 -->
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
@@ -477,7 +482,7 @@
                     <p class="text-xs text-brand-sub mt-0.5">메뉴 표시 관리 및 데이터 백업</p>
                 </header>
                 
-                <div class="grid grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
                         <h3 class="font-bold text-brand-ink text-sm mb-3 border-b border-brand-border pb-2.5">사이드바 메뉴 켜기/끄기</h3>
                         <ul class="divide-y divide-brand-border/40">
@@ -569,7 +574,6 @@
         </main>
     </div>
 
-    <!-- 브라우저 캐시 무력화 버전 태그(?v=20261110) 적용 -->
-    <script type="module" src="js/main.js?v=20261110"></script>
+    <script type="module" src="js/main.js?v=20261110_final"></script>
 </body>
 </html>
