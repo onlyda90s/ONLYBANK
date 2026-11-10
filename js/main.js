@@ -33,7 +33,7 @@ if (logoutBtn) {
     });
 }
 
-// 3. 초대 코드 (필요 시 동작)
+// 3. 초대 코드
 if (enterCodeBtn) {
     enterCodeBtn.addEventListener("click", () => {
         const code = inviteCodeInput ? inviteCodeInput.value.trim() : "";
@@ -48,50 +48,42 @@ if (enterCodeBtn) {
 // 4. Firebase 실제 인증 상태 감시 (화면 전환)
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // 로그인 성공 시 메인 대시보드 표출
         if (loginScreen) loginScreen.style.setProperty("display", "none", "important");
         if (dashboardScreen) dashboardScreen.style.setProperty("display", "flex", "important");
         if (userName) userName.textContent = user.displayName || "사용자";
         if (userAvatar && user.photoURL) userAvatar.src = user.photoURL;
     } else {
-        // 로그아웃 상태 시 로그인 대문 화면 표출
         if (loginScreen) loginScreen.style.setProperty("display", "flex", "important");
         if (dashboardScreen) dashboardScreen.style.setProperty("display", "none", "important");
     }
 });
 
-// 5. 사이드바 접기/펼치기 (Collapse)
+// 5. 사이드바 접기/펼치기 (Collapse & 중앙 정렬 토글)
 const sidebar = document.getElementById("sidebar");
-const sidebarHeader = document.getElementById("sidebarHeader");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
 const sidebarTexts = document.querySelectorAll(".sidebar-text");
 
 if (sidebarToggleBtn && sidebar) {
     sidebarToggleBtn.addEventListener("click", () => {
         const isCollapsed = sidebar.classList.contains("w-20");
+        
         if (isCollapsed) {
+            // 사이드바 펼치기 (w-64)
             sidebar.classList.remove("w-20");
             sidebar.classList.add("w-64");
-            if (sidebarHeader) {
-                sidebarHeader.classList.remove("px-2.5");
-                sidebarHeader.classList.add("px-4");
-            }
-            sidebarTexts.forEach(el => el.style.display = "");
+            sidebarTexts.forEach(el => el.style.setProperty("display", "", ""));
             sidebarToggleBtn.textContent = "◀";
         } else {
+            // 사이드바 접기 (w-20)
             sidebar.classList.remove("w-64");
             sidebar.classList.add("w-20");
-            if (sidebarHeader) {
-                sidebarHeader.classList.remove("px-4");
-                sidebarHeader.classList.add("px-2.5");
-            }
-            sidebarTexts.forEach(el => el.style.display = "none");
+            sidebarTexts.forEach(el => el.style.setProperty("display", "none", "important"));
             sidebarToggleBtn.textContent = "▶";
         }
     });
 }
 
-// 6. 메뉴 라우팅 (13px 폰트 및 pl-7 들여쓰기 유지)
+// 6. 메뉴 라우팅 (화면 전환)
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -100,20 +92,24 @@ menuBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         
+        // 모든 메뉴 기본 스타일 초기화
         menuBtns.forEach(b => {
             if (b.id === 'nav-settings') {
                 b.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs font-medium text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors";
+            } else if (b.id === 'nav-add-group') {
+                b.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition-colors text-[13px]";
             } else {
-                b.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]";
+                b.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/[0.03] transition-colors text-[13px]";
             }
         });
         
+        // 클릭된 메뉴 하이라이트
         if (btn.id.includes('group')) {
-            btn.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-group text-white shadow-sm font-semibold text-[13px]";
+            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-group text-white shadow-sm font-semibold text-[13px]";
         } else if (btn.id === 'nav-settings') {
             btn.className = "menu-btn flex items-center px-3 py-2 mb-2 rounded-xl text-xs bg-slate-200 text-brand-ink shadow-sm font-semibold";
         } else {
-            btn.className = "menu-btn flex items-center pl-7 pr-3 py-2 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]";
+            btn.className = "menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm font-semibold text-[13px]";
         }
 
         viewSections.forEach(section => { section.style.display = 'none'; });
@@ -131,7 +127,7 @@ menuBtns.forEach(btn => {
     });
 });
 
-// 7. 설정 화면 메뉴 ON/OFF 토글 (행 전체 클릭형 스위치)
+// 7. 설정 화면 메뉴 ON/OFF 토글
 const toggleConfigs = [
     { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
     { checkboxId: 'toggle-vehicle', liId: 'li-vehicle', key: 'onlybank_cfg_vehicle' },
