@@ -123,11 +123,10 @@ menuBtns.forEach(btn => {
 });
 
 // ==========================================
-// ★ 7. 연간 리포트 연도 데이터 세트 & 실시간 변경 기능
+// 7. 연간 리포트 연도 데이터 세트 & 실시간 갱신 기능
 // ==========================================
 let currentYear = 2026;
 
-// 연도별 데이터 세트
 const yearlyData = {
     2025: {
         income: "49,200,000", savings: "19,800,000", expense: "17,600,000",
@@ -162,9 +161,7 @@ const prevYearBtn = document.getElementById("prevYearBtn");
 const nextYearBtn = document.getElementById("nextYearBtn");
 const chartContainer = document.getElementById("chartContainer");
 
-// 화면 업데이트 함수
 const renderYearData = (year) => {
-    // 1. 헤더 텍스트 갱신
     if (currentYearDisplay) currentYearDisplay.textContent = `${year}년`;
     if (accumYearDisplay) accumYearDisplay.textContent = `(${year}년)`;
 
@@ -173,7 +170,6 @@ const renderYearData = (year) => {
         bars: Array(12).fill({ inc: 0, exp: 0 })
     };
 
-    // 2. 올해 누적 수치 갱신
     const yIncome = document.getElementById("y-income");
     const ySavings = document.getElementById("y-savings");
     const yExpense = document.getElementById("y-expense");
@@ -190,7 +186,6 @@ const renderYearData = (year) => {
     if (ySavingsTxt) ySavingsTxt.textContent = `저축 ${data.savingsRate}`;
     if (yExpenseTxt) yExpenseTxt.textContent = `소비 ${data.expenseRate}`;
 
-    // 3. 12개월 차트 렌더링
     if (chartContainer) {
         chartContainer.innerHTML = "";
         data.bars.forEach((m, idx) => {
@@ -219,7 +214,6 @@ const renderYearData = (year) => {
     }
 };
 
-// 버튼 이벤트 바인딩
 if (prevYearBtn) {
     prevYearBtn.addEventListener("click", () => {
         currentYear--;
@@ -234,7 +228,6 @@ if (nextYearBtn) {
     });
 }
 
-// 초기 로딩 시 차트 및 데이터 실행
 renderYearData(currentYear);
 
 // ==========================================
