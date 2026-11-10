@@ -62,41 +62,54 @@
         
         <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
-            <!-- 로고 및 사이드바 접기 버튼 -->
             <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <span class="text-xl shrink-0 select-none">🏦</span>
                     <h1 class="text-lg font-bold font-serif text-brand-ink sidebar-text truncate">ONLYBANK</h1>
                 </div>
-                <button id="sidebarToggleBtn" class="w-7 h-7 rounded-lg hover:bg-black/5 text-brand-sub hover:text-brand-ink transition text-xs font-bold flex items-center justify-center shrink-0" title="사이드바 접기/펼치기">
-                    ◀
-                </button>
+                <button id="sidebarToggleBtn" class="w-7 h-7 rounded-lg hover:bg-black/5 text-brand-sub hover:text-brand-ink transition text-xs font-bold flex items-center justify-center shrink-0" title="사이드바 접기/펼치기">◀</button>
             </div>
             
             <nav class="flex-1 overflow-y-auto p-3 space-y-6">
-                <!-- 개인 공간 메뉴 -->
+                <!-- 1. 개인 금융 -->
                 <div>
-                    <!-- ★ 변경됨: 개인 공간 + 나만 보임 알약 뱃지 -->
+                    <!-- 대분류 헤더 -->
                     <div class="flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
-                        <span class="text-xs font-bold text-[#1E5F74] tracking-tight">개인 공간</span>
+                        <span class="text-xs font-bold text-[#1E5F74] tracking-tight">개인 금융</span>
                         <span class="text-[11px] font-semibold text-[#137A74] bg-[#E2F5F3] px-2.5 py-0.5 rounded-full">나만 보임</span>
                     </div>
+
+                    <!-- 소분류 1: 자산 관리 -->
+                    <div class="px-3 mt-4 mb-1.5 sidebar-text">
+                        <span class="text-[10px] font-bold text-slate-400 tracking-wider">자산 관리</span>
+                    </div>
                     <ul class="space-y-1 text-sm font-medium">
-                        <li id="li-home"><a href="#" id="nav-home" class="menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm"><span class="text-base shrink-0">🏠</span><span class="sidebar-text ml-3 truncate">홈</span></a></li>
+                        <li id="li-home"><a href="#" id="nav-home" class="menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm"><span class="text-base shrink-0">📅</span><span class="sidebar-text ml-3 truncate">연간 리포트</span></a></li>
                         <li id="li-ledger"><a href="#" id="nav-ledger" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📒</span><span class="sidebar-text ml-3 truncate">가계부</span></a></li>
-                        <li id="li-assets"><a href="#" id="nav-assets" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📊</span><span class="sidebar-text ml-3 truncate">자산관리시트</span></a></li>
-                        <li id="li-cards"><a href="#" id="nav-cards" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💳</span><span class="sidebar-text ml-3 truncate">카드</span></a></li>
-                        <li id="li-income"><a href="#" id="nav-income" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💰</span><span class="sidebar-text ml-3 truncate">부수입 허브</span></a></li>
-                        <li id="li-vehicle"><a href="#" id="nav-vehicle" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🚗</span><span class="sidebar-text ml-3 truncate">차량 관리</span></a></li>
+                        <li id="li-assets"><a href="#" id="nav-assets" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📊</span><span class="sidebar-text ml-3 truncate">자산현황</span></a></li>
+                        <li id="li-cards"><a href="#" id="nav-cards" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💳</span><span class="sidebar-text ml-3 truncate">카드관리</span></a></li>
+                        <li id="li-vehicle"><a href="#" id="nav-vehicle" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🚗</span><span class="sidebar-text ml-3 truncate">차량관리</span></a></li>
                         <li id="li-tax"><a href="#" id="nav-tax" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🧾</span><span class="sidebar-text ml-3 truncate">연말정산</span></a></li>
                     </ul>
+
+                    <!-- 소분류 2: 부수입 관리 (그룹 전체 토글 가능) -->
+                    <div id="group-income">
+                        <div class="px-3 mt-6 mb-1.5 sidebar-text">
+                            <span class="text-[10px] font-bold text-slate-400 tracking-wider">부수입 관리</span>
+                        </div>
+                        <ul class="space-y-1 text-sm font-medium">
+                            <li><a href="#" id="nav-ipo" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">📈</span><span class="sidebar-text ml-3 truncate">공모주 정산</span></a></li>
+                            <li><a href="#" id="nav-reward" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">🎁</span><span class="sidebar-text ml-3 truncate">금융 리워드</span></a></li>
+                            <li><a href="#" id="nav-extra" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">💵</span><span class="sidebar-text ml-3 truncate">부가소득</span></a></li>
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- 모임 공간 메뉴 -->
+                <!-- 2. 모임 금융 -->
                 <div>
-                    <!-- ★ 변경됨: 모임 공간 + 멤버 공유 알약 뱃지 -->
+                    <!-- 대분류 헤더 -->
                     <div class="flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
-                        <span class="text-xs font-bold text-[#6D326D] tracking-tight">모임 공간</span>
+                        <span class="text-xs font-bold text-[#6D326D] tracking-tight">모임 금융</span>
                         <span class="text-[11px] font-semibold text-[#6B46C1] bg-[#EDE9FE] px-2.5 py-0.5 rounded-full">멤버 공유</span>
                     </div>
                     <ul class="space-y-1 text-sm font-medium">
@@ -122,10 +135,10 @@
             </div>
         </aside>
 
-        <!-- 우측 메인 대시보드 본문 -->
+        <!-- 우측 메인 본문 -->
         <main class="flex-1 overflow-y-auto p-10 bg-brand-cream/30">
             
-            <!-- 1. 홈 화면 (벤토 대시보드) -->
+            <!-- 1. 홈 화면 (연간 리포트) -->
             <div id="view-home" class="view-section">
                 <header class="flex justify-between items-end mb-8">
                     <div>
@@ -338,7 +351,7 @@
                         <ul class="space-y-4">
                             <li class="flex justify-between items-center">
                                 <div>
-                                    <p class="text-sm font-bold text-brand-ink">카드</p>
+                                    <p class="text-sm font-bold text-brand-ink">카드관리</p>
                                     <p class="text-xs text-brand-sub">보유 카드 및 실적·혜택 관리</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
@@ -348,17 +361,7 @@
                             </li>
                             <li class="flex justify-between items-center">
                                 <div>
-                                    <p class="text-sm font-bold text-brand-ink">부수입 허브</p>
-                                    <p class="text-xs text-brand-sub">공모주, 이벤트, 앱테크 수익</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-income" class="sr-only peer" checked>
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                                </label>
-                            </li>
-                            <li class="flex justify-between items-center">
-                                <div>
-                                    <p class="text-sm font-bold text-brand-ink">차량 관리</p>
+                                    <p class="text-sm font-bold text-brand-ink">차량관리</p>
                                     <p class="text-xs text-brand-sub">소모품 교체 주기 및 유지비</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
@@ -373,6 +376,16 @@
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" id="toggle-tax" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                </label>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm font-bold text-brand-ink">부수입 관리</p>
+                                    <p class="text-xs text-brand-sub">공모주, 리워드, 부가소득 메뉴 활성화</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="toggle-income" class="sr-only peer" checked>
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-brand-personal peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                                 </label>
                             </li>
