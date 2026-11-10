@@ -62,7 +62,7 @@
         
         <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
-            <!-- 로고 영역: 축소 시에도 🏦와 버튼이 깔끔하게 표시됨 -->
+            <!-- 로고 및 사이드바 접기 버튼 -->
             <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
                     <span class="text-xl shrink-0 select-none">🏦</span>
@@ -76,8 +76,10 @@
             <nav class="flex-1 overflow-y-auto p-3 space-y-6">
                 <!-- 개인 공간 메뉴 -->
                 <div>
-                    <div class="flex items-center space-x-2 mb-2 px-2 sidebar-text">
-                        <span class="text-[10px] font-bold text-brand-personal bg-brand-personal/10 px-2 py-0.5 rounded-full border border-brand-personal/20">나만 보임</span>
+                    <!-- ★ 변경됨: 개인 공간 + 나만 보임 알약 뱃지 -->
+                    <div class="flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
+                        <span class="text-xs font-bold text-[#1E5F74] tracking-tight">개인 공간</span>
+                        <span class="text-[11px] font-semibold text-[#137A74] bg-[#E2F5F3] px-2.5 py-0.5 rounded-full">나만 보임</span>
                     </div>
                     <ul class="space-y-1 text-sm font-medium">
                         <li id="li-home"><a href="#" id="nav-home" class="menu-btn flex items-center px-3 py-2.5 rounded-xl bg-brand-personal text-white shadow-sm"><span class="text-base shrink-0">🏠</span><span class="sidebar-text ml-3 truncate">홈</span></a></li>
@@ -92,8 +94,10 @@
 
                 <!-- 모임 공간 메뉴 -->
                 <div>
-                    <div class="flex items-center space-x-2 mb-2 px-2 sidebar-text">
-                        <span class="text-[10px] font-bold text-brand-group bg-brand-group/10 px-2 py-0.5 rounded-full border border-brand-group/20">멤버 공유</span>
+                    <!-- ★ 변경됨: 모임 공간 + 멤버 공유 알약 뱃지 -->
+                    <div class="flex items-center justify-between mb-2.5 px-2.5 sidebar-text">
+                        <span class="text-xs font-bold text-[#6D326D] tracking-tight">모임 공간</span>
+                        <span class="text-[11px] font-semibold text-[#6B46C1] bg-[#EDE9FE] px-2.5 py-0.5 rounded-full">멤버 공유</span>
                     </div>
                     <ul class="space-y-1 text-sm font-medium">
                         <li id="li-group1"><a href="#" id="nav-group1" class="menu-btn flex items-center px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition"><span class="text-base shrink-0">👥</span><span class="sidebar-text ml-3 truncate">대학 동기계</span></a></li>
@@ -156,7 +160,7 @@
                         </div>
                     </div>
 
-                    <!-- 12개월 수입·지출 막대 차트 (금액 표기 적용) -->
+                    <!-- 12개월 수입·지출 막대 차트 -->
                     <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[360px] flex flex-col">
                         <div class="flex justify-between items-center mb-6">
                             <div class="flex items-center space-x-2">
@@ -169,7 +173,6 @@
                             </div>
                         </div>
 
-                        <!-- 차트 막대 및 상단 금액 텍스트 영역 -->
                         <div class="flex-1 h-48 flex items-end justify-between gap-1 border-b border-brand-border pb-2 px-1">
                             <!-- 1월 -->
                             <div class="flex-1 flex flex-col items-center h-full justify-end">
@@ -255,7 +258,7 @@
                                 </div>
                                 <span class="text-[11px] mt-2.5 font-medium text-brand-sub">6월</span>
                             </div>
-                            <!-- 7월~12월 (미래 월) -->
+                            <!-- 7월~12월 -->
                             <div class="flex-1 flex flex-col items-center h-full justify-end">
                                 <div class="w-full flex items-end justify-center gap-1.5 h-36">
                                     <div class="flex flex-col items-center justify-end h-full"><div class="w-3.5 bg-brand-positive/20 rounded-t" style="height: 25%;"></div></div>
