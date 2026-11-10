@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONLYBANK</title>
+    <!-- 디자인용 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm w-full border border-slate-200">
+        <!-- 로그인 전 화면 -->
+        <div id="loggedOutView">
+            <h1 class="text-2xl font-bold text-slate-800 mb-2">🏦 ONLYBANK</h1>
+            <p class="text-slate-500 mb-6 text-sm">개인 및 모임 재무 관리</p>
+            <button id="loginBtn" class="w-full bg-indigo-600 text-white font-semibold py-2.5 px-4 rounded-xl hover:bg-indigo-700 transition">
+                구글 계정으로 로그인
+            </button>
+        </div>
+
+        <!-- 로그인 후 화면 (처음엔 숨김) -->
+        <div id="loggedInView" class="hidden">
+            <img id="userAvatar" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-indigo-500 shadow-sm" src="" alt="프로필">
+            <h2 id="userName" class="text-xl font-bold text-slate-800 mb-1"></h2>
+            <p id="userEmail" class="text-sm text-slate-500 mb-6"></p>
+            <button id="logoutBtn" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-xl hover:bg-slate-300 transition">
+                로그아웃
+            </button>
+        </div>
+    </div>
+
+    <!-- 스크립트 연결 -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
