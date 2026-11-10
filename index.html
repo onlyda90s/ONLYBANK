@@ -1,103 +1,41 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONLYBANK</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Pretendard', 'sans-serif'], serif: ['"Noto Serif KR"', 'serif'] },
-                    colors: {
-                        brand: {
-                            cream: '#F7F3EA', surface: '#FFFDF8', border: '#E4DCC8',
-                            ink: '#1E2A3A', sub: '#5E6670',
-                            personal: '#234B7A', group: '#A5472F',
-                            positive: '#2F6B4F', negative: '#B3402A',
-                            caution: '#B8892B', cautionBg: '#F6EBCB', line: '#CFC6B2'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-brand-cream text-brand-ink min-h-screen">
-
-    <!-- 1. 로그인 대문 화면 (초기 상태: 보임) -->
-    <div id="loginScreen" class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 text-center max-w-sm w-full">
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight mb-2">🏦 ONLYBANK</h1>
-                <p class="text-slate-600 text-sm font-medium leading-relaxed">개인 가계부, 자산, 모임 통장을<br>한곳에서</p>
-            </div>
-            
-            <div class="space-y-3 mb-6">
-                <input type="text" id="inviteCodeInput" placeholder="초대 코드 입력" class="w-full text-center px-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-brand-personal transition shadow-sm">
-                <button id="enterCodeBtn" class="w-full bg-slate-900 text-white font-semibold py-3.5 px-4 rounded-2xl text-sm hover:bg-slate-800 transition shadow-sm">초대 코드로 대시보드 보기</button>
-            </div>
-
-            <div class="relative flex items-center justify-center my-6">
-                <div class="border-t border-slate-200 w-full"></div>
-                <span class="bg-white px-3 text-xs text-slate-400 font-medium absolute">또는</span>
-            </div>
-
-            <button id="loginBtn" class="w-full bg-[#2563eb] text-white font-semibold py-3.5 px-4 rounded-2xl text-sm flex items-center justify-center space-x-2 hover:bg-blue-700 transition shadow-sm">
-                <span class="bg-white w-5 h-5 rounded-full flex items-center justify-center">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                    </svg>
-                </span>
-                <span>Google로 계속하기</span>
-            </button>
-
-            <p class="text-xs text-slate-400 mt-6">초대 코드 입력 시 모임의 내역을 함께 볼 수 있어요</p>
-        </div>
-    </div>
-
-    <!-- 2. 메인 대시보드 화면 (초기 상태: 숨김) -->
-    <div id="dashboardScreen" style="display: none;" class="w-full h-screen flex">
-        
-        <!-- 좌측 사이드바 -->
+<!-- 좌측 사이드바 -->
         <aside class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0">
             <div class="p-6 border-b border-brand-border">
                 <h1 class="text-xl font-bold font-serif text-brand-ink">🏦 ONLYBANK</h1>
             </div>
             
             <nav class="flex-1 overflow-y-auto p-4 space-y-6">
+                <!-- 개인 공간 -->
                 <div>
                     <div class="flex items-center space-x-2 mb-2 px-3">
                         <span class="text-[10px] font-bold text-brand-personal bg-brand-personal/10 px-2 py-0.5 rounded-full border border-brand-personal/20">나만 보임</span>
                     </div>
-                    <ul class="space-y-1 text-sm font-medium">
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl bg-brand-personal text-white">홈</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">가계부</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">자산관리시트</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">카드</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">부수입 허브</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">차량 관리</a></li>
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">연말정산</a></li>
+                    <ul class="space-y-1 text-sm font-medium" id="personalMenu">
+                        <li><a href="#" id="nav-home" class="menu-btn block px-3 py-2.5 rounded-xl bg-brand-personal text-white">홈</a></li>
+                        <li><a href="#" id="nav-ledger" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">가계부</a></li>
+                        <li><a href="#" id="nav-assets" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">자산관리시트</a></li>
+                        <li><a href="#" id="nav-cards" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">카드</a></li>
+                        <li><a href="#" id="nav-income" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">부수입 허브</a></li>
+                        <li><a href="#" id="nav-vehicle" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">차량 관리</a></li>
+                        <li><a href="#" id="nav-tax" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">연말정산</a></li>
                     </ul>
                 </div>
 
+                <!-- 모임 공간 -->
                 <div>
                     <div class="flex items-center space-x-2 mb-2 px-3">
                         <span class="text-[10px] font-bold text-brand-group bg-brand-group/10 px-2 py-0.5 rounded-full border border-brand-group/20">멤버 공유</span>
                     </div>
-                    <ul class="space-y-1 text-sm font-medium">
-                        <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">대학 동기계</a></li>
+                    <ul class="space-y-1 text-sm font-medium" id="groupMenu">
+                        <li><a href="#" id="nav-group1" class="menu-btn block px-3 py-2.5 rounded-xl text-brand-sub hover:bg-black/5 transition">대학 동기계</a></li>
                         <li><a href="#" class="block px-3 py-2.5 rounded-xl text-brand-group hover:bg-brand-group/5 transition">+ 모임 추가</a></li>
                     </ul>
                 </div>
             </nav>
 
+            <!-- 하단 계정 -->
             <div class="p-4 border-t border-brand-border">
+                <a href="#" class="block px-3 py-2.5 mb-2 rounded-xl text-sm font-medium text-brand-sub hover:bg-black/5 transition">설정 · 계정</a>
                 <div class="flex items-center justify-between px-3 py-2 bg-black/5 rounded-xl">
                     <div class="flex items-center space-x-2 overflow-hidden">
                         <img id="userAvatar" src="" class="w-7 h-7 rounded-full border border-slate-300 bg-white">
@@ -108,68 +46,81 @@
             </div>
         </aside>
 
-        <!-- 우측 메인 대시보드 -->
-        <main class="flex-1 overflow-y-auto p-10">
-            <header class="flex justify-between items-end mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold font-serif text-brand-ink">2026년 요약</h2>
-                    <p class="text-sm text-brand-sub mt-1">개인 재무 현황 대시보드</p>
-                </div>
-                <span class="text-xs border border-brand-caution text-brand-caution bg-brand-cautionBg px-2.5 py-1 rounded-md font-bold">
-                    샘플 데이터
-                </span>
-            </header>
-
-            <div class="grid grid-cols-4 gap-5">
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                    <p class="text-xs text-brand-sub font-bold mb-2">연 수입</p>
-                    <p class="text-2xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                </div>
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                    <p class="text-xs text-brand-sub font-bold mb-2">연 저축·투자</p>
-                    <p class="text-2xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                </div>
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
-                    <p class="text-xs text-brand-sub font-bold mb-2">연 지출 (소비)</p>
-                    <p class="text-2xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
-                </div>
-                <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm flex flex-col justify-center">
-                    <p class="text-xs text-brand-sub font-bold mb-2">저축률 / 소비율</p>
-                    <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden mb-1.5">
-                        <div class="bg-brand-personal h-full" style="width: 40%;"></div>
-                        <div class="bg-brand-negative h-full" style="width: 35%;"></div>
+        <!-- 우측 메인 컨텐츠 영역 -->
+        <main class="flex-1 overflow-y-auto p-10 relative">
+            
+            <!-- 화면 1: 홈 (기존 벤토 대시보드) -->
+            <div id="view-home" class="view-section block">
+                <header class="flex justify-between items-end mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold font-serif text-brand-ink">2026년 요약</h2>
+                        <p class="text-sm text-brand-sub mt-1">개인 재무 현황 대시보드</p>
                     </div>
-                    <div class="flex justify-between text-[11px] font-bold text-brand-sub">
-                        <span class="text-brand-personal">저축 40%</span>
-                        <span class="text-brand-negative">소비 35%</span>
+                    <span class="text-xs border border-brand-caution text-brand-caution bg-brand-cautionBg px-2.5 py-1 rounded-md font-bold">샘플 데이터</span>
+                </header>
+                <!-- 벤토 타일들 -->
+                <div class="grid grid-cols-4 gap-5">
+                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
+                        <p class="text-xs text-brand-sub font-bold mb-2">연 수입</p>
+                        <p class="text-2xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
                     </div>
-                </div>
-
-                <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[300px] flex flex-col">
-                    <h3 class="text-sm font-bold text-brand-ink mb-4">월별 수입·지출 현황</h3>
-                    <div class="flex-1 border border-dashed border-brand-line rounded-xl flex items-center justify-center text-brand-sub text-sm bg-brand-cream/30">
-                        [12개월 막대 그래프 영역]
+                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
+                        <p class="text-xs text-brand-sub font-bold mb-2">연 저축·투자</p>
+                        <p class="text-2xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
                     </div>
-                </div>
-
-                <div class="col-span-1 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm flex flex-col">
-                    <h3 class="text-sm font-bold text-brand-ink mb-4">다가오는 일정</h3>
-                    <ul class="space-y-4 text-sm flex-1">
-                        <li class="flex justify-between items-center">
-                            <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-group mr-2"></span>동기계 회비</span>
-                            <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-2</span>
-                        </li>
-                        <li class="flex justify-between items-center">
-                            <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>신한카드 대금</span>
-                            <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-3</span>
-                        </li>
-                    </ul>
+                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm">
+                        <p class="text-xs text-brand-sub font-bold mb-2">연 지출 (소비)</p>
+                        <p class="text-2xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-sm font-sans ml-1 text-brand-ink">원</span></p>
+                    </div>
+                    <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 shadow-sm flex flex-col justify-center">
+                        <p class="text-xs text-brand-sub font-bold mb-2">저축률 / 소비율</p>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden mb-1.5">
+                            <div class="bg-brand-personal h-full" style="width: 40%;"></div>
+                            <div class="bg-brand-negative h-full" style="width: 35%;"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] font-bold text-brand-sub">
+                            <span class="text-brand-personal">저축 40%</span>
+                            <span class="text-brand-negative">소비 35%</span>
+                        </div>
+                    </div>
+                    <div class="col-span-3 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm min-h-[300px] flex flex-col">
+                        <h3 class="text-sm font-bold text-brand-ink mb-4">월별 수입·지출 현황</h3>
+                        <div class="flex-1 border border-dashed border-brand-line rounded-xl flex items-center justify-center text-brand-sub text-sm bg-brand-cream/30">
+                            [12개월 막대 그래프 영역]
+                        </div>
+                    </div>
+                    <div class="col-span-1 bg-brand-surface border border-brand-border rounded-2xl p-6 shadow-sm flex flex-col">
+                        <h3 class="text-sm font-bold text-brand-ink mb-4">다가오는 일정</h3>
+                        <ul class="space-y-4 text-sm flex-1">
+                            <li class="flex justify-between items-center">
+                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-group mr-2"></span>동기계 회비</span>
+                                <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-2</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="flex items-center text-brand-ink"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>신한카드 대금</span>
+                                <span class="font-bold text-brand-negative bg-brand-negative/10 px-2 py-0.5 rounded text-xs">D-3</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+
+            <!-- 화면 2: 가계부 (초기엔 숨김) -->
+            <div id="view-ledger" class="view-section hidden">
+                <header class="mb-8"><h2 class="text-3xl font-bold font-serif text-brand-ink">가계부</h2></header>
+                <div class="p-10 border border-dashed border-brand-line rounded-2xl text-center text-brand-sub">가계부 화면을 조립할 빈 공간입니다.</div>
+            </div>
+
+            <!-- 화면 3: 자산관리시트 (초기엔 숨김) -->
+            <div id="view-assets" class="view-section hidden">
+                <header class="mb-8"><h2 class="text-3xl font-bold font-serif text-brand-ink">자산관리시트</h2></header>
+                <div class="p-10 border border-dashed border-brand-line rounded-2xl text-center text-brand-sub">자산관리시트 화면을 조립할 빈 공간입니다.</div>
+            </div>
+
+            <!-- 기타 화면들 (카드, 부수입 등) -->
+            <div id="view-placeholder" class="view-section hidden">
+                <header class="mb-8"><h2 id="placeholder-title" class="text-3xl font-bold font-serif text-brand-ink">화면 준비 중</h2></header>
+                <div class="p-10 border border-dashed border-brand-line rounded-2xl text-center text-brand-sub">아직 연결되지 않은 메뉴입니다.</div>
+            </div>
+
         </main>
-
-    </div>
-
-    <script type="module" src="js/main.js"></script>
-</body>
-</html>
