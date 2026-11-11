@@ -1,12 +1,12 @@
 let assetYear = 2026;
 let currentTab = "bank"; 
 let showHiddenAccounts = false; 
-let activeMenuAccountId = null; // 현재 팝오버 메뉴가 열린 계좌 ID
+let activeMenuAccountId = null;
 
 const currentSystemMonth = new Date().getMonth() + 1;
 let currentRange = currentSystemMonth <= 6 ? "h1" : "h2"; 
 
-const ASSET_STORAGE_KEY = "onlybank_asset_accounts_v5";
+const ASSET_STORAGE_KEY = "onlybank_asset_accounts_v6";
 
 const defaultAccountDatabase = {
     bank: [
@@ -46,7 +46,7 @@ const saveAccounts = () => {
 
 const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
 
-// 1. 상단 순자산 추이 차트
+// 1. 상단 순자산 추이 차트 (단일 숫자 툴팁)
 const assetYearlyData = {
     2025: [
         { m: 1, net: 9800, diff: 0 }, { m: 2, net: 10100, diff: 300 }, { m: 3, net: 10450, diff: 350 },
@@ -83,57 +83,45 @@ export const renderAssetYearChart = (year) => {
 
         const netInThousand = hasData ? item.net * 10 : 0;
         const exactFullWon = item.net * 10000;
-        const diffFullWon = item.diff * 10000;
 
         const col = document.createElement("div");
         col.className = "flex-1 flex flex-col items-center h-full justify-end group relative transition-all";
 
         let badgeHtml = '';
         let barColor = 'bg-slate-200';
-        let diffText = '-';
-        let diffColorCls = 'text-slate-300';
 
         if (hasData) {
             if (isPositive) {
                 badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▲+${item.diff}만</span>`;
                 barColor = 'bg-emerald-600/90 group-hover:bg-emerald-600';
-                diffText = `▲ +${diffFullWon.toLocaleString()}원`;
-                diffColorCls = 'text-emerald-400';
             } else if (isNegative) {
                 badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▼${Math.abs(item.diff)}만</span>`;
                 barColor = 'bg-rose-600/90 group-hover:bg-rose-600';
-                diffText = `▼ ${Math.abs(diffFullWon).toLocaleString()}원`;
-                diffColorCls = 'text-rose-400';
             } else {
                 badgeHtml = `<span class="text-[10px] font-medium text-slate-400 tabular-nums">-</span>`;
                 barColor = 'bg-slate-300 group-hover:bg-slate-400';
-                diffText = '전월 동일';
             }
         } else {
             badgeHtml = `<span class="text-[9px] text-slate-300">예정</span>`;
             barColor = 'bg-slate-100 border border-dashed border-slate-200';
         }
 
+        // 마우스 호버 시 순자산 실물 숫자 하나만 간결 노출
         const tooltipHtml = hasData ? `
-            <div class="absolute bottom-[95%] mb-2 hidden group-hover:flex flex-col items-center z-50 pointer-events-none transition-all duration-200 shadow-xl">
-                <div class="bg-slate-900/95 text-white rounded-xl py-2 px-3 border border-slate-700 text-center whitespace-nowrap shadow-2xl backdrop-blur-xs">
-                    <p class="text-[10px] text-slate-300 font-medium mb-0.5">${item.m}월 말 순자산 총액</p>
-                    <p class="text-xs font-bold text-amber-300 tabular-nums font-mono">${exactFullWon.toLocaleString()}원</p>
-                    <div class="mt-1 pt-1 border-t border-slate-700/80 flex items-center justify-center space-x-1 text-[10px]">
-                        <span class="text-slate-400">전월비:</span>
-                        <span class="font-bold tabular-nums ${diffColorCls}">${diffText}</span>
-                    </div>
+            <div class="absolute bottom-full mb-1.5 hidden group-hover:flex flex-col items-center z-50 pointer-events-none whitespace-nowrap shadow-md">
+                <div class="bg-slate-900/95 text-white rounded-md py-1 px-2.5 text-xs font-bold font-mono">
+                    ${exactFullWon.toLocaleString()}원
                 </div>
-                <div class="w-2 h-2 bg-slate-900/95 rotate-45 -mt-1 border-r border-b border-slate-700"></div>
+                <div class="w-1.5 h-1.5 bg-slate-900/95 rotate-45 -mt-0.5"></div>
             </div>
         ` : '';
 
         col.innerHTML = `
-            ${tooltipHtml}
             <div class="h-6 flex items-center justify-center mb-1">
                 ${badgeHtml}
             </div>
-            <div class="w-full flex flex-col items-center justify-end h-28 cursor-pointer">
+            <div class="w-full flex flex-col items-center justify-end h-28 cursor-pointer relative">
+                ${tooltipHtml}
                 <div class="w-5 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
             </div>
             <div class="mt-2 flex flex-col items-center select-none border-t border-brand-border/40 w-full pt-1.5">
@@ -168,7 +156,7 @@ const hidePopoverMenu = () => {
     activeMenuAccountId = null;
 };
 
-// 3. 월간 결산 시트 (항목 열 내부 min-w-0 적용으로 1월 침범 원천 차단)
+// 3. 월간 결산 시트
 export const renderAssetTable = (focusNewId = null) => {
     hidePopoverMenu();
 
@@ -195,7 +183,6 @@ export const renderAssetTable = (focusNewId = null) => {
     const colNameWidth = isAll ? "w-[16%]" : "w-[22%]";
     const colMonthWidth = isAll ? "w-[7%]" : "w-[13%]";
 
-    // 헤더(Thead)
     let headHtml = `
         <tr class="bg-slate-50/80 border-b border-brand-border/60 text-xs text-brand-sub">
             <th class="p-2.5 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 ${colNameWidth}">항목</th>
@@ -215,14 +202,12 @@ export const renderAssetTable = (focusNewId = null) => {
     headHtml += `</tr>`;
     thead.innerHTML = headHtml;
 
-    // 계좌 데이터 분류
     const allTabAccounts = accountDatabase[currentTab] || [];
     const activeAccounts = allTabAccounts.filter(acc => !acc.hidden);
     const hiddenAccounts = allTabAccounts.filter(acc => acc.hidden);
 
     tbody.innerHTML = "";
 
-    // [A] 활성 계좌 렌더링 (min-w-0 및 overflow-hidden으로 1월 침범 완전 해결)
     activeAccounts.forEach(acc => {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-black/[0.015] transition-colors group";
@@ -268,7 +253,6 @@ export const renderAssetTable = (focusNewId = null) => {
         tbody.appendChild(tr);
     });
 
-    // [B] '+ 계좌 추가'
     const addRow = document.createElement("tr");
     addRow.className = "hover:bg-brand-personal/[0.02] border-t border-brand-border/40";
     addRow.innerHTML = `
@@ -282,7 +266,6 @@ export const renderAssetTable = (focusNewId = null) => {
     `;
     tbody.appendChild(addRow);
 
-    // [C] '해지 보관함'
     if (hiddenAccounts.length > 0) {
         const toggleRow = document.createElement("tr");
         toggleRow.className = "border-t border-dashed border-slate-300 bg-slate-50/60";
@@ -334,7 +317,6 @@ export const renderAssetTable = (focusNewId = null) => {
         }
     }
 
-    // [D] 푸터(합계)
     let footHtml = `
         <tr>
             <td class="p-2.5 sticky-col bg-slate-100 border-r border-brand-border/40 whitespace-nowrap ${colNameWidth}">
@@ -360,7 +342,6 @@ export const renderAssetTable = (focusNewId = null) => {
     footHtml += `</tr>`;
     tfoot.innerHTML = footHtml;
 
-    // 리스너 연결
     tbody.querySelectorAll('.account-name-input').forEach(nameInput => {
         nameInput.addEventListener('blur', (e) => {
             const accId = e.target.getAttribute('data-id');
