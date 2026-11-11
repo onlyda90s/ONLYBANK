@@ -31,7 +31,7 @@ export const renderAssetYearChart = (year) => {
     const chartTitleEl = document.getElementById("assetYearChartTitle");
     
     if (displayEl) displayEl.textContent = `${year}년`;
-    // 연도 텍스트 완전 제거 및 고정 타이틀 유지
+    // 연도 텍스트 제거하고 고정 타이틀로 설정
     if (chartTitleEl) chartTitleEl.textContent = "순자산 추이 및 월별 증감";
 
     const monthsData = assetYearlyData[year] || Array(12).fill({ net: 0, diff: 0 }).map((_, idx) => ({ m: idx + 1, net: 0, diff: 0 }));
@@ -43,40 +43,42 @@ export const renderAssetYearChart = (year) => {
 
     monthsData.forEach(item => {
         const hasData = item.net > 0;
-        const barH = hasData ? Math.min(Math.round((item.net / maxNet) * 100), 88) : 6;
+        const barH = hasData ? Math.min(Math.round((item.net / maxNet) * 100), 85) : 6;
         const isPositive = item.diff > 0;
         const isNegative = item.diff < 0;
 
         const col = document.createElement("div");
         col.className = "flex-1 flex flex-col items-center h-full justify-end group transition-all";
 
-        // 1. 상단: 증감 뱃지 단독 배치
+        // 상단 증감 뱃지
         let badgeHtml = '';
         let barColor = 'bg-slate-200';
 
         if (hasData) {
             if (isPositive) {
-                badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1 py-0.5 rounded mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▲+${item.diff}만</span>`;
+                badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▲+${item.diff}만</span>`;
                 barColor = 'bg-emerald-600/90 group-hover:bg-emerald-600';
             } else if (isNegative) {
-                badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1 py-0.5 rounded mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▼${Math.abs(item.diff)}만</span>`;
+                badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▼${Math.abs(item.diff)}만</span>`;
                 barColor = 'bg-rose-600/90 group-hover:bg-rose-600';
             } else {
-                badgeHtml = `<span class="text-[10px] font-medium text-slate-400 mb-1.5 tabular-nums">-</span>`;
+                badgeHtml = `<span class="text-[10px] font-medium text-slate-400 tabular-nums">-</span>`;
                 barColor = 'bg-slate-300 group-hover:bg-slate-400';
             }
         } else {
-            badgeHtml = `<span class="text-[9px] text-slate-300 mb-1.5">예정</span>`;
+            badgeHtml = `<span class="text-[9px] text-slate-300">예정</span>`;
             barColor = 'bg-slate-100 border border-dashed border-slate-200';
         }
 
-        // 2. 구조: [상단 뱃지 + 막대] -> [하단 월 라벨] -> [하단 잔액 숫자]
+        // [구조: 상단 증감 뱃지 -> 막대 그래프 -> 하단 월 라벨 -> 하단 자산 잔액]
         col.innerHTML = `
-            <div class="w-full flex flex-col items-center justify-end h-32">
+            <div class="h-6 flex items-center justify-center mb-1">
                 ${badgeHtml}
+            </div>
+            <div class="w-full flex flex-col items-center justify-end h-28">
                 <div class="w-5 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
             </div>
-            <div class="mt-2 flex flex-col items-center select-none">
+            <div class="mt-2 flex flex-col items-center select-none border-t border-brand-border/40 w-full pt-1.5">
                 <span class="text-[11px] font-semibold ${hasData ? 'text-brand-ink' : 'text-slate-400'}">${item.m}월</span>
                 <span class="text-[11px] font-bold tracking-tight mt-0.5 tabular-nums ${hasData ? 'text-brand-ink' : 'text-slate-300'}">${hasData ? item.net.toLocaleString() : '-'}</span>
             </div>
