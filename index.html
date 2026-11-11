@@ -75,7 +75,7 @@
     <!-- 2. 메인 대시보드 화면 -->
     <div id="dashboardScreen" style="display: none;" class="w-full h-screen flex">
         
-        <!-- 좌측 사이드바 (메뉴 순서 완벽 복원) -->
+        <!-- 좌측 사이드바 -->
         <aside id="sidebar" class="w-64 bg-brand-surface border-r border-brand-border flex flex-col shrink-0 transition-all duration-300">
             <div id="sidebarHeader" class="h-16 px-4 border-b border-brand-border flex items-center justify-between shrink-0">
                 <div class="flex items-center space-x-2.5 min-w-0">
@@ -86,7 +86,7 @@
             </div>
             
             <nav class="flex-1 overflow-y-auto px-3.5 pt-5 pb-3 space-y-4 custom-scrollbar">
-                <!-- 1. 내 자산 관리 (1: 연간 리포트 -> 2: 가계부 -> 3: 자산현황 -> 4: 카드관리 -> 5: 차량관리 -> 6: 연말정산) -->
+                <!-- 내 자산 관리 -->
                 <div>
                     <div class="category-header flex items-center justify-between mb-2 px-2 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">내 자산 관리</span>
@@ -141,7 +141,7 @@
                     </ul>
                 </div>
 
-                <!-- 2. 공용 자산 관리 -->
+                <!-- 공용 자산 관리 -->
                 <div id="group-moim">
                     <div class="category-header flex items-center justify-between mb-2 px-2 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">공용 자산 관리</span>
@@ -184,7 +184,7 @@
         <main class="flex-1 overflow-y-auto px-10 pt-8 pb-10 bg-brand-cream/30 custom-scrollbar relative">
             
             <!-- ============================================== -->
-            <!-- 1. 뷰: 연간 리포트 (차트 및 4대 위젯 완전 복원)     -->
+            <!-- 1. 뷰: 연간 리포트                             -->
             <!-- ============================================== -->
             <div id="view-home" class="view-section space-y-7 max-w-7xl mx-auto h-full flex flex-col">
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
@@ -200,13 +200,11 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 shrink-0">
+                    <!-- 이달의 현황 (우측 배지 삭제 완료) -->
                     <div class="space-y-2.5">
-                        <div class="flex items-center justify-between px-1">
-                            <div class="flex items-center">
-                                <span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>
-                                <h3 class="text-sm font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
-                            </div>
-                            <span class="text-[11px] font-bold text-brand-personal bg-brand-personal/5 px-2 py-1 rounded-md">가계부 실시간</span>
+                        <div class="flex items-center px-1">
+                            <span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>
+                            <h3 class="text-sm font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
                         </div>
                         <div class="grid grid-cols-2 gap-3.5">
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
@@ -235,13 +233,11 @@
                         </div>
                     </div>
 
+                    <!-- 올해 누적 (우측 배지 삭제 완료) -->
                     <div class="space-y-2.5">
-                        <div class="flex items-center justify-between px-1">
-                            <div class="flex items-center">
-                                <span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span>
-                                <h3 class="text-sm font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(2026년)</span></h3>
-                            </div>
-                            <span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded-md">연간 결산</span>
+                        <div class="flex items-center px-1">
+                            <span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span>
+                            <h3 class="text-sm font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(2026년)</span></h3>
                         </div>
                         <div class="grid grid-cols-2 gap-3.5">
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
@@ -271,6 +267,7 @@
                     </div>
                 </div>
 
+                <!-- 월별 수입·지출 현황 차트 박스 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -287,11 +284,12 @@
                     </div>
                 </div>
 
+                <!-- 4대 위젯 영역 (D-Day 배지 삭제 & 제목 옆 괄호로 통일) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
+                    <!-- 1. 다가오는 일정 (우측 D-Day 배지 삭제) -->
                     <div class="space-y-2.5 h-full flex flex-col">
-                        <div class="flex justify-between items-center px-1">
+                        <div class="flex items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">다가오는 일정</h3>
-                            <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">D-Day</span>
                         </div>
                         <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col">
                             <ul class="space-y-2 text-[13px] overflow-y-auto pr-1 custom-scrollbar flex-1">
@@ -303,6 +301,8 @@
                             </ul>
                         </div>
                     </div>
+
+                    <!-- 2. 내 모임 현황 -->
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex justify-between items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">내 모임 현황</h3>
@@ -317,11 +317,11 @@
                             <div class="pt-2 border-t border-brand-border/60 flex items-center justify-between text-xs text-brand-group font-bold px-0.5"><span>모임 장부 관리하기</span><span>→</span></div>
                         </div>
                     </div>
-                    <!-- 지출 카테고리 (금액 중심 시안) -->
+
+                    <!-- 3. 지출 카테고리 (우측 배지 삭제 -> 제목 옆 '(연 누적)'으로 통일) -->
                     <div class="space-y-2.5 h-full flex flex-col">
-                        <div class="flex justify-between items-center px-1">
-                            <h3 class="text-sm font-bold text-brand-ink">지출 카테고리</h3>
-                            <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">연 누적 (원)</span>
+                        <div class="flex items-center px-1">
+                            <h3 class="text-sm font-bold text-brand-ink">지출 카테고리 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(연 누적)</span></h3>
                         </div>
                         <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col justify-center">
                             <div class="space-y-2.5 text-xs">
@@ -332,11 +332,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 결제수단 및 카드 실적 시안 -->
+
+                    <!-- 4. 결제수단 및 카드 실적 (우측 배지 삭제 -> 제목 옆 '(11월)'로 통일) -->
                     <div class="space-y-2.5 h-full flex flex-col">
-                        <div class="flex justify-between items-center px-1">
-                            <h3 class="text-sm font-bold text-brand-ink">결제수단 및 카드 실적</h3>
-                            <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">11월</span>
+                        <div class="flex items-center px-1">
+                            <h3 class="text-sm font-bold text-brand-ink">결제수단 및 카드 실적 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
                         </div>
                         <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs h-[188px] flex flex-col justify-center">
                             <div class="space-y-3 text-xs">
@@ -350,7 +350,7 @@
             </div>
 
             <!-- ============================================== -->
-            <!-- 2. 뷰: 자산현황 (전폭 12개월 차트 + 1원 시트 복원)   -->
+            <!-- 2. 뷰: 자산현황                                -->
             <!-- ============================================== -->
             <div id="view-assets" class="view-section space-y-6 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
@@ -365,7 +365,6 @@
                     </div>
                 </header>
 
-                <!-- 1열 : 순자산 추이 및 월별 증감 전폭 와이드 패널 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -383,7 +382,6 @@
                     </div>
                 </div>
 
-                <!-- 2열 : 탭 기반 월간 자산 결산 시트 (1원 단위 & 전면 수정 지원) -->
                 <div class="flex flex-col flex-1 min-h-[380px] bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs overflow-hidden">
                     <div id="assetTabs" class="flex items-center space-x-1.5 border-b border-brand-border/60 p-2 bg-slate-50 shrink-0 overflow-x-auto custom-scrollbar">
                         <button data-tab="summary" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">★ 전체 요약</button>
@@ -477,6 +475,7 @@
         </main>
     </div>
 
-    <script type="module" src="js/main.js?v=20261111_restored_v1"></script>
+    <!-- 캐시 방지 쿼리 파라미터 갱신 -->
+    <script type="module" src="js/main.js?v=20261111_chart_fix"></script>
 </body>
 </html>
