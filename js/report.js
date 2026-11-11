@@ -38,7 +38,7 @@ const yearlyFinanceData = {
 
 const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
 
-// 1. 수입·지출 월별 차트 렌더링 (단위: 만원 + 마우스 호버 정밀 툴팁)
+// 1. 수입·지출 월별 차트 (상단 금액 표기 + 해당 막대 단일 숫자 툴팁)
 export const renderMonthlyChart = (year) => {
     const chartContainer = document.getElementById("chartContainer");
     if (!chartContainer) return;
@@ -49,56 +49,56 @@ export const renderMonthlyChart = (year) => {
 
     yearData.forEach(item => {
         const hasData = item.in > 0 || item.out > 0;
-        const inH = hasData ? Math.min(Math.round((item.in / maxVal) * 100), 88) : 5;
-        const outH = hasData ? Math.min(Math.round((item.out / maxVal) * 100), 88) : 5;
+        const inH = hasData ? Math.min(Math.round((item.in / maxVal) * 100), 80) : 5;
+        const outH = hasData ? Math.min(Math.round((item.out / maxVal) * 100), 80) : 5;
 
         const exactIncome = item.in * 10000;
         const exactExpense = item.out * 10000;
-        const exactSurplus = exactIncome - exactExpense;
 
         const col = document.createElement("div");
         col.className = "flex-1 flex flex-col items-center h-full justify-end group relative transition-all";
 
-        // 마우스 호버 시 나타나는 1원 단위 툴팁
-        const tooltipHtml = hasData ? `
-            <div class="absolute bottom-[95%] mb-2 hidden group-hover:flex flex-col items-center z-50 pointer-events-none transition-all duration-200 shadow-xl">
-                <div class="bg-slate-900/95 text-white rounded-xl py-2 px-3 border border-slate-700 text-center whitespace-nowrap shadow-2xl backdrop-blur-xs">
-                    <p class="text-[10px] text-slate-300 font-medium mb-1">${item.m}월 결산 내역</p>
-                    <div class="space-y-0.5 text-xs text-left">
-                        <div class="flex justify-between space-x-2 text-emerald-400">
-                            <span>수입:</span><span class="font-bold tabular-nums">${exactIncome.toLocaleString()}원</span>
-                        </div>
-                        <div class="flex justify-between space-x-2 text-rose-400">
-                            <span>지출:</span><span class="font-bold tabular-nums">${exactExpense.toLocaleString()}원</span>
-                        </div>
-                    </div>
-                    <div class="mt-1 pt-1 border-t border-slate-700 flex justify-between space-x-2 text-[11px]">
-                        <span class="text-slate-400">순잉여:</span>
-                        <span class="font-bold tabular-nums text-amber-300">${exactSurplus >= 0 ? '+' : ''}${exactSurplus.toLocaleString()}원</span>
-                    </div>
-                </div>
-                <div class="w-2 h-2 bg-slate-900/95 rotate-45 -mt-1 border-r border-b border-slate-700"></div>
-            </div>
-        ` : '';
-
         col.innerHTML = `
-            ${tooltipHtml}
-            <div class="w-full flex items-end justify-center space-x-1 h-32 cursor-pointer pb-1">
-                <!-- 수입 막대 -->
-                <div class="w-3.5 ${hasData ? 'bg-brand-positive group-hover:brightness-110' : 'bg-slate-200'} rounded-t transition-all duration-300" style="height: ${inH}%;"></div>
-                <!-- 지출 막대 -->
-                <div class="w-3.5 ${hasData ? 'bg-brand-negative group-hover:brightness-110' : 'bg-slate-200'} rounded-t transition-all duration-300" style="height: ${outH}%;"></div>
+            <div class="w-full flex items-end justify-center space-x-1.5 h-32 cursor-pointer pb-0.5">
+                <!-- 수입 막대 (상단 만원 표기 + 호버 시 수입 단독 툴팁) -->
+                <div class="flex flex-col items-center justify-end h-full relative group/in">
+                    ${hasData && item.in > 0 ? `
+                        <div class="absolute bottom-full mb-1 hidden group-hover/in:flex flex-col items-center z-50 pointer-events-none whitespace-nowrap shadow-md">
+                            <div class="bg-slate-900/95 text-emerald-300 rounded-md py-1 px-2.5 text-[11px] font-bold font-mono">
+                                ${exactIncome.toLocaleString()}원
+                            </div>
+                            <div class="w-1.5 h-1.5 bg-slate-900/95 rotate-45 -mt-0.5"></div>
+                        </div>
+                        <span class="text-[9px] font-bold text-brand-positive tabular-nums mb-0.5 select-none leading-none">${item.in}</span>
+                    ` : ''}
+                    <div class="w-3.5 ${hasData && item.in > 0 ? 'bg-brand-positive hover:brightness-110' : 'bg-slate-200'} rounded-t transition-all duration-300" style="height: ${inH}%;"></div>
+                </div>
+
+                <!-- 지출 막대 (상단 만원 표기 + 호버 시 지출 단독 툴팁) -->
+                <div class="flex flex-col items-center justify-end h-full relative group/out">
+                    ${hasData && item.out > 0 ? `
+                        <div class="absolute bottom-full mb-1 hidden group-hover/out:flex flex-col items-center z-50 pointer-events-none whitespace-nowrap shadow-md">
+                            <div class="bg-slate-900/95 text-rose-300 rounded-md py-1 px-2.5 text-[11px] font-bold font-mono">
+                                ${exactExpense.toLocaleString()}원
+                            </div>
+                            <div class="w-1.5 h-1.5 bg-slate-900/95 rotate-45 -mt-0.5"></div>
+                        </div>
+                        <span class="text-[9px] font-bold text-brand-negative tabular-nums mb-0.5 select-none leading-none">${item.out}</span>
+                    ` : ''}
+                    <div class="w-3.5 ${hasData && item.out > 0 ? 'bg-brand-negative hover:brightness-110' : 'bg-slate-200'} rounded-t transition-all duration-300" style="height: ${outH}%;"></div>
+                </div>
             </div>
+
+            <!-- 하단 라벨 (월만 단정하게 표시) -->
             <div class="mt-1 flex flex-col items-center select-none border-t border-brand-border/40 w-full pt-1">
                 <span class="text-[11px] font-semibold ${hasData ? 'text-brand-ink' : 'text-slate-400'}">${item.m}월</span>
-                <span class="text-[10px] font-medium tracking-tight text-slate-400 tabular-nums">${hasData ? `${item.in}/${item.out}` : '-'}</span>
             </div>
         `;
         chartContainer.appendChild(col);
     });
 };
 
-// 2. 상단 8대 지표 카드 렌더링 (부수입 및 항목별 세부 실적 주입)
+// 2. 상단 8대 지표 카드 렌더링
 export const renderSummaryCards = (year) => {
     const data = yearlyFinanceData[year] || yearlyFinanceData[2026];
 
@@ -115,7 +115,6 @@ export const renderSummaryCards = (year) => {
     if (mSavingsEl) mSavingsEl.innerHTML = `${formatWon(data.currentMonth.savings)}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
     if (mExpenseEl) mExpenseEl.innerHTML = `${formatWon(data.currentMonth.expense)}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
     
-    // 이달 부수입 세부 항목 반영
     if (mSideIncomeEl) mSideIncomeEl.innerHTML = `${formatWon(data.currentMonth.sideIncome.total)}<span class="text-xs font-sans ml-0.5 text-brand-ink">원</span>`;
     if (mSideInvestEl) mSideInvestEl.textContent = `${formatWon(data.currentMonth.sideIncome.invest)}원`;
     if (mSideIpoEl) mSideIpoEl.textContent = `${formatWon(data.currentMonth.sideIncome.ipo)}원`;
@@ -134,7 +133,6 @@ export const renderSummaryCards = (year) => {
     if (ySavingsEl) ySavingsEl.innerHTML = `${formatWon(data.accumulated.savings)}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
     if (yExpenseEl) yExpenseEl.innerHTML = `${formatWon(data.accumulated.expense)}<span class="text-xs font-sans ml-1 text-brand-ink">원</span>`;
 
-    // 올해 누적 부수입 세부 항목 반영
     if (ySideIncomeEl) ySideIncomeEl.innerHTML = `${formatWon(data.accumulated.sideIncome.total)}<span class="text-xs font-sans ml-0.5 text-brand-ink">원</span>`;
     if (ySideInvestEl) ySideInvestEl.textContent = `${formatWon(data.accumulated.sideIncome.invest)}원`;
     if (ySideIpoEl) ySideIpoEl.textContent = `${formatWon(data.accumulated.sideIncome.ipo)}원`;
