@@ -86,7 +86,6 @@
             </div>
             
             <nav class="flex-1 overflow-y-auto px-3.5 pt-5 pb-3 space-y-4 custom-scrollbar">
-                <!-- 내 자산 관리 -->
                 <div>
                     <div class="category-header flex items-center justify-between mb-2 px-2 sidebar-text">
                         <span class="text-[13px] font-bold text-brand-ink tracking-tight">내 자산 관리</span>
@@ -200,7 +199,6 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 shrink-0">
-                    <!-- 이달의 현황 (우측 배지 삭제 완료) -->
                     <div class="space-y-2.5">
                         <div class="flex items-center px-1">
                             <span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>
@@ -233,7 +231,6 @@
                         </div>
                     </div>
 
-                    <!-- 올해 누적 (우측 배지 삭제 완료) -->
                     <div class="space-y-2.5">
                         <div class="flex items-center px-1">
                             <span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span>
@@ -267,7 +264,6 @@
                     </div>
                 </div>
 
-                <!-- 월별 수입·지출 현황 차트 박스 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -284,9 +280,7 @@
                     </div>
                 </div>
 
-                <!-- 4대 위젯 영역 (D-Day 배지 삭제 & 제목 옆 괄호로 통일) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
-                    <!-- 1. 다가오는 일정 (우측 D-Day 배지 삭제) -->
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">다가오는 일정</h3>
@@ -302,7 +296,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. 내 모임 현황 -->
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex justify-between items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">내 모임 현황</h3>
@@ -318,7 +311,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. 지출 카테고리 (우측 배지 삭제 -> 제목 옆 '(연 누적)'으로 통일) -->
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">지출 카테고리 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(연 누적)</span></h3>
@@ -333,7 +325,6 @@
                         </div>
                     </div>
 
-                    <!-- 4. 결제수단 및 카드 실적 (우측 배지 삭제 -> 제목 옆 '(11월)'로 통일) -->
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex items-center px-1">
                             <h3 class="text-sm font-bold text-brand-ink">결제수단 및 카드 실적 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
@@ -350,7 +341,7 @@
             </div>
 
             <!-- ============================================== -->
-            <!-- 2. 뷰: 자산현황                                -->
+            <!-- 2. 뷰: 자산현황 (차트 제목 및 시트 제목 정돈)       -->
             <!-- ============================================== -->
             <div id="view-assets" class="view-section space-y-6 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
@@ -365,10 +356,11 @@
                     </div>
                 </header>
 
+                <!-- 1열 : 순자산 추이 및 월별 증감 패널 (연도 텍스트 제거) -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
-                            <h3 id="assetYearChartTitle" class="text-sm font-bold text-brand-ink">2026년 순자산 추이 및 월별 증감</h3>
+                            <h3 id="assetYearChartTitle" class="text-sm font-bold text-brand-ink">순자산 추이 및 월별 증감</h3>
                             <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span>
                         </div>
                         <div class="flex items-center space-x-4 text-[11px] font-semibold text-brand-sub">
@@ -378,61 +370,72 @@
                         </div>
                     </div>
                     <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
-                        <div id="asset12MonthChart" class="h-44 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2"></div>
+                        <div id="asset12MonthChart" class="h-48 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2"></div>
                     </div>
                 </div>
 
-                <div class="flex flex-col flex-1 min-h-[380px] bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs overflow-hidden">
-                    <div id="assetTabs" class="flex items-center space-x-1.5 border-b border-brand-border/60 p-2 bg-slate-50 shrink-0 overflow-x-auto custom-scrollbar">
-                        <button data-tab="summary" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">★ 전체 요약</button>
-                        <button data-tab="bank" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap">① 은행 · 예적금</button>
-                        <button data-tab="invest" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">② 증권 · 투자</button>
-                        <button data-tab="debt" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">③ 부채 · 대출</button>
-                        <button data-tab="fixed" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">④ 실물 · 보증금</button>
-                        <div class="flex-1"></div>
-                        <button class="px-2.5 py-1 rounded-lg text-[11px] font-medium text-brand-sub hover:bg-black/5 border border-brand-border/50">+ 계좌 추가</button>
-                    </div>
-
-                    <div class="px-4 py-2 bg-white text-[11px] text-brand-sub border-b border-brand-border/40 shrink-0 flex items-center justify-between">
+                <!-- 2열 : 월간 계좌별 잔액 결산 시트 (상단 섹션 제목 신설) -->
+                <div class="space-y-2.5 flex-1 flex flex-col min-h-[380px]">
+                    <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-brand-personal mr-2"></span>
-                            <span>단위: <strong>원(1원 단위)</strong> · 각 월의 금액 칸을 클릭하면 <strong>과거 월이라도 언제든 자유롭게 수정</strong>할 수 있습니다.</span>
+                            <h3 class="text-sm font-bold text-brand-ink">월간 계좌별 잔액 결산</h3>
+                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 원)</span>
                         </div>
-                        <span class="text-[10px] text-slate-400">숫자 수정 시 합계 및 증감이 즉시 재계산됩니다</span>
+                        <span class="text-[11px] text-slate-400 font-medium">* 탭을 선택하여 자산군별 잔액을 확인하고 편집할 수 있습니다</span>
                     </div>
 
-                    <div class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
-                        <table class="w-full text-left border-collapse min-w-[1200px]">
-                            <thead>
-                                <tr class="bg-slate-50/80 border-b border-brand-border/60 text-xs text-brand-sub">
-                                    <th class="p-3 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 w-[200px]">항목 (계좌명)</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.06</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.07</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.08</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.09</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.10</th>
-                                    <th class="p-2.5 font-bold text-center w-[125px] bg-brand-personal/5 text-brand-personal">26.11 (당월)</th>
-                                    <th class="p-2.5 font-medium text-center w-[110px]">26.12</th>
-                                    <th class="p-3 font-semibold text-right pr-4 w-[130px]">11월 전월증감</th>
-                                </tr>
-                            </thead>
-                            <tbody id="assetTableBody" class="text-xs divide-y divide-brand-border/30"></tbody>
-                            <tfoot class="sticky-row-bottom bg-slate-100 border-t border-brand-border/70 font-bold text-xs text-brand-ink">
-                                <tr id="assetTableFoot">
-                                    <td class="p-3 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5">
-                                        <span>📌</span><span>소계 (합계)</span>
-                                    </td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-600">44,470,000</td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-600">64,260,000</td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-600">73,930,000</td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-600">102,170,000</td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-600">102,170,000</td>
-                                    <td class="p-2.5 text-right tabular-nums bg-brand-personal/5 text-brand-personal font-extrabold text-[13px]">107,520,000</td>
-                                    <td class="p-2.5 text-right tabular-nums text-slate-400">-</td>
-                                    <td class="p-3 text-right pr-4 tabular-nums text-brand-positive font-bold">+5,350,000</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    <div class="flex flex-col flex-1 bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs overflow-hidden">
+                        <div id="assetTabs" class="flex items-center space-x-1.5 border-b border-brand-border/60 p-2 bg-slate-50 shrink-0 overflow-x-auto custom-scrollbar">
+                            <button data-tab="summary" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">★ 전체 요약</button>
+                            <button data-tab="bank" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap">① 은행 · 예적금</button>
+                            <button data-tab="invest" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">② 증권 · 투자</button>
+                            <button data-tab="debt" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">③ 부채 · 대출</button>
+                            <button data-tab="fixed" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">④ 실물 · 보증금</button>
+                            <div class="flex-1"></div>
+                            <button class="px-2.5 py-1 rounded-lg text-[11px] font-medium text-brand-sub hover:bg-black/5 border border-brand-border/50">+ 계좌 추가</button>
+                        </div>
+
+                        <div class="px-4 py-2 bg-white text-[11px] text-brand-sub border-b border-brand-border/40 shrink-0 flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="w-1.5 h-1.5 rounded-full bg-brand-personal mr-2"></span>
+                                <span>각 월의 금액 칸을 클릭하면 <strong>과거 월이라도 언제든 자유롭게 수정</strong>할 수 있습니다.</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400">숫자 수정 시 합계 및 증감이 즉시 재계산됩니다</span>
+                        </div>
+
+                        <div class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[1200px]">
+                                <thead>
+                                    <tr class="bg-slate-50/80 border-b border-brand-border/60 text-xs text-brand-sub">
+                                        <th class="p-3 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 w-[200px]">항목 (계좌명)</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.06</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.07</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.08</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.09</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.10</th>
+                                        <th class="p-2.5 font-bold text-center w-[125px] bg-brand-personal/5 text-brand-personal">26.11 (당월)</th>
+                                        <th class="p-2.5 font-medium text-center w-[110px]">26.12</th>
+                                        <th class="p-3 font-semibold text-right pr-4 w-[130px]">11월 전월증감</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assetTableBody" class="text-xs divide-y divide-brand-border/30"></tbody>
+                                <tfoot class="sticky-row-bottom bg-slate-100 border-t border-brand-border/70 font-bold text-xs text-brand-ink">
+                                    <tr id="assetTableFoot">
+                                        <td class="p-3 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5">
+                                            <span>📌</span><span>소계 (합계)</span>
+                                        </td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-600">44,470,000</td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-600">64,260,000</td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-600">73,930,000</td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-600">102,170,000</td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-600">102,170,000</td>
+                                        <td class="p-2.5 text-right tabular-nums bg-brand-personal/5 text-brand-personal font-extrabold text-[13px]">107,520,000</td>
+                                        <td class="p-2.5 text-right tabular-nums text-slate-400">-</td>
+                                        <td class="p-3 text-right pr-4 tabular-nums text-brand-positive font-bold">+5,350,000</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -475,7 +478,6 @@
         </main>
     </div>
 
-    <!-- 캐시 방지 쿼리 파라미터 갱신 -->
-    <script type="module" src="js/main.js?v=20261111_chart_fix"></script>
+    <script type="module" src="js/main.js?v=20261111_layout_clean"></script>
 </body>
 </html>
