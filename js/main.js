@@ -111,23 +111,38 @@ menuBtns.forEach(btn => {
 // 5. [자산현황] 데이터 모델 & 인터랙션 로직
 // ==========================================================
 let assetYear = 2026;
-let assetMonth = 11;
 
-// 12개월 연간 순자산 추이 데이터 (단위: 만원)
-const assetYearlyTrend = [
-    { m: 1, net: 11800, diff: 0 },
-    { m: 2, net: 12100, diff: 300 },
-    { m: 3, net: 12050, diff: -50 },
-    { m: 4, net: 12300, diff: 250 },
-    { m: 5, net: 12450, diff: 150 },
-    { m: 6, net: 12553, diff: 103 },
-    { m: 7, net: 12573, diff: 20 },
-    { m: 8, net: 13018, diff: 445 },
-    { m: 9, net: 12978, diff: -40 },
-    { m: 10, net: 13930, diff: 952 },
-    { m: 11, net: 14250, diff: 320 },
-    { m: 12, net: 0, diff: 0 }
-];
+// 연도별 12개월 순자산 추이 및 전월 대비 증감 데이터 (단위: 만원)
+const assetYearlyData = {
+    2025: [
+        { m: 1, net: 9800, diff: 0 },
+        { m: 2, net: 10100, diff: 300 },
+        { m: 3, net: 10450, diff: 350 },
+        { m: 4, net: 10400, diff: -50 },
+        { m: 5, net: 10700, diff: 300 },
+        { m: 6, net: 10950, diff: 250 },
+        { m: 7, net: 11200, diff: 250 },
+        { m: 8, net: 11500, diff: 300 },
+        { m: 9, net: 11400, diff: -100 },
+        { m: 10, net: 11600, diff: 200 },
+        { m: 11, net: 11750, diff: 150 },
+        { m: 12, net: 11800, diff: 50 }
+    ],
+    2026: [
+        { m: 1, net: 11800, diff: 0 },
+        { m: 2, net: 12100, diff: 300 },
+        { m: 3, net: 12050, diff: -50 },
+        { m: 4, net: 12300, diff: 250 },
+        { m: 5, net: 12450, diff: 150 },
+        { m: 6, net: 12553, diff: 103 },
+        { m: 7, net: 12573, diff: 20 },
+        { m: 8, net: 13018, diff: 445 },
+        { m: 9, net: 12978, diff: -40 },
+        { m: 10, net: 13930, diff: 952 },
+        { m: 11, net: 14250, diff: 320 },
+        { m: 12, net: 0, diff: 0 }
+    ]
+};
 
 // 계좌별 월간 잔액 데이터 (1원 단위 정밀 데이터)
 const bankAccounts = [
@@ -145,58 +160,66 @@ const formatWon = (val) => {
     return Number(val).toLocaleString();
 };
 
-// 상단 헤더 & 지표 렌더링
-const renderAssetHeader = () => {
-    const monthStr = assetMonth < 10 ? `0${assetMonth}` : `${assetMonth}`;
-    const displayEl = document.getElementById("assetMonthDisplay");
-    const labelEl = document.getElementById("assetMonthLabel");
+// 1) 자산현황 연도 헤더 & 12개월 증감 차트 렌더링
+const renderAssetYear = (year) => {
+    const displayEl = document.getElementById("assetYearDisplay");
     const chartTitleEl = document.getElementById("assetYearChartTitle");
     
-    if (displayEl) displayEl.textContent = `${assetYear}년 ${monthStr}월`;
-    if (labelEl) labelEl.textContent = `${assetYear}.${monthStr} 기준 순자산`;
-    if (chartTitleEl) chartTitleEl.textContent = `${assetYear}년 순자산 추이 및 월별 증감`;
+    if (displayEl) displayEl.textContent = `${year}년`;
+    if (chartTitleEl) chartTitleEl.textContent = `${year}년 순자산 추이 및 월별 증감`;
 
-    // 12개월 추이 그래프 렌더링
+    const monthsData = assetYearlyData[year] || Array(12).fill({ net: 0, diff: 0 }).map((_, idx) => ({ m: idx + 1, net: 0, diff: 0 }));
     const chartContainer = document.getElementById("asset12MonthChart");
-    if (chartContainer) {
-        chartContainer.innerHTML = "";
-        assetYearlyTrend.forEach(item => {
-            const hasData = item.net > 0;
-            const isCurrent = item.m === assetMonth;
-            const barH = hasData ? Math.min(Math.round((item.net / 16000) * 100), 95) : 8;
+    if (!chartContainer) return;
 
-            const col = document.createElement("div");
-            col.className = "flex-1 flex flex-col items-center h-full justify-end group cursor-pointer";
-            
-            // 증감 뱃지 표기 (+XX만, -XX만)
-            let diffHtml = '';
-            if (hasData && item.diff !== 0) {
-                const isPlus = item.diff > 0;
-                diffHtml = `<span class="text-[9px] font-bold ${isPlus ? 'text-brand-positive bg-brand-positive/10' : 'text-brand-negative bg-brand-negative/10'} px-1 py-0.2 rounded mb-0.5 tabular-nums whitespace-nowrap">${isPlus ? '+' : ''}${item.diff}만</span>`;
-            } else if (hasData) {
-                diffHtml = `<span class="text-[9px] font-bold text-slate-400 mb-0.5 tabular-nums">0</span>`;
+    chartContainer.innerHTML = "";
+
+    // 최대값 산출 (높이 비율 계산용)
+    const maxNet = Math.max(...monthsData.map(d => d.net), 15000);
+
+    monthsData.forEach(item => {
+        const hasData = item.net > 0;
+        const barH = hasData ? Math.min(Math.round((item.net / maxNet) * 100), 92) : 6;
+        const isPositive = item.diff > 0;
+        const isNegative = item.diff < 0;
+
+        const col = document.createElement("div");
+        col.className = "flex-1 flex flex-col items-center h-full justify-end group transition-all";
+
+        // 증감 뱃지 및 막대 색상 분기
+        let badgeHtml = '';
+        let barColor = 'bg-slate-200';
+
+        if (hasData) {
+            if (isPositive) {
+                badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded-md mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▲ +${item.diff}만</span>`;
+                barColor = 'bg-emerald-600/90 group-hover:bg-emerald-600';
+            } else if (isNegative) {
+                badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1.5 py-0.5 rounded-md mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▼ ${Math.abs(item.diff)}만</span>`;
+                barColor = 'bg-rose-600/90 group-hover:bg-rose-600';
+            } else {
+                badgeHtml = `<span class="text-[10px] font-medium text-slate-400 mb-1.5 tabular-nums">-</span>`;
+                barColor = 'bg-slate-300 group-hover:bg-slate-400';
             }
+        } else {
+            badgeHtml = `<span class="text-[9px] text-slate-300 mb-1.5">예정</span>`;
+            barColor = 'bg-slate-100 border border-dashed border-slate-200';
+        }
 
-            col.innerHTML = `
-                <div class="w-full flex flex-col items-center justify-end h-20">
-                    ${diffHtml}
-                    <div class="w-4 ${isCurrent ? 'bg-brand-personal ring-2 ring-brand-personal/30' : (hasData ? 'bg-slate-300 group-hover:bg-slate-400' : 'bg-slate-100')} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
-                </div>
-                <span class="text-[10px] mt-1.5 font-medium ${isCurrent ? 'text-brand-personal font-bold' : (hasData ? 'text-brand-sub' : 'text-slate-300')}">${item.m}월</span>
-            `;
+        col.innerHTML = `
+            <div class="w-full flex flex-col items-center justify-end h-32">
+                ${badgeHtml}
+                ${hasData ? `<span class="text-[11px] font-bold text-brand-ink mb-1 tabular-nums">${item.net.toLocaleString()}</span>` : ''}
+                <div class="w-6 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
+            </div>
+            <span class="text-[11px] mt-2 font-medium ${hasData ? 'text-brand-ink font-semibold' : 'text-slate-300'}">${item.m}월</span>
+        `;
 
-            // 클릭 시 해당 월로 전환
-            col.addEventListener('click', () => {
-                assetMonth = item.m;
-                renderAssetHeader();
-            });
-
-            chartContainer.appendChild(col);
-        });
-    }
+        chartContainer.appendChild(col);
+    });
 };
 
-// 하단 테이블 렌더링 (모든 월 편집 가능 input 구성)
+// 2) 하단 결산 시트 렌더링 (모든 셀 편집 가능 input 구성)
 const renderAssetTable = () => {
     const tbody = document.getElementById("assetTableBody");
     if (!tbody) return;
@@ -215,7 +238,7 @@ const renderAssetTable = () => {
 
         monthsHeader.forEach(mKey => {
             const val = acc.values[mKey] || 0;
-            const isSelectedMonth = mKey === `26.${assetMonth < 10 ? '0' + assetMonth : assetMonth}`;
+            const isSelectedMonth = mKey === "26.11";
             
             cellsHtml += `
                 <td class="p-1.5 text-center ${isSelectedMonth ? 'bg-brand-personal/5' : ''}">
@@ -263,22 +286,20 @@ const renderAssetTable = () => {
     });
 };
 
-// 월별 이동 버튼 리스너
-const prevMonthBtn = document.getElementById("prevMonthBtn");
-const nextMonthBtn = document.getElementById("nextMonthBtn");
+// 연도 이동 버튼 리스너
+const prevAssetYearBtn = document.getElementById("prevAssetYearBtn");
+const nextAssetYearBtn = document.getElementById("nextAssetYearBtn");
 
-if (prevMonthBtn) {
-    prevMonthBtn.addEventListener("click", () => {
-        assetMonth--;
-        if (assetMonth < 1) { assetMonth = 12; assetYear--; }
-        renderAssetHeader();
+if (prevAssetYearBtn) {
+    prevAssetYearBtn.addEventListener("click", () => {
+        assetYear--;
+        renderAssetYear(assetYear);
     });
 }
-if (nextMonthBtn) {
-    nextMonthBtn.addEventListener("click", () => {
-        assetMonth++;
-        if (assetMonth > 12) { assetMonth = 1; assetYear++; }
-        renderAssetHeader();
+if (nextAssetYearBtn) {
+    nextAssetYearBtn.addEventListener("click", () => {
+        assetYear++;
+        renderAssetYear(assetYear);
     });
 }
 
@@ -297,7 +318,7 @@ if (assetTabContainer) {
 }
 
 // 초기 자산현황 렌더링 호출
-renderAssetHeader();
+renderAssetYear(assetYear);
 renderAssetTable();
 
 // ==========================================================
