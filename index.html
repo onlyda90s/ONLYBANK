@@ -134,10 +134,15 @@
         <!-- 우측 메인 본문 -->
         <main class="flex-1 overflow-y-auto px-10 pt-8 pb-10 bg-brand-cream/30 custom-scrollbar relative">
             
-            <!-- 1. 뷰: 연간 리포트 -->
+            <!-- ============================================== -->
+            <!-- 1. 뷰: 연간 리포트 (부수입 카드 + 항목별 세부 실적 적용) -->
+            <!-- ============================================== -->
             <div id="view-home" class="view-section space-y-7 max-w-7xl mx-auto h-full flex flex-col">
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
-                    <div><h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트</h2><p class="text-sm text-brand-sub mt-1.5">한 해 동안의 수입과 지출, 자산 변화를 한눈에 요약해 드려요</p></div>
+                    <div>
+                        <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">연간 리포트</h2>
+                        <p class="text-sm text-brand-sub mt-1.5">한 해 동안의 수입과 지출, 자산 변화를 한눈에 요약해 드려요</p>
+                    </div>
                     <div class="flex items-center bg-brand-surface border border-brand-border/80 rounded-2xl px-2 py-1 shadow-xs">
                         <button id="prevYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold">◀</button>
                         <span id="currentYearDisplay" class="px-3 text-lg font-bold font-serif text-brand-ink tracking-tight select-none">2026년</span>
@@ -146,40 +151,123 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 shrink-0">
+                    <!-- [A] 이달의 현황 (11월) -->
                     <div class="space-y-2.5">
-                        <div class="flex items-center px-1"><span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span><h3 class="text-sm font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3></div>
+                        <div class="flex items-center px-1">
+                            <span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>
+                            <h3 class="text-sm font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
+                        </div>
                         <div class="grid grid-cols-2 gap-3.5">
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">이달 수입</p><p id="m-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">4,800,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">이달 저축·투자</p><p id="m-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">2,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">이달 지출</p><p id="m-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">1,900,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs flex flex-col justify-center"><p class="text-xs text-brand-sub font-medium mb-1.5">저축률 / 소비율</p><div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-2"><div id="m-savings-bar" class="bg-brand-personal h-full" style="width: 42%;"></div><div id="m-expense-bar" class="bg-brand-negative h-full" style="width: 40%;"></div></div><div class="flex justify-between text-[11px] font-bold"><span id="m-savings-txt" class="text-brand-personal">저축 42%</span><span id="m-expense-txt" class="text-brand-negative">소비 40%</span></div></div>
+                            <!-- 1. 이달 총수입 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">이달 총 수입</p>
+                                <p id="m-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">4,800,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 2. 이달 저축·투자 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">이달 저축·투자</p>
+                                <p id="m-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">2,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 3. 이달 지출 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">이달 총 지출</p>
+                                <p id="m-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">1,900,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 4. ★ 이달 부수입 (게이지바 제거 -> 부수입 + 항목별 세부 실적) ★ -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
+                                <div class="flex justify-between items-start">
+                                    <p class="text-xs text-brand-sub font-medium flex items-center">
+                                        이달 부수입
+                                        <span class="text-[10px] text-brand-personal font-semibold bg-brand-personal/10 px-1.5 py-0.2 rounded ml-1.5">월급 외</span>
+                                    </p>
+                                    <p id="m-side-income" class="text-base font-serif font-bold text-brand-positive text-right tabular-nums">850,000<span class="text-xs font-sans ml-0.5 text-brand-ink">원</span></p>
+                                </div>
+                                <div class="pt-2 border-t border-brand-border/50 space-y-0.5 text-[11px]">
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 주식/배당 실현익</span>
+                                        <span id="m-side-invest" class="font-semibold text-brand-ink tabular-nums">500,000원</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 공모주 정산</span>
+                                        <span id="m-side-ipo" class="font-semibold text-brand-ink tabular-nums">250,000원</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 리워드·기타</span>
+                                        <span id="m-side-reward" class="font-semibold text-brand-ink tabular-nums">100,000원</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- [B] 올해 누적 (2026년) -->
                     <div class="space-y-2.5">
-                        <div class="flex items-center px-1"><span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span><h3 class="text-sm font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(2026년)</span></h3></div>
+                        <div class="flex items-center px-1">
+                            <span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span>
+                            <h3 class="text-sm font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(2026년)</span></h3>
+                        </div>
                         <div class="grid grid-cols-2 gap-3.5">
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 수입</p><p id="y-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">올해 저축·투자</p><p id="y-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs"><p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 지출</p><p id="y-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p></div>
-                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs flex flex-col justify-center"><p class="text-xs text-brand-sub font-medium mb-1.5">누적 저축 / 소비율</p><div class="w-full bg-slate-200 rounded-full h-2 flex overflow-hidden mb-2"><div id="y-savings-bar" class="bg-brand-personal h-full" style="width: 40%;"></div><div id="y-expense-bar" class="bg-brand-negative h-full" style="width: 35%;"></div></div><div class="flex justify-between text-[11px] font-bold"><span id="y-savings-txt" class="text-brand-personal">저축 40%</span><span id="y-expense-txt" class="text-brand-negative">소비 35%</span></div></div>
+                            <!-- 1. 올해 총 수입 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 수입</p>
+                                <p id="y-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 2. 올해 저축·투자 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">올해 저축·투자</p>
+                                <p id="y-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 3. 올해 총 지출 -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
+                                <p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 지출</p>
+                                <p id="y-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
+                            </div>
+                            <!-- 4. ★ 올해 누적 부수입 (항목별 누적 세부 실적) ★ -->
+                            <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
+                                <div class="flex justify-between items-start">
+                                    <p class="text-xs text-brand-sub font-medium flex items-center">
+                                        올해 누적 부수입
+                                        <span class="text-[10px] text-brand-personal font-semibold bg-brand-personal/10 px-1.5 py-0.2 rounded ml-1.5">연 누적</span>
+                                    </p>
+                                    <p id="y-side-income" class="text-base font-serif font-bold text-brand-positive text-right tabular-nums">7,450,000<span class="text-xs font-sans ml-0.5 text-brand-ink">원</span></p>
+                                </div>
+                                <div class="pt-2 border-t border-brand-border/50 space-y-0.5 text-[11px]">
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 주식/배당 실현익</span>
+                                        <span id="y-side-invest" class="font-semibold text-brand-ink tabular-nums">4,200,000원</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 공모주 정산</span>
+                                        <span id="y-side-ipo" class="font-semibold text-brand-ink tabular-nums">2,150,000원</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500">
+                                        <span>· 리워드·기타</span>
+                                        <span id="y-side-reward" class="font-semibold text-brand-ink tabular-nums">1,100,000원</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 월별 수입·지출 현황 차트 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
-                        <div class="flex items-center"><h3 class="text-sm font-bold text-brand-ink">월별 수입·지출 현황</h3><span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span></div>
+                        <div class="flex items-center">
+                            <h3 class="text-sm font-bold text-brand-ink">월별 수입·지출 현황</h3>
+                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span>
+                        </div>
                         <div class="flex items-center space-x-4 text-[11px] font-bold text-slate-500">
                             <span class="flex items-center"><span class="w-2.5 h-2.5 bg-brand-positive rounded-[3px] mr-1.5"></span>수입</span>
                             <span class="flex items-center"><span class="w-2.5 h-2.5 bg-brand-negative rounded-[3px] mr-1.5"></span>지출</span>
                         </div>
                     </div>
-                    <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
-                        <div id="chartContainer" class="h-44 flex items-end justify-between gap-1 border-b border-brand-border/70 pb-2 px-1"></div>
+                    <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs overflow-visible">
+                        <div id="chartContainer" class="h-44 flex items-end justify-between gap-1 border-b border-brand-border/70 pb-2 px-1 overflow-visible relative"></div>
                     </div>
                 </div>
 
+                <!-- 하단 4대 위젯 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex items-center px-1"><h3 class="text-sm font-bold text-brand-ink">다가오는 일정</h3></div>
@@ -242,7 +330,6 @@
                     </div>
                 </header>
 
-                <!-- 1열 : 순자산 추이 및 월별 증감 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -260,7 +347,6 @@
                     </div>
                 </div>
 
-                <!-- 2열 : 월간 계좌별 잔액 결산 (인라인 입력 + 더보기 메뉴) -->
                 <div class="space-y-2.5 flex-1 flex flex-col min-h-[380px]">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -334,7 +420,7 @@
         </main>
     </div>
 
-    <!-- ★ 방안 1: 단정하고 큼직한 [⋮] 플로팅 더보기 메뉴 ★ -->
+    <!-- 플로팅 더보기 [⋮] 메뉴 -->
     <div id="accountActionPopover" class="fixed hidden bg-white border border-slate-200 rounded-xl shadow-xl z-[150] py-1 text-xs font-semibold min-w-[130px] flex-col backdrop-blur-xs">
         <button id="popoverHideBtn" class="w-full text-left px-3 py-2 text-slate-700 hover:bg-slate-50 hover:text-brand-personal flex items-center space-x-2 transition">
             <span>📦</span><span>해지(숨김)</span>
@@ -344,7 +430,7 @@
         </button>
     </div>
 
-    <!-- 캐시 갱신 -->
-    <script type="module" src="js/main.js?v=20261111_popover_action"></script>
+    <!-- 캐시 갱신 버전 적용 -->
+    <script type="module" src="js/main.js?v=20261111_side_income_v1"></script>
 </body>
 </html>
