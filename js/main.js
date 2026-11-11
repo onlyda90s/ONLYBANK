@@ -80,7 +80,7 @@ if (sidebarToggleBtn && sidebar) {
     });
 }
 
-// 6. 메뉴 라우팅
+// 6. 메인 메뉴 라우팅
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -112,18 +112,36 @@ menuBtns.forEach(btn => {
         const targetView = document.getElementById(targetViewId);
         
         if (targetView) {
-            targetView.style.display = 'block';
+            targetView.style.display = 'flex';
         } else {
             const placeholder = document.getElementById('view-placeholder');
             const menuName = btn.querySelector('.sidebar-text') ? btn.querySelector('.sidebar-text').textContent.trim() : btn.textContent.trim();
             if (placeholderTitle) placeholderTitle.textContent = menuName;
-            if (placeholder) placeholder.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'flex';
         }
     });
 });
 
 // ==========================================
-// 7. 연간 리포트 우측 연도 컨트롤러 & 실시간 갱신 기능
+// 7. 자산현황 내 탭 메뉴 UI 제어
+// ==========================================
+const assetTabContainer = document.getElementById('assetTabs');
+if (assetTabContainer) {
+    const tabs = assetTabContainer.querySelectorAll('button:not(:last-child)');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // 모든 탭 초기화
+            tabs.forEach(t => {
+                t.className = "px-4 py-2 rounded-lg text-[13px] font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap";
+            });
+            // 클릭된 탭 활성화 (흰색 배경, 테두리, 퍼스널 컬러 적용)
+            tab.className = "px-4 py-2 rounded-lg text-[13px] font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap";
+        });
+    });
+}
+
+// ==========================================
+// 8. 연간 리포트 우측 연도 컨트롤러 & 차트 렌더링
 // ==========================================
 let currentYear = 2026;
 
@@ -197,7 +215,7 @@ const renderYearData = (year) => {
             const col = document.createElement("div");
             col.className = "flex-1 flex flex-col items-center h-full justify-end";
             col.innerHTML = `
-                <div class="w-full flex items-end justify-center gap-1.5 h-28">
+                <div class="w-full flex items-end justify-center gap-1.5 h-34">
                     <div class="flex flex-col items-center justify-end h-full">
                         ${hasData ? `<span class="text-[11px] font-bold text-brand-positive mb-1 tabular-nums">${m.inc}</span>` : ''}
                         <div class="w-3.5 ${hasData ? 'bg-brand-positive' : 'bg-brand-positive/15'} rounded-t transition-all duration-300" style="height: ${hasData ? incH : 10}%;"></div>
@@ -231,7 +249,7 @@ if (nextYearBtn) {
 renderYearData(currentYear);
 
 // ==========================================
-// 8. 하단 위젯 바로가기 라우팅
+// 9. 하단 위젯 바로가기 라우팅
 // ==========================================
 const ddayItems = document.querySelectorAll(".dday-item");
 ddayItems.forEach(item => {
@@ -247,86 +265,5 @@ if (summaryMoimTile) {
     summaryMoimTile.addEventListener("click", () => {
         const groupBtn = document.getElementById("nav-group1");
         if (groupBtn) groupBtn.click();
-    });
-}
-
-// 9. 설정 화면 메뉴 ON/OFF 토글
-const toggleConfigs = [
-    { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
-    { checkboxId: 'toggle-vehicle', liId: 'li-vehicle', key: 'onlybank_cfg_vehicle' },
-    { checkboxId: 'toggle-tax', liId: 'li-tax', key: 'onlybank_cfg_tax' },
-    { checkboxId: 'toggle-ipo', liId: 'li-ipo', key: 'onlybank_cfg_ipo' },
-    { checkboxId: 'toggle-reward', liId: 'li-reward', key: 'onlybank_cfg_reward' },
-    { checkboxId: 'toggle-extra', liId: 'li-extra', key: 'onlybank_cfg_extra' },
-    { checkboxId: 'toggle-moim', liId: 'group-moim', key: 'onlybank_cfg_moim' }
-];
-
-const checkIncomeDivider = () => {
-    const ipo = document.getElementById('toggle-ipo');
-    const reward = document.getElementById('toggle-reward');
-    const extra = document.getElementById('toggle-extra');
-    const divider = document.getElementById('divider-income');
-    
-    if (divider && ipo && reward && extra) {
-        if (!ipo.checked && !reward.checked && !extra.checked) {
-            divider.style.setProperty("display", "none", "important");
-        } else {
-            divider.style.setProperty("display", "block", "important");
-        }
-    }
-};
-
-toggleConfigs.forEach(item => {
-    const checkbox = document.getElementById(item.checkboxId);
-    const liElement = document.getElementById(item.liId);
-    if (!checkbox || !liElement) return;
-
-    try {
-        const savedState = localStorage.getItem(item.key);
-        if (savedState !== null) {
-            checkbox.checked = (savedState === 'true');
-        }
-    } catch (e) {}
-
-    const updateVisibility = () => {
-        if (checkbox.checked) {
-            liElement.style.setProperty("display", "block", "important");
-        } else {
-            liElement.style.setProperty("display", "none", "important");
-        }
-        checkIncomeDivider();
-    };
-
-    updateVisibility();
-
-    checkbox.addEventListener('change', () => {
-        try { localStorage.setItem(item.key, checkbox.checked); } catch (e) {}
-        updateVisibility();
-    });
-
-    const row = checkbox.closest('.toggle-row');
-    if (row) {
-        row.addEventListener('click', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.closest('label')) return;
-            checkbox.checked = !checkbox.checked;
-            checkbox.dispatchEvent(new Event('change'));
-        });
-    }
-});
-
-// 10. 엑셀 다운로드
-const exportCsvBtn = document.getElementById('exportCsvBtn');
-if (exportCsvBtn) {
-    exportCsvBtn.addEventListener('click', () => {
-        const csvContent = "data:text/csv;charset=utf-8,\uFEFF날짜,구분,카테고리,결제수단,금액,메모\n"
-            + "2026-11-01,수입,급여,우리은행,3000000,11월 급여\n"
-            + "2026-11-02,지출,식비,신한카드,15000,점심식사";
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "onlybank_backup.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     });
 }
