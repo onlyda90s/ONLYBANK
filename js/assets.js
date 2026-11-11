@@ -1,7 +1,11 @@
 let assetYear = 2026;
 let currentTab = "bank"; // 기본 탭: 금융권
 
-// 1. 상단 차트 데이터 (1~12월 연간 순자산 추이)
+// 접속 시점 월(1~12)을 자동 판별하여 상반기/하반기 기본 활성화
+const currentSystemMonth = new Date().getMonth() + 1;
+let currentRange = currentSystemMonth <= 6 ? "h1" : "h2"; // 11월이므로 자동으로 'h2'로 시작
+
+// 1. 상단 차트 데이터 (단위: 만원 기준 원본)
 const assetYearlyData = {
     2025: [
         { m: 1, net: 9800, diff: 0 }, { m: 2, net: 10100, diff: 300 }, { m: 3, net: 10450, diff: 350 },
@@ -17,7 +21,7 @@ const assetYearlyData = {
     ]
 };
 
-// 2. 4대 자산군 계좌별 1~12월 잔액 데이터 (1원 단위 및 고유 ID 관리)
+// 2. 4대 자산군 계좌별 원 단위(KRW) 원본 데이터베이스
 const accountDatabase = {
     bank: [
         { id: "b_1", name: "우리은행 (급여통장)", dot: "bg-blue-500", values: { 1: 9500000, 2: 9800000, 3: 9700000, 4: 9900000, 5: 10050000, 6: 10140000, 7: 9440000, 8: 19070000, 9: 16750000, 10: 16750000, 11: 16954200, 12: 0 } },
@@ -40,7 +44,7 @@ const accountDatabase = {
 
 const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
 
-// 1. 상단 순자산 추이 차트
+// 1. 상단 순자산 추이 차트 (단위: 천원 + 마우스 호버 툴팁)
 export const renderAssetYearChart = (year) => {
     const displayEl = document.getElementById("assetYearDisplay");
     const chartTitleEl = document.getElementById("assetYearChartTitle");
@@ -60,64 +64,110 @@ export const renderAssetYearChart = (year) => {
         const isPositive = item.diff > 0;
         const isNegative = item.diff < 0;
 
+        // 천원 단위 환산: 14,250만원 -> 142,500천원
+        const netInThousand = hasData ? item.net * 10 : 0;
+        const exactFullWon = item.net * 10000;
+        const diffFullWon = item.diff * 10000;
+
         const col = document.createElement("div");
-        col.className = "flex-1 flex flex-col items-center h-full justify-end group transition-all";
+        col.className = "flex-1 flex flex-col items-center h-full justify-end group relative transition-all";
 
         let badgeHtml = '';
         let barColor = 'bg-slate-200';
+        let diffText = '-';
+        let diffColorCls = 'text-slate-300';
 
         if (hasData) {
             if (isPositive) {
                 badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▲+${item.diff}만</span>`;
                 barColor = 'bg-emerald-600/90 group-hover:bg-emerald-600';
+                diffText = `▲ +${diffFullWon.toLocaleString()}원`;
+                diffColorCls = 'text-emerald-400';
             } else if (isNegative) {
                 badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▼${Math.abs(item.diff)}만</span>`;
                 barColor = 'bg-rose-600/90 group-hover:bg-rose-600';
+                diffText = `▼ ${Math.abs(diffFullWon).toLocaleString()}원`;
+                diffColorCls = 'text-rose-400';
             } else {
                 badgeHtml = `<span class="text-[10px] font-medium text-slate-400 tabular-nums">-</span>`;
                 barColor = 'bg-slate-300 group-hover:bg-slate-400';
+                diffText = '전월 동일';
             }
         } else {
             badgeHtml = `<span class="text-[9px] text-slate-300">예정</span>`;
             barColor = 'bg-slate-100 border border-dashed border-slate-200';
         }
 
+        // 마우스 오버 시 표시되는 미니 툴팁 (1원 단위 전체 금액 + 증감)
+        const tooltipHtml = hasData ? `
+            <div class="absolute bottom-[95%] mb-2 hidden group-hover:flex flex-col items-center z-50 pointer-events-none transition-all duration-200 shadow-xl">
+                <div class="bg-slate-900/95 text-white rounded-xl py-2 px-3 border border-slate-700 text-center whitespace-nowrap shadow-2xl backdrop-blur-xs">
+                    <p class="text-[10px] text-slate-300 font-medium mb-0.5">${item.m}월 말 순자산 총액</p>
+                    <p class="text-xs font-bold text-amber-300 tabular-nums font-mono">${exactFullWon.toLocaleString()}원</p>
+                    <div class="mt-1 pt-1 border-t border-slate-700/80 flex items-center justify-center space-x-1 text-[10px]">
+                        <span class="text-slate-400">전월비:</span>
+                        <span class="font-bold tabular-nums ${diffColorCls}">${diffText}</span>
+                    </div>
+                </div>
+                <div class="w-2 h-2 bg-slate-900/95 rotate-45 -mt-1 border-r border-b border-slate-700"></div>
+            </div>
+        ` : '';
+
         col.innerHTML = `
+            ${tooltipHtml}
             <div class="h-6 flex items-center justify-center mb-1">
                 ${badgeHtml}
             </div>
-            <div class="w-full flex flex-col items-center justify-end h-28">
+            <div class="w-full flex flex-col items-center justify-end h-28 cursor-pointer">
                 <div class="w-5 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
             </div>
             <div class="mt-2 flex flex-col items-center select-none border-t border-brand-border/40 w-full pt-1.5">
                 <span class="text-[11px] font-semibold ${hasData ? 'text-brand-ink' : 'text-slate-400'}">${item.m}월</span>
-                <span class="text-[11px] font-bold tracking-tight mt-0.5 tabular-nums ${hasData ? 'text-brand-ink' : 'text-slate-300'}">${hasData ? item.net.toLocaleString() : '-'}</span>
+                <span class="text-[11px] font-bold tracking-tight mt-0.5 tabular-nums ${hasData ? 'text-brand-ink' : 'text-slate-300'}">${hasData ? netInThousand.toLocaleString() : '-'}</span>
             </div>
         `;
         chartContainer.appendChild(col);
     });
 };
 
-// 2. 월간 결산 시트 (1~12월 균등 너비, 당월 문구 제거, 인라인 계좌/항목명 편집)
+// 2. 월간 결산 시트 (상반기/하반기 6열 원단위 vs 전체 12열 천원단위)
 export const renderAssetTable = (focusNewId = null) => {
     const thead = document.getElementById("assetTableHead");
     const tbody = document.getElementById("assetTableBody");
     const tfoot = document.getElementById("assetTableFoot");
+    const unitDisplay = document.getElementById("assetSheetUnit");
     if (!thead || !tbody || !tfoot) return;
 
-    const allMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    // 현재 뷰 범위에 따른 월 목록 & 단위 결정
+    let activeMonths = [];
+    const isAll = (currentRange === "all");
 
-    // 헤더(Thead): 항목 + 1~12월 (당월 문구 제거, 7% 균등 분할)
+    if (currentRange === "h1") {
+        activeMonths = [1, 2, 3, 4, 5, 6];
+        if (unitDisplay) unitDisplay.textContent = "(단위: 원)";
+    } else if (currentRange === "h2") {
+        activeMonths = [7, 8, 9, 10, 11, 12];
+        if (unitDisplay) unitDisplay.textContent = "(단위: 원)";
+    } else {
+        activeMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        if (unitDisplay) unitDisplay.textContent = "(단위: 천원)";
+    }
+
+    // 열 너비 비율 계산 (전체: 항목 16% + 월 7% / 반기: 항목 22% + 월 13%)
+    const colNameWidth = isAll ? "w-[16%]" : "w-[22%]";
+    const colMonthWidth = isAll ? "w-[7%]" : "w-[13%]";
+
+    // 헤더(Thead)
     let headHtml = `
         <tr class="bg-slate-50/80 border-b border-brand-border/60 text-xs text-brand-sub">
-            <th class="p-2.5 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 w-[16%]">항목</th>
+            <th class="p-2.5 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 ${colNameWidth}">항목</th>
     `;
-    allMonths.forEach(m => {
+    activeMonths.forEach(m => {
         const isCurrent = m === 11;
-        const isQuarterEnd = (m === 3 || m === 6 || m === 9);
+        const isQuarterEnd = isAll && (m === 3 || m === 6 || m === 9);
         const borderCls = isQuarterEnd ? "quarter-divider" : "";
         headHtml += `
-            <th class="p-2 font-medium text-center w-[7%] ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-bold' : ''} ${borderCls}">
+            <th class="p-2 font-medium text-center ${colMonthWidth} ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-bold' : ''} ${borderCls}">
                 ${m}월
             </th>
         `;
@@ -125,7 +175,7 @@ export const renderAssetTable = (focusNewId = null) => {
     headHtml += `</tr>`;
     thead.innerHTML = headHtml;
 
-    // 본문(Tbody): 항목명 및 금액 모두 input 필드로 직접 편집
+    // 본문(Tbody)
     const currentAccounts = accountDatabase[currentTab] || [];
     tbody.innerHTML = "";
 
@@ -134,8 +184,8 @@ export const renderAssetTable = (focusNewId = null) => {
         tr.className = "hover:bg-black/[0.015] transition-colors";
 
         let rowHtml = `
-            <td class="p-1 sticky-col bg-white border-r border-brand-border/40">
-                <div class="flex items-center space-x-1.5 px-1.5 py-0.5">
+            <td class="p-1 sticky-col bg-white border-r border-brand-border/40 ${colNameWidth}">
+                <div class="flex items-center space-x-1.5 px-1 py-0.5">
                     <span class="w-2 h-2 rounded-full ${acc.dot} shrink-0"></span>
                     <input type="text" data-id="${acc.id}" value="${acc.name}" 
                         class="account-name-input w-full bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1.5 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition" />
@@ -143,16 +193,19 @@ export const renderAssetTable = (focusNewId = null) => {
             </td>
         `;
 
-        allMonths.forEach(m => {
+        activeMonths.forEach(m => {
             const val = acc.values[m] || 0;
             const isCurrent = m === 11;
-            const isQuarterEnd = (m === 3 || m === 6 || m === 9);
+            const isQuarterEnd = isAll && (m === 3 || m === 6 || m === 9);
             const borderCls = isQuarterEnd ? "quarter-divider" : "";
 
+            // 전체 뷰면 천원 단위 환산 표시, 반기 뷰면 원 단위 그대로 표시
+            const displayVal = isAll ? (val > 0 ? Math.round(val / 1000) : 0) : val;
+
             rowHtml += `
-                <td class="p-1 text-center ${isCurrent ? 'bg-brand-personal/5' : ''} ${borderCls}">
-                    <input type="text" data-acc-id="${acc.id}" data-month="${m}" value="${formatWon(val)}" 
-                        class="asset-input w-full text-right bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1 py-1 tabular-nums text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-personal transition-all shadow-2xs" />
+                <td class="p-1 text-center ${colMonthWidth} ${isCurrent ? 'bg-brand-personal/5' : ''} ${borderCls}">
+                    <input type="text" data-acc-id="${acc.id}" data-month="${m}" value="${formatWon(displayVal)}" 
+                        class="asset-input w-full text-right bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1 py-1 tabular-nums ${isAll ? 'text-[11px]' : 'text-xs'} font-medium focus:outline-none focus:ring-1 focus:ring-brand-personal transition-all shadow-2xs" />
                 </td>
             `;
         });
@@ -161,43 +214,44 @@ export const renderAssetTable = (focusNewId = null) => {
         tbody.appendChild(tr);
     });
 
-    // '+ 계좌 추가' 행
+    // '+ 계좌 추가' 인라인 행
     const addRow = document.createElement("tr");
     addRow.className = "hover:bg-brand-personal/[0.02] border-t border-brand-border/40";
     addRow.innerHTML = `
-        <td class="p-2 sticky-col bg-white border-r border-brand-border/40">
+        <td class="p-2 sticky-col bg-white border-r border-brand-border/40 ${colNameWidth}">
             <button id="addAccountBtn" class="flex items-center text-xs font-bold text-brand-personal hover:text-sky-800 transition px-2 py-1 rounded hover:bg-black/5">
                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                 계좌 추가
             </button>
         </td>
-        <td colspan="12" class="bg-slate-50/20"></td>
+        <td colspan="${activeMonths.length}" class="bg-slate-50/20"></td>
     `;
     tbody.appendChild(addRow);
 
     // 푸터(합계) 렌더링
     let footHtml = `
         <tr>
-            <td class="p-2.5 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5">
+            <td class="p-2.5 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5 ${colNameWidth}">
                 <span>📌</span><span>합계</span>
             </td>
     `;
-    allMonths.forEach(m => {
-        const total = currentAccounts.reduce((sum, a) => sum + (a.values[m] || 0), 0);
+    activeMonths.forEach(m => {
+        const totalRaw = currentAccounts.reduce((sum, a) => sum + (a.values[m] || 0), 0);
+        const displayTotal = isAll ? (totalRaw > 0 ? Math.round(totalRaw / 1000) : 0) : totalRaw;
         const isCurrent = m === 11;
-        const isQuarterEnd = (m === 3 || m === 6 || m === 9);
+        const isQuarterEnd = isAll && (m === 3 || m === 6 || m === 9);
         const borderCls = isQuarterEnd ? "quarter-divider" : "";
 
         footHtml += `
-            <td class="p-2 text-right tabular-nums ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-extrabold text-[12px]' : 'text-slate-600 text-xs'} ${borderCls}">
-                ${total > 0 ? formatWon(total) : '-'}
+            <td class="p-2 text-right tabular-nums ${colMonthWidth} ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-extrabold text-[12px]' : 'text-slate-600 text-xs'} ${borderCls}">
+                ${displayTotal > 0 ? formatWon(displayTotal) : '-'}
             </td>
         `;
     });
     footHtml += `</tr>`;
     tfoot.innerHTML = footHtml;
 
-    // 1) 항목(계좌명) 수정 리스너
+    // 1) 항목명 수정 리스너
     tbody.querySelectorAll('.account-name-input').forEach(nameInput => {
         nameInput.addEventListener('blur', (e) => {
             const accId = e.target.getAttribute('data-id');
@@ -208,26 +262,27 @@ export const renderAssetTable = (focusNewId = null) => {
         });
     });
 
-    // 2) 금액 수정 리스너 (1원 단위 포맷팅)
+    // 2) 금액 수정 리스너 (현재 뷰 단위에 맞춘 정밀 보존)
     tbody.querySelectorAll('.asset-input').forEach(input => {
         input.addEventListener('focus', (e) => {
             const raw = e.target.value.replace(/,/g, '');
             e.target.value = raw === "0" ? "" : raw;
         });
         input.addEventListener('blur', (e) => {
-            const num = Number(e.target.value.replace(/,/g, '')) || 0;
-            e.target.value = formatWon(num);
+            const entered = Number(e.target.value.replace(/,/g, '')) || 0;
             const accId = e.target.getAttribute('data-acc-id');
             const m = parseInt(e.target.getAttribute('data-month'), 10);
             const targetAcc = currentAccounts.find(a => a.id === accId);
+
             if (targetAcc) {
-                targetAcc.values[m] = num;
-                renderAssetTable(); // 합계 재계산
+                // 전체(천원 뷰)에서 입력했으면 * 1000하여 원 단위로 영구 보존, 반기 뷰면 그대로 보존
+                targetAcc.values[m] = isAll ? entered * 1000 : entered;
+                renderAssetTable(); // 즉시 합계 재계산
             }
         });
     });
 
-    // 3) '+ 계좌 추가' 클릭 리스너 (팝업 없이 즉시 행 추가)
+    // 3) '+ 계좌 추가' 인라인 클릭 리스너
     document.getElementById("addAccountBtn")?.addEventListener("click", () => {
         const newId = "acc_" + Date.now();
         currentAccounts.push({
@@ -239,7 +294,7 @@ export const renderAssetTable = (focusNewId = null) => {
         renderAssetTable(newId);
     });
 
-    // 새 계좌 추가 직후 해당 입력창에 자동 포커스
+    // 새 항목 생성 시 자동 포커스
     if (focusNewId) {
         setTimeout(() => {
             const target = tbody.querySelector(`input[data-id="${focusNewId}"]`);
@@ -272,6 +327,40 @@ export const initAssetsModule = () => {
         });
     });
 
+    // 반기/전체 필터 칩 스타일 동기화 함수
+    const updateRangeBtnUI = () => {
+        const h1Btn = document.getElementById("filter-range-h1");
+        const h2Btn = document.getElementById("filter-range-h2");
+        const allBtn = document.getElementById("filter-range-all");
+
+        [h1Btn, h2Btn, allBtn].forEach(b => {
+            if (b) b.className = "range-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition whitespace-nowrap text-[11px] font-semibold text-brand-sub";
+        });
+
+        const activeBtn = currentRange === "h1" ? h1Btn : (currentRange === "h2" ? h2Btn : allBtn);
+        if (activeBtn) {
+            activeBtn.className = "range-btn px-2.5 py-0.5 rounded-md bg-white text-brand-personal shadow-xs transition whitespace-nowrap text-[11px] font-bold";
+        }
+    };
+
+    document.getElementById("filter-range-h1")?.addEventListener("click", () => {
+        currentRange = "h1";
+        updateRangeBtnUI();
+        renderAssetTable();
+    });
+    document.getElementById("filter-range-h2")?.addEventListener("click", () => {
+        currentRange = "h2";
+        updateRangeBtnUI();
+        renderAssetTable();
+    });
+    document.getElementById("filter-range-all")?.addEventListener("click", () => {
+        currentRange = "all";
+        updateRangeBtnUI();
+        renderAssetTable();
+    });
+
+    // 초기 상태 가동
+    updateRangeBtnUI();
     renderAssetYearChart(assetYear);
     renderAssetTable();
 };
