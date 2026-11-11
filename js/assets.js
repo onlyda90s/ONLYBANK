@@ -29,8 +29,10 @@ const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleStrin
 export const renderAssetYearChart = (year) => {
     const displayEl = document.getElementById("assetYearDisplay");
     const chartTitleEl = document.getElementById("assetYearChartTitle");
+    
     if (displayEl) displayEl.textContent = `${year}년`;
-    if (chartTitleEl) chartTitleEl.textContent = `${year}년 순자산 추이 및 월별 증감`;
+    // 연도 텍스트 제거 및 고정 타이틀 설정
+    if (chartTitleEl) chartTitleEl.textContent = "순자산 추이 및 월별 증감";
 
     const monthsData = assetYearlyData[year] || Array(12).fill({ net: 0, diff: 0 }).map((_, idx) => ({ m: idx + 1, net: 0, diff: 0 }));
     const chartContainer = document.getElementById("asset12MonthChart");
@@ -41,39 +43,47 @@ export const renderAssetYearChart = (year) => {
 
     monthsData.forEach(item => {
         const hasData = item.net > 0;
-        const barH = hasData ? Math.min(Math.round((item.net / maxNet) * 100), 92) : 6;
+        const barH = hasData ? Math.min(Math.round((item.net / maxNet) * 100), 90) : 6;
         const isPositive = item.diff > 0;
         const isNegative = item.diff < 0;
 
         const col = document.createElement("div");
         col.className = "flex-1 flex flex-col items-center h-full justify-end group transition-all";
 
+        // 증감 뱃지 생성 (하단 전용 행에 깔끔하게 배치될 디자인)
         let badgeHtml = '';
         let barColor = 'bg-slate-200';
 
         if (hasData) {
             if (isPositive) {
-                badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded-md mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▲ +${item.diff}만</span>`;
+                badgeHtml = `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▲+${item.diff}만</span>`;
                 barColor = 'bg-emerald-600/90 group-hover:bg-emerald-600';
             } else if (isNegative) {
-                badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1.5 py-0.5 rounded-md mb-1.5 tabular-nums whitespace-nowrap shadow-3xs">▼ ${Math.abs(item.diff)}만</span>`;
+                badgeHtml = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200/80 px-1 py-0.5 rounded tabular-nums whitespace-nowrap shadow-3xs">▼${Math.abs(item.diff)}만</span>`;
                 barColor = 'bg-rose-600/90 group-hover:bg-rose-600';
             } else {
-                badgeHtml = `<span class="text-[10px] font-medium text-slate-400 mb-1.5 tabular-nums">-</span>`;
+                badgeHtml = `<span class="text-[10px] font-medium text-slate-400 tabular-nums">-</span>`;
                 barColor = 'bg-slate-300 group-hover:bg-slate-400';
             }
         } else {
-            badgeHtml = `<span class="text-[9px] text-slate-300 mb-1.5">예정</span>`;
+            badgeHtml = `<span class="text-[9px] text-slate-300">예정</span>`;
             barColor = 'bg-slate-100 border border-dashed border-slate-200';
         }
 
+        // [상하 분리 구조]
+        // 1) 막대 상단: 당월 순자산 금액 단독 노출 (숫자 위 숫자 중첩 완전 해소)
+        // 2) 막대
+        // 3) 월 라벨
+        // 4) 하단 전용 행: 증감 뱃지 일렬 정렬
         col.innerHTML = `
             <div class="w-full flex flex-col items-center justify-end h-32">
-                ${badgeHtml}
-                ${hasData ? `<span class="text-[11px] font-bold text-brand-ink mb-1 tabular-nums">${item.net.toLocaleString()}</span>` : ''}
-                <div class="w-6 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
+                ${hasData ? `<span class="text-[11px] font-bold text-brand-ink mb-1.5 tabular-nums tracking-tight">${item.net.toLocaleString()}</span>` : ''}
+                <div class="w-5 ${barColor} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
             </div>
             <span class="text-[11px] mt-2 font-medium ${hasData ? 'text-brand-ink font-semibold' : 'text-slate-300'}">${item.m}월</span>
+            <div class="mt-1 h-5 flex items-center justify-center">
+                ${badgeHtml}
+            </div>
         `;
         chartContainer.appendChild(col);
     });
