@@ -343,37 +343,36 @@
             <!-- ============================================== -->
             <!-- 2. 뷰: 자산현황 (차트 제목 및 시트 제목 정돈)       -->
             <!-- ============================================== -->
-            <div id="view-assets" class="view-section space-y-6 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
-                <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
-                    <div>
-                        <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">자산현황</h2>
-                        <p class="text-sm text-brand-sub mt-1.5">예·적금, 투자, 대출 등 보유 중인 모든 자산의 총합을 확인해요</p>
-                    </div>
-                    <div class="flex items-center bg-brand-surface border border-brand-border/80 rounded-2xl px-2 py-1 shadow-xs">
-                        <button id="prevAssetYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold" title="이전 연도">◀</button>
-                        <span id="assetYearDisplay" class="px-3 text-lg font-bold font-serif text-brand-ink tracking-tight select-none">2026년</span>
-                        <button id="nextAssetYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold" title="다음 연도">▶</button>
-                    </div>
-                </header>
+          <div id="view-assets" class="view-section space-y-6 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
+    <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
+        <div>
+            <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">자산현황</h2>
+            <p class="text-sm text-brand-sub mt-1.5">예·적금, 투자, 대출 등 보유 중인 모든 자산의 총합을 확인해요</p>
+        </div>
+        <div class="flex items-center bg-brand-surface border border-brand-border/80 rounded-2xl px-2 py-1 shadow-xs">
+            <button id="prevAssetYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold" title="이전 연도">◀</button>
+            <span id="assetYearDisplay" class="px-3 text-lg font-bold font-serif text-brand-ink tracking-tight select-none">2026년</span>
+            <button id="nextAssetYearBtn" class="w-8 h-8 flex items-center justify-center rounded-xl text-brand-sub hover:text-brand-ink hover:bg-black/5 transition text-xs font-bold" title="다음 연도">▶</button>
+        </div>
+    </header>
 
-                <!-- 1열 : 순자산 추이 및 월별 증감 패널 (연도 텍스트 제거) -->
-                <div class="space-y-2.5 shrink-0">
-                    <div class="flex justify-between items-center px-1">
-                        <div class="flex items-center">
-                            <h3 id="assetYearChartTitle" class="text-sm font-bold text-brand-ink">순자산 추이 및 월별 증감</h3>
-                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span>
-                        </div>
-                        <div class="flex items-center space-x-4 text-[11px] font-semibold text-brand-sub">
-                            <span class="flex items-center"><span class="w-2.5 h-2.5 bg-emerald-600 rounded-[3px] mr-1.5"></span>순자산 증가(▲)</span>
-                            <span class="flex items-center"><span class="w-2.5 h-2.5 bg-rose-600 rounded-[3px] mr-1.5"></span>순자산 감소(▼)</span>
-                            <span class="flex items-center"><span class="w-2.5 h-2.5 bg-slate-300 rounded-[3px] mr-1.5"></span>변동 없음 / 예정</span>
-                        </div>
-                    </div>
-                    <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
-                        <div id="asset12MonthChart" class="h-48 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2"></div>
-                    </div>
-                </div>
-
+               <!-- 1열 : 연도 텍스트가 완전히 제거된 고정 타이틀 & 상하 분리형 차트 -->
+    <div class="space-y-2.5 shrink-0">
+        <div class="flex justify-between items-center px-1">
+            <div class="flex items-center">
+                <h3 id="assetYearChartTitle" class="text-sm font-bold text-brand-ink">순자산 추이 및 월별 증감</h3>
+                <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span>
+            </div>
+            <div class="flex items-center space-x-4 text-[11px] font-semibold text-brand-sub">
+                <span class="flex items-center"><span class="w-2.5 h-2.5 bg-emerald-600 rounded-[3px] mr-1.5"></span>순자산 증가(▲)</span>
+                <span class="flex items-center"><span class="w-2.5 h-2.5 bg-rose-600 rounded-[3px] mr-1.5"></span>순자산 감소(▼)</span>
+                <span class="flex items-center"><span class="w-2.5 h-2.5 bg-slate-300 rounded-[3px] mr-1.5"></span>변동 없음 / 예정</span>
+            </div>
+        </div>
+        <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
+            <div id="asset12MonthChart" class="h-52 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2"></div>
+        </div>
+    </div>
                 <!-- 2열 : 월간 계좌별 잔액 결산 시트 (상단 섹션 제목 신설) -->
                 <div class="space-y-2.5 flex-1 flex flex-col min-h-[380px]">
                     <div class="flex justify-between items-center px-1">
