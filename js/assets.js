@@ -1,11 +1,66 @@
 let assetYear = 2026;
 let currentTab = "bank"; // 기본 탭: 금융권
+let showHiddenAccounts = false; // 숨김 보관함 접힘/펼침 상태
 
-// 접속 시점 월(1~12)을 자동 판별하여 상반기/하반기 기본 활성화
+// 접속 시점 월(1~12) 자동 감지하여 상반기/하반기 기본 활성화
 const currentSystemMonth = new Date().getMonth() + 1;
-let currentRange = currentSystemMonth <= 6 ? "h1" : "h2"; // 11월이므로 자동으로 'h2'로 시작
+let currentRange = currentSystemMonth <= 6 ? "h1" : "h2"; // 11월이므로 'h2'로 시작
 
-// 1. 상단 차트 데이터 (단위: 만원 기준 원본)
+// 로컬 영구 저장소 키
+const ASSET_STORAGE_KEY = "onlybank_asset_accounts_v3";
+
+// 초기 기본 데이터 (저장소에 아무것도 없을 때 1회 로드)
+const defaultAccountDatabase = {
+    bank: [
+        { id: "b_1", name: "우리은행 (급여통장)", hidden: false, values: { 1: 9500000, 2: 9800000, 3: 9700000, 4: 9900000, 5: 10050000, 6: 10140000, 7: 9440000, 8: 19070000, 9: 16750000, 10: 16750000, 11: 16954200, 12: 0 } },
+        { id: "b_2", name: "카카오뱅크 (생활비)", hidden: false, values: { 1: 5100000, 2: 5200000, 3: 5200000, 4: 5250000, 5: 5250000, 6: 5250000, 7: 5250000, 8: 5260000, 9: 5270000, 10: 5270000, 11: 5270000, 12: 0 } },
+        { id: "b_3", name: "토스뱅크 (비상금)", hidden: false, values: { 1: 23500000, 2: 23800000, 3: 23900000, 4: 24000000, 5: 24000000, 6: 24080000, 7: 24570000, 8: 24600000, 9: 25150000, 10: 25150000, 11: 25308500, 12: 0 } },
+        { id: "b_4", name: "신한은행 (청년적금)", hidden: false, values: { 1: 1000000, 2: 2000000, 3: 3000000, 4: 4000000, 5: 5000000, 6: 5000000, 7: 25000000, 8: 25000000, 9: 55000000, 10: 55000000, 11: 60000000, 12: 0 } }
+    ],
+    invest: [
+        { id: "i_1", name: "미래에셋 (국내주식)", hidden: false, values: { 1: 15000000, 2: 15800000, 3: 15200000, 4: 16000000, 5: 16500000, 6: 16800000, 7: 17100000, 8: 18200000, 9: 17900000, 10: 19500000, 11: 20100000, 12: 0 } },
+        { id: "i_2", name: "토스증권 (해외주식)", hidden: false, values: { 1: 8000000, 2: 8500000, 3: 8900000, 4: 9200000, 5: 9400000, 6: 9800000, 7: 10200000, 8: 10500000, 9: 10800000, 10: 11400000, 11: 12000000, 12: 0 } }
+    ],
+    debt: [
+        { id: "d_1", name: "신한은행 마이너스통장", hidden: false, values: { 1: 5000000, 2: 4500000, 3: 4000000, 4: 3500000, 5: 3000000, 6: 2500000, 7: 2000000, 8: 1500000, 9: 1000000, 10: 500000, 11: 0, 12: 0 } }
+    ],
+    etc: [
+        { id: "e_1", name: "주택청약종합저축", hidden: false, values: { 1: 7200000, 2: 7300000, 3: 7400000, 4: 7500000, 5: 7600000, 6: 7700000, 7: 7800000, 8: 7900000, 9: 8000000, 10: 8100000, 11: 8200000, 12: 0 } },
+        { id: "e_2", name: "오피스텔 임대보증금", hidden: false, values: { 1: 10000000, 2: 10000000, 3: 10000000, 4: 10000000, 5: 10000000, 6: 10000000, 7: 10000000, 8: 10000000, 9: 10000000, 10: 10000000, 11: 10000000, 12: 0 } }
+    ]
+};
+
+// ==========================================
+// 로컬 저장소 입출력 엔진 (새로고침 보존)
+// ==========================================
+let accountDatabase = defaultAccountDatabase;
+
+const loadAccounts = () => {
+    try {
+        const saved = localStorage.getItem(ASSET_STORAGE_KEY);
+        if (saved) {
+            accountDatabase = JSON.parse(saved);
+        } else {
+            accountDatabase = defaultAccountDatabase;
+            saveAccounts();
+        }
+    } catch (e) {
+        console.warn("데이터 로드 오류, 기본값 적용:", e);
+        accountDatabase = defaultAccountDatabase;
+    }
+};
+
+const saveAccounts = () => {
+    try {
+        localStorage.setItem(ASSET_STORAGE_KEY, JSON.stringify(accountDatabase));
+    } catch (e) {
+        console.error("데이터 저장 실패:", e);
+    }
+};
+
+const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
+
+// 1. 상단 순자산 추이 차트 (단위: 천원 + 마우스 호버 툴팁)
 const assetYearlyData = {
     2025: [
         { m: 1, net: 9800, diff: 0 }, { m: 2, net: 10100, diff: 300 }, { m: 3, net: 10450, diff: 350 },
@@ -21,30 +76,6 @@ const assetYearlyData = {
     ]
 };
 
-// 2. 4대 자산군 계좌별 원 단위(KRW) 원본 데이터베이스 (dot 색상 속성 제거)
-const accountDatabase = {
-    bank: [
-        { id: "b_1", name: "우리은행 (급여통장)", values: { 1: 9500000, 2: 9800000, 3: 9700000, 4: 9900000, 5: 10050000, 6: 10140000, 7: 9440000, 8: 19070000, 9: 16750000, 10: 16750000, 11: 16954200, 12: 0 } },
-        { id: "b_2", name: "카카오뱅크 (생활비)", values: { 1: 5100000, 2: 5200000, 3: 5200000, 4: 5250000, 5: 5250000, 6: 5250000, 7: 5250000, 8: 5260000, 9: 5270000, 10: 5270000, 11: 5270000, 12: 0 } },
-        { id: "b_3", name: "토스뱅크 (비상금)", values: { 1: 23500000, 2: 23800000, 3: 23900000, 4: 24000000, 5: 24000000, 6: 24080000, 7: 24570000, 8: 24600000, 9: 25150000, 10: 25150000, 11: 25308500, 12: 0 } },
-        { id: "b_4", name: "신한은행 (청년적금)", values: { 1: 1000000, 2: 2000000, 3: 3000000, 4: 4000000, 5: 5000000, 6: 5000000, 7: 25000000, 8: 25000000, 9: 55000000, 10: 55000000, 11: 60000000, 12: 0 } }
-    ],
-    invest: [
-        { id: "i_1", name: "미래에셋 (국내주식)", values: { 1: 15000000, 2: 15800000, 3: 15200000, 4: 16000000, 5: 16500000, 6: 16800000, 7: 17100000, 8: 18200000, 9: 17900000, 10: 19500000, 11: 20100000, 12: 0 } },
-        { id: "i_2", name: "토스증권 (해외주식)", values: { 1: 8000000, 2: 8500000, 3: 8900000, 4: 9200000, 5: 9400000, 6: 9800000, 7: 10200000, 8: 10500000, 9: 10800000, 10: 11400000, 11: 12000000, 12: 0 } }
-    ],
-    debt: [
-        { id: "d_1", name: "신한은행 마이너스통장", values: { 1: 5000000, 2: 4500000, 3: 4000000, 4: 3500000, 5: 3000000, 6: 2500000, 7: 2000000, 8: 1500000, 9: 1000000, 10: 500000, 11: 0, 12: 0 } }
-    ],
-    etc: [
-        { id: "e_1", name: "주택청약종합저축", values: { 1: 7200000, 2: 7300000, 3: 7400000, 4: 7500000, 5: 7600000, 6: 7700000, 7: 7800000, 8: 7900000, 9: 8000000, 10: 8100000, 11: 8200000, 12: 0 } },
-        { id: "e_2", name: "오피스텔 임대보증금", values: { 1: 10000000, 2: 10000000, 3: 10000000, 4: 10000000, 5: 10000000, 6: 10000000, 7: 10000000, 8: 10000000, 9: 10000000, 10: 10000000, 11: 10000000, 12: 0 } }
-    ]
-};
-
-const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
-
-// 1. 상단 순자산 추이 차트 (단위: 천원 + 마우스 호버 툴팁)
 export const renderAssetYearChart = (year) => {
     const displayEl = document.getElementById("assetYearDisplay");
     const chartTitleEl = document.getElementById("assetYearChartTitle");
@@ -128,7 +159,7 @@ export const renderAssetYearChart = (year) => {
     });
 };
 
-// 2. 월간 결산 시트 (여백 개선, dot 제거, 합계 줄바꿈 방지, 전체 뷰 읽기전용 자동반영)
+// 2. 월간 결산 시트 (영구 저장, 숨김/보관 처리, 영구 삭제, 합계 보존)
 export const renderAssetTable = (focusNewId = null) => {
     const thead = document.getElementById("assetTableHead");
     const tbody = document.getElementById("assetTableBody");
@@ -174,20 +205,28 @@ export const renderAssetTable = (focusNewId = null) => {
     headHtml += `</tr>`;
     thead.innerHTML = headHtml;
 
-    // 본문(Tbody)
-    const currentAccounts = accountDatabase[currentTab] || [];
+    // 계좌 데이터 분류 (활성 vs 숨김)
+    const allTabAccounts = accountDatabase[currentTab] || [];
+    const activeAccounts = allTabAccounts.filter(acc => !acc.hidden);
+    const hiddenAccounts = allTabAccounts.filter(acc => acc.hidden);
+
     tbody.innerHTML = "";
 
-    currentAccounts.forEach(acc => {
+    // [A] 현재 활성 계좌 목록 렌더링
+    activeAccounts.forEach(acc => {
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-black/[0.015] transition-colors";
+        tr.className = "hover:bg-black/[0.015] transition-colors group";
 
-        // 항목 칸: 원형 컬러 점(dot) 완전 삭제
         let rowHtml = `
             <td class="p-1 sticky-col bg-white border-r border-brand-border/40 ${colNameWidth}">
-                <div class="px-1 py-0.5">
+                <div class="flex items-center justify-between px-1 py-0.5">
                     <input type="text" data-id="${acc.id}" value="${acc.name}" 
-                        class="account-name-input w-full bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-2 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition" />
+                        class="account-name-input flex-1 bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-2 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition" />
+                    <!-- 마우스 오버 시 나타나는 미니 관리 버튼 (숨김/삭제) -->
+                    <div class="opacity-0 group-hover:opacity-100 flex items-center space-x-0.5 transition-opacity shrink-0 ml-1">
+                        <button data-action="hide" data-id="${acc.id}" title="숨김 (해지 보관)" class="p-1 text-slate-400 hover:text-brand-personal hover:bg-black/5 rounded text-[11px] transition">📦</button>
+                        <button data-action="delete" data-id="${acc.id}" title="영구 삭제" class="p-1 text-slate-400 hover:text-brand-negative hover:bg-black/5 rounded text-[11px] transition">🗑️</button>
+                    </div>
                 </div>
             </td>
         `;
@@ -202,7 +241,6 @@ export const renderAssetTable = (focusNewId = null) => {
 
             const displayVal = isAll ? (val > 0 ? Math.round(val / 1000) : 0) : val;
 
-            // 전체(1~12월) 뷰는 자동 반영 조회 전용(수정 불가), 상·하반기는 직접 수정 가능
             if (isAll) {
                 rowHtml += `
                     <td class="p-1 text-center ${colMonthWidth} ${isCurrent ? 'bg-brand-personal/5' : ''} ${borderCls} ${padRight}">
@@ -225,7 +263,7 @@ export const renderAssetTable = (focusNewId = null) => {
         tbody.appendChild(tr);
     });
 
-    // '+ 계좌 추가' 인라인 행
+    // [B] '+ 계좌 추가' 행 (인라인)
     const addRow = document.createElement("tr");
     addRow.className = "hover:bg-brand-personal/[0.02] border-t border-brand-border/40";
     addRow.innerHTML = `
@@ -239,7 +277,65 @@ export const renderAssetTable = (focusNewId = null) => {
     `;
     tbody.appendChild(addRow);
 
-    // 푸터(합계): 줄바꿈 방지(whitespace-nowrap) 완벽 적용
+    // [C] '해지 · 숨김 항목 (N) 보관함' 접이식 행
+    if (hiddenAccounts.length > 0) {
+        const toggleRow = document.createElement("tr");
+        toggleRow.className = "border-t border-dashed border-slate-300 bg-slate-50/60";
+        toggleRow.innerHTML = `
+            <td class="p-2 sticky-col bg-slate-50/90 border-r border-brand-border/40 ${colNameWidth}">
+                <button id="toggleHiddenSectionBtn" class="flex items-center text-[11px] font-semibold text-slate-500 hover:text-brand-ink transition px-2 py-0.5 rounded hover:bg-black/5">
+                    <span>📦 해지 · 숨김 항목 (${hiddenAccounts.length}개)</span>
+                    <span class="ml-1 text-[9px]">${showHiddenAccounts ? '▲ 접기' : '▼ 펼치기'}</span>
+                </button>
+            </td>
+            <td colspan="${activeMonths.length}" class="px-3 text-[10px] text-slate-400">
+                ${showHiddenAccounts ? '숨겨진 항목의 과거 금액도 연간 합계에 안전하게 보존됩니다.' : ''}
+            </td>
+        `;
+        tbody.appendChild(toggleRow);
+
+        // 펼침 상태일 때 숨겨진 계좌 목록 노출
+        if (showHiddenAccounts) {
+            hiddenAccounts.forEach(acc => {
+                const hTr = document.createElement("tr");
+                hTr.className = "bg-slate-100/50 hover:bg-slate-100 transition-colors group opacity-75";
+
+                let hRowHtml = `
+                    <td class="p-1 sticky-col bg-slate-100 border-r border-brand-border/40 ${colNameWidth}">
+                        <div class="flex items-center justify-between px-2 py-1">
+                            <span class="text-xs font-medium text-slate-500 line-through truncate">${acc.name}</span>
+                            <div class="flex items-center space-x-1 shrink-0 ml-1">
+                                <button data-action="restore" data-id="${acc.id}" title="활성 목록으로 복원" class="text-[10px] font-bold text-brand-personal bg-white border border-slate-200 px-1.5 py-0.5 rounded hover:bg-brand-personal hover:text-white transition shadow-3xs">복원</button>
+                                <button data-action="delete" data-id="${acc.id}" title="완전 영구 삭제" class="text-[10px] font-medium text-slate-400 hover:text-brand-negative px-1 py-0.5 rounded transition">삭제</button>
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                activeMonths.forEach((m, idx) => {
+                    const val = acc.values[m] || 0;
+                    const isQuarterEnd = isAll && (m === 3 || m === 6 || m === 9);
+                    const borderCls = isQuarterEnd ? "quarter-divider" : "";
+                    const isLastMonth = (idx === activeMonths.length - 1);
+                    const padRight = isLastMonth ? "pr-5" : "";
+                    const displayVal = isAll ? (val > 0 ? Math.round(val / 1000) : 0) : val;
+
+                    hRowHtml += `
+                        <td class="p-1 text-center ${colMonthWidth} ${borderCls} ${padRight}">
+                            <div class="w-full text-right px-2 py-1 tabular-nums text-[11px] font-medium text-slate-400 select-none">
+                                ${displayVal > 0 ? formatWon(displayVal) : '-'}
+                            </div>
+                        </td>
+                    `;
+                });
+
+                hTr.innerHTML = hRowHtml;
+                tbody.appendChild(hTr);
+            });
+        }
+    }
+
+    // [D] 푸터(합계) 렌더링: 활성 + 숨김 계좌 전체를 합산하여 과거 기록 보존!
     let footHtml = `
         <tr>
             <td class="p-2.5 sticky-col bg-slate-100 border-r border-brand-border/40 whitespace-nowrap ${colNameWidth}">
@@ -249,7 +345,8 @@ export const renderAssetTable = (focusNewId = null) => {
             </td>
     `;
     activeMonths.forEach((m, idx) => {
-        const totalRaw = currentAccounts.reduce((sum, a) => sum + (a.values[m] || 0), 0);
+        // 숨겨진 계좌의 과거 금액도 합계에 포함
+        const totalRaw = allTabAccounts.reduce((sum, a) => sum + (a.values[m] || 0), 0);
         const displayTotal = isAll ? (totalRaw > 0 ? Math.round(totalRaw / 1000) : 0) : totalRaw;
         const isCurrent = m === 11;
         const isQuarterEnd = isAll && (m === 3 || m === 6 || m === 9);
@@ -266,18 +363,23 @@ export const renderAssetTable = (focusNewId = null) => {
     footHtml += `</tr>`;
     tfoot.innerHTML = footHtml;
 
-    // 1) 항목명 수정 리스너
+    // ==========================================
+    // 리스너 연결 (수정 즉시 localStorage 영구 저장)
+    // ==========================================
+
+    // 1) 항목명 수정 -> 저장
     tbody.querySelectorAll('.account-name-input').forEach(nameInput => {
         nameInput.addEventListener('blur', (e) => {
             const accId = e.target.getAttribute('data-id');
-            const targetAcc = currentAccounts.find(a => a.id === accId);
+            const targetAcc = allTabAccounts.find(a => a.id === accId);
             if (targetAcc && e.target.value.trim()) {
                 targetAcc.name = e.target.value.trim();
+                saveAccounts(); // 영구 저장
             }
         });
     });
 
-    // 2) 금액 수정 리스너 (상반기/하반기에서만 동작, 원 단위 영구 보존)
+    // 2) 금액 수정 -> 저장 및 합계 즉시 재계산
     tbody.querySelectorAll('.asset-input').forEach(input => {
         input.addEventListener('focus', (e) => {
             const raw = e.target.value.replace(/,/g, '');
@@ -287,26 +389,92 @@ export const renderAssetTable = (focusNewId = null) => {
             const entered = Number(e.target.value.replace(/,/g, '')) || 0;
             const accId = e.target.getAttribute('data-acc-id');
             const m = parseInt(e.target.getAttribute('data-month'), 10);
-            const targetAcc = currentAccounts.find(a => a.id === accId);
+            const targetAcc = allTabAccounts.find(a => a.id === accId);
 
             if (targetAcc) {
                 targetAcc.values[m] = entered;
-                renderAssetTable(); // 즉시 합계 재계산
+                saveAccounts(); // 영구 저장
+                renderAssetTable(); // 화면 갱신
             }
         });
     });
 
-    // 3) '+ 계좌 추가' 인라인 클릭 리스너
+    // 3) '+ 계좌 추가' 인라인 행 생성 -> 저장
     document.getElementById("addAccountBtn")?.addEventListener("click", () => {
         const newId = "acc_" + Date.now();
-        currentAccounts.push({
+        allTabAccounts.push({
             id: newId,
             name: "새 항목",
+            hidden: false,
             values: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
         });
+        saveAccounts(); // 영구 저장
         renderAssetTable(newId);
     });
 
+    // 4) 숨김(해지 보관) 버튼 클릭
+    tbody.querySelectorAll('button[data-action="hide"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const accId = btn.getAttribute('data-id');
+            const targetAcc = allTabAccounts.find(a => a.id === accId);
+            if (targetAcc) {
+                targetAcc.hidden = true;
+                saveAccounts(); // 영구 저장
+                renderAssetTable();
+            }
+        });
+    });
+
+    // 5) 복원 버튼 클릭
+    tbody.querySelectorAll('button[data-action="restore"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const accId = btn.getAttribute('data-id');
+            const targetAcc = allTabAccounts.find(a => a.id === accId);
+            if (targetAcc) {
+                targetAcc.hidden = false;
+                saveAccounts(); // 영구 저장
+                renderAssetTable();
+            }
+        });
+    });
+
+    // 6) 영구 삭제 버튼 클릭 (이중 방어선)
+    tbody.querySelectorAll('button[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const accId = btn.getAttribute('data-id');
+            const targetIdx = allTabAccounts.findIndex(a => a.id === accId);
+            if (targetIdx === -1) return;
+
+            const targetAcc = allTabAccounts[targetIdx];
+            const hasMoney = Object.values(targetAcc.values).some(v => v > 0);
+
+            if (hasMoney) {
+                const confirmed = confirm(
+                    `[주의] '${targetAcc.name}' 항목은 과거 결산 금액이 기록되어 있습니다.\n\n` +
+                    `영구 삭제 시 이전 달의 순자산 통계에서도 금액이 완전히 제외됩니다.\n` +
+                    `과거 기록을 보존하려면 '취소'를 누른 뒤 📦 [숨김] 처리를 권장합니다.\n\n` +
+                    `정말 완전 삭제하시겠습니까?`
+                );
+                if (!confirmed) return;
+            }
+
+            // 계좌 영구 삭제
+            allTabAccounts.splice(targetIdx, 1);
+            saveAccounts(); // 영구 저장
+            renderAssetTable();
+        });
+    });
+
+    // 7) 숨김 보관함 접기/펼치기 토글
+    document.getElementById("toggleHiddenSectionBtn")?.addEventListener("click", () => {
+        showHiddenAccounts = !showHiddenAccounts;
+        renderAssetTable();
+    });
+
+    // 새로 추가된 행으로 자동 포커스
     if (focusNewId) {
         setTimeout(() => {
             const target = tbody.querySelector(`input[data-id="${focusNewId}"]`);
@@ -319,6 +487,9 @@ export const renderAssetTable = (focusNewId = null) => {
 };
 
 export const initAssetsModule = () => {
+    // 저장된 계좌 데이터 불러오기
+    loadAccounts();
+
     document.getElementById("prevAssetYearBtn")?.addEventListener("click", () => {
         assetYear--;
         renderAssetYearChart(assetYear);
@@ -339,7 +510,7 @@ export const initAssetsModule = () => {
         });
     });
 
-    // 반기/전체 필터 칩 스타일 동기화 함수
+    // 반기/전체 필터 칩 스타일 동기화
     const updateRangeBtnUI = () => {
         const h1Btn = document.getElementById("filter-range-h1");
         const h2Btn = document.getElementById("filter-range-h2");
@@ -371,7 +542,6 @@ export const initAssetsModule = () => {
         renderAssetTable();
     });
 
-    // 초기 상태 가동
     updateRangeBtnUI();
     renderAssetYearChart(assetYear);
     renderAssetTable();
