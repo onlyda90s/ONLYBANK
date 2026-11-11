@@ -357,12 +357,12 @@
                     </div>
                 </header>
 
-                <!-- 1열 : 순자산 추이 및 월별 증감 -->
+                <!-- 1열 : 순자산 추이 및 월별 증감 (단위: 천원 + 툴팁 지원) -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
                             <h3 id="assetYearChartTitle" class="text-sm font-bold text-brand-ink">순자산 추이 및 월별 증감</h3>
-                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 만원)</span>
+                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 천원)</span>
                         </div>
                         <div class="flex items-center space-x-4 text-[11px] font-semibold text-brand-sub">
                             <span class="flex items-center"><span class="w-2.5 h-2.5 bg-emerald-600 rounded-[3px] mr-1.5"></span>순자산 증가(▲)</span>
@@ -370,43 +370,45 @@
                             <span class="flex items-center"><span class="w-2.5 h-2.5 bg-slate-300 rounded-[3px] mr-1.5"></span>변동 없음 / 예정</span>
                         </div>
                     </div>
-                    <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs">
-                        <div id="asset12MonthChart" class="h-44 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2"></div>
+                    <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-5 shadow-xs overflow-visible">
+                        <div id="asset12MonthChart" class="h-44 flex items-end justify-between gap-2 border-b border-brand-border/70 pb-2 px-2 overflow-visible relative"></div>
                     </div>
                 </div>
 
-                <!-- 2열 : 월간 계좌별 잔액 결산 (안내문구 제거, 균등 분할 1~12월 테이블) -->
+                <!-- 2열 : 월간 계좌별 잔액 결산 (스마트 자동 반기 탭 + 동적 단위) -->
                 <div class="space-y-2.5 flex-1 flex flex-col min-h-[380px]">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
                             <h3 class="text-sm font-bold text-brand-ink">월간 계좌별 잔액 결산</h3>
-                            <span class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 원)</span>
+                            <span id="assetSheetUnit" class="text-[12px] font-medium text-slate-400 ml-1.5">(단위: 원)</span>
                         </div>
+                        <span class="text-[11px] text-slate-400 font-medium">* 탭을 선택하여 자산군별 잔액을 확인하고 편집할 수 있습니다</span>
                     </div>
 
                     <div class="flex flex-col flex-1 bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs overflow-hidden">
-                        <!-- 4대 탭 영역 -->
-                        <div id="assetTabs" class="flex items-center border-b border-brand-border/60 p-2 bg-slate-50 shrink-0">
+                        <!-- 4대 탭 및 우측 반기 전환 칩 -->
+                        <div id="assetTabs" class="flex items-center justify-between border-b border-brand-border/60 p-2 bg-slate-50 shrink-0 overflow-x-auto custom-scrollbar">
                             <div class="flex items-center space-x-1.5">
                                 <button data-tab="bank" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap">금융권</button>
                                 <button data-tab="invest" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">증권사</button>
                                 <button data-tab="debt" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">부채 · 대출</button>
                                 <button data-tab="etc" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap">기타</button>
                             </div>
+
+                            <!-- 반기/전체 스마트 칩 (현재 월 기준 자동 활성화) -->
+                            <div class="flex items-center bg-slate-200/60 p-0.5 rounded-lg text-[11px] font-semibold text-brand-sub shrink-0 ml-2">
+                                <button id="filter-range-h1" class="range-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition whitespace-nowrap">상반기(1~6월)</button>
+                                <button id="filter-range-h2" class="range-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition whitespace-nowrap">하반기(7~12월)</button>
+                                <button id="filter-range-all" class="range-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition whitespace-nowrap">전체(1~12월)</button>
+                            </div>
                         </div>
 
-                        <!-- 1~12월 균등 너비 고정 테이블 (안내문구 제거 완료) -->
-                        <div class="overflow-x-auto lg:overflow-x-visible overflow-y-auto flex-1 custom-scrollbar">
-                            <table class="w-full table-fixed text-left border-collapse min-w-[780px] lg:min-w-0">
-                                <thead id="assetTableHead">
-                                    <!-- js/assets.js 동적 렌더링 -->
-                                </thead>
-                                <tbody id="assetTableBody" class="text-xs divide-y divide-brand-border/30">
-                                    <!-- js/assets.js 동적 렌더링 -->
-                                </tbody>
-                                <tfoot id="assetTableFoot" class="sticky-row-bottom bg-slate-100 border-t border-brand-border/70 font-bold text-xs text-brand-ink">
-                                    <!-- js/assets.js 동적 렌더링 -->
-                                </tfoot>
+                        <!-- 스프레드시트 컨테이너 -->
+                        <div class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
+                            <table class="w-full table-fixed text-left border-collapse min-w-[760px] lg:min-w-0">
+                                <thead id="assetTableHead"></thead>
+                                <tbody id="assetTableBody" class="text-xs divide-y divide-brand-border/30"></tbody>
+                                <tfoot id="assetTableFoot" class="sticky-row-bottom bg-slate-100 border-t border-brand-border/70 font-bold text-xs text-brand-ink"></tfoot>
                             </table>
                         </div>
                     </div>
@@ -452,6 +454,6 @@
     </div>
 
     <!-- 캐시 갱신 파라미터 적용 -->
-    <script type="module" src="js/main.js?v=20261111_sheet_grid12"></script>
+    <script type="module" src="js/main.js?v=20261111_smart_view"></script>
 </body>
 </html>
