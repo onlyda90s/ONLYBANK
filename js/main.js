@@ -10,42 +10,27 @@ const userAvatar = document.getElementById("userAvatar");
 const inviteCodeInput = document.getElementById("inviteCodeInput");
 const enterCodeBtn = document.getElementById("enterCodeBtn");
 
-// 1. Google 로그인
+// 1. Google 로그인 & 로그아웃 & 초대코드
 if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error("Google 로그인 실패:", error);
-            alert(`로그인 오류: ${error.message}`);
-        }
+        try { await signInWithPopup(auth, provider); }
+        catch (error) { alert(`로그인 오류: ${error.message}`); }
     });
 }
-
-// 2. 로그아웃
 if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error("로그아웃 실패:", error);
-        }
+        try { await signOut(auth); } catch (e) { console.error(e); }
     });
 }
-
-// 3. 초대 코드
 if (enterCodeBtn) {
     enterCodeBtn.addEventListener("click", () => {
         const code = inviteCodeInput ? inviteCodeInput.value.trim() : "";
-        if (!code) {
-            alert("초대 코드를 입력해 주세요.");
-            return;
-        }
+        if (!code) return alert("초대 코드를 입력해 주세요.");
         alert(`[${code}] 코드로 모임 권한을 확인합니다.`);
     });
 }
 
-// 4. 인증 상태 감시
+// 2. 인증 상태 감시
 onAuthStateChanged(auth, (user) => {
     if (user) {
         if (loginScreen) loginScreen.style.setProperty("display", "none", "important");
@@ -58,7 +43,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// 5. 사이드바 접기/펼치기
+// 3. 사이드바 접기/펼치기
 const sidebar = document.getElementById("sidebar");
 const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
 const sidebarTexts = document.querySelectorAll(".sidebar-text");
@@ -80,7 +65,7 @@ if (sidebarToggleBtn && sidebar) {
     });
 }
 
-// 6. 메인 메뉴 라우팅
+// 4. 메인 메뉴 라우팅
 const menuBtns = document.querySelectorAll('.menu-btn');
 const viewSections = document.querySelectorAll('.view-section');
 const placeholderTitle = document.getElementById('placeholder-title');
@@ -122,54 +107,213 @@ menuBtns.forEach(btn => {
     });
 });
 
-// ==========================================
-// 7. 자산현황 내 탭 메뉴 UI 제어
-// ==========================================
+// ==========================================================
+// 5. [자산현황] 데이터 모델 & 인터랙션 로직
+// ==========================================================
+let assetYear = 2026;
+let assetMonth = 11;
+
+// 12개월 연간 순자산 추이 데이터 (단위: 만원)
+const assetYearlyTrend = [
+    { m: 1, net: 11800, diff: 0 },
+    { m: 2, net: 12100, diff: 300 },
+    { m: 3, net: 12050, diff: -50 },
+    { m: 4, net: 12300, diff: 250 },
+    { m: 5, net: 12450, diff: 150 },
+    { m: 6, net: 12553, diff: 103 },
+    { m: 7, net: 12573, diff: 20 },
+    { m: 8, net: 13018, diff: 445 },
+    { m: 9, net: 12978, diff: -40 },
+    { m: 10, net: 13930, diff: 952 },
+    { m: 11, net: 14250, diff: 320 },
+    { m: 12, net: 0, diff: 0 }
+];
+
+// 계좌별 월간 잔액 데이터 (1원 단위 정밀 데이터)
+const bankAccounts = [
+    { name: "우리은행 (급여통장)", dot: "bg-blue-500", values: { "26.06": 10140000, "26.07": 9440000, "26.08": 19070000, "26.09": 16750000, "26.10": 16750000, "26.11": 16954200, "26.12": 0 } },
+    { name: "카카오뱅크 (모임·생활)", dot: "bg-yellow-400", values: { "26.06": 5250000, "26.07": 5250000, "26.08": 5260000, "26.09": 5270000, "26.10": 5270000, "26.11": 5270000, "26.12": 0 } },
+    { name: "토스뱅크 (비상금통장)", dot: "bg-indigo-500", values: { "26.06": 24080000, "26.07": 24570000, "26.08": 24600000, "26.09": 25150000, "26.10": 25150000, "26.11": 25308500, "26.12": 0 } },
+    { name: "신한은행 (청년적금)", dot: "bg-sky-500", values: { "26.06": 5000000, "26.07": 25000000, "26.08": 25000000, "26.09": 55000000, "26.10": 55000000, "26.11": 60000000, "26.12": 0 } }
+];
+
+const monthsHeader = ["26.06", "26.07", "26.08", "26.09", "26.10", "26.11", "26.12"];
+
+// 1원 단위 천단위 콤마 포맷터
+const formatWon = (val) => {
+    if (!val || isNaN(val)) return "0";
+    return Number(val).toLocaleString();
+};
+
+// 상단 헤더 & 지표 렌더링
+const renderAssetHeader = () => {
+    const monthStr = assetMonth < 10 ? `0${assetMonth}` : `${assetMonth}`;
+    const displayEl = document.getElementById("assetMonthDisplay");
+    const labelEl = document.getElementById("assetMonthLabel");
+    const chartTitleEl = document.getElementById("assetYearChartTitle");
+    
+    if (displayEl) displayEl.textContent = `${assetYear}년 ${monthStr}월`;
+    if (labelEl) labelEl.textContent = `${assetYear}.${monthStr} 기준 순자산`;
+    if (chartTitleEl) chartTitleEl.textContent = `${assetYear}년 순자산 추이 및 월별 증감`;
+
+    // 12개월 추이 그래프 렌더링
+    const chartContainer = document.getElementById("asset12MonthChart");
+    if (chartContainer) {
+        chartContainer.innerHTML = "";
+        assetYearlyTrend.forEach(item => {
+            const hasData = item.net > 0;
+            const isCurrent = item.m === assetMonth;
+            const barH = hasData ? Math.min(Math.round((item.net / 16000) * 100), 95) : 8;
+
+            const col = document.createElement("div");
+            col.className = "flex-1 flex flex-col items-center h-full justify-end group cursor-pointer";
+            
+            // 증감 뱃지 표기 (+XX만, -XX만)
+            let diffHtml = '';
+            if (hasData && item.diff !== 0) {
+                const isPlus = item.diff > 0;
+                diffHtml = `<span class="text-[9px] font-bold ${isPlus ? 'text-brand-positive bg-brand-positive/10' : 'text-brand-negative bg-brand-negative/10'} px-1 py-0.2 rounded mb-0.5 tabular-nums whitespace-nowrap">${isPlus ? '+' : ''}${item.diff}만</span>`;
+            } else if (hasData) {
+                diffHtml = `<span class="text-[9px] font-bold text-slate-400 mb-0.5 tabular-nums">0</span>`;
+            }
+
+            col.innerHTML = `
+                <div class="w-full flex flex-col items-center justify-end h-20">
+                    ${diffHtml}
+                    <div class="w-4 ${isCurrent ? 'bg-brand-personal ring-2 ring-brand-personal/30' : (hasData ? 'bg-slate-300 group-hover:bg-slate-400' : 'bg-slate-100')} rounded-t transition-all duration-300" style="height: ${barH}%;"></div>
+                </div>
+                <span class="text-[10px] mt-1.5 font-medium ${isCurrent ? 'text-brand-personal font-bold' : (hasData ? 'text-brand-sub' : 'text-slate-300')}">${item.m}월</span>
+            `;
+
+            // 클릭 시 해당 월로 전환
+            col.addEventListener('click', () => {
+                assetMonth = item.m;
+                renderAssetHeader();
+            });
+
+            chartContainer.appendChild(col);
+        });
+    }
+};
+
+// 하단 테이블 렌더링 (모든 월 편집 가능 input 구성)
+const renderAssetTable = () => {
+    const tbody = document.getElementById("assetTableBody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    bankAccounts.forEach(acc => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-black/[0.015] transition-colors";
+
+        let cellsHtml = `
+            <td class="p-3 font-medium text-brand-ink sticky-col bg-white border-r border-brand-border/40 flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full ${acc.dot} shrink-0"></span>
+                <span class="truncate">${acc.name}</span>
+            </td>
+        `;
+
+        monthsHeader.forEach(mKey => {
+            const val = acc.values[mKey] || 0;
+            const isSelectedMonth = mKey === `26.${assetMonth < 10 ? '0' + assetMonth : assetMonth}`;
+            
+            cellsHtml += `
+                <td class="p-1.5 text-center ${isSelectedMonth ? 'bg-brand-personal/5' : ''}">
+                    <input type="text" data-acc="${acc.name}" data-month="${mKey}" value="${formatWon(val)}" 
+                        class="asset-input w-full text-right bg-transparent hover:bg-white focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-2 py-1 tabular-nums text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-personal transition-all shadow-2xs" />
+                </td>
+            `;
+        });
+
+        // 11월 기준 전월(10월) 대비 증감 계산
+        const vCurr = acc.values["26.11"] || 0;
+        const vPrev = acc.values["26.10"] || 0;
+        const diff = vCurr - vPrev;
+        const isPlus = diff > 0;
+        const diffClass = diff === 0 ? "text-slate-400" : (isPlus ? "text-brand-positive font-bold" : "text-brand-negative font-bold");
+        const diffSign = isPlus ? "+" : "";
+
+        cellsHtml += `
+            <td class="p-3 text-right pr-4 tabular-nums text-xs ${diffClass}">
+                ${diffSign}${formatWon(diff)}원
+            </td>
+        `;
+
+        tr.innerHTML = cellsHtml;
+        tbody.appendChild(tr);
+    });
+
+    // input 값 직접 변경 시 실시간 반영 (1원 단위 포맷팅 유지)
+    const inputs = tbody.querySelectorAll('.asset-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', (e) => {
+            const rawVal = e.target.value.replace(/,/g, '');
+            e.target.value = rawVal === "0" ? "" : rawVal;
+        });
+        input.addEventListener('blur', (e) => {
+            const num = Number(e.target.value.replace(/,/g, '')) || 0;
+            e.target.value = formatWon(num);
+            const accName = e.target.getAttribute('data-acc');
+            const mKey = e.target.getAttribute('data-month');
+            const targetAcc = bankAccounts.find(a => a.name === accName);
+            if (targetAcc) {
+                targetAcc.values[mKey] = num;
+            }
+        });
+    });
+};
+
+// 월별 이동 버튼 리스너
+const prevMonthBtn = document.getElementById("prevMonthBtn");
+const nextMonthBtn = document.getElementById("nextMonthBtn");
+
+if (prevMonthBtn) {
+    prevMonthBtn.addEventListener("click", () => {
+        assetMonth--;
+        if (assetMonth < 1) { assetMonth = 12; assetYear--; }
+        renderAssetHeader();
+    });
+}
+if (nextMonthBtn) {
+    nextMonthBtn.addEventListener("click", () => {
+        assetMonth++;
+        if (assetMonth > 12) { assetMonth = 1; assetYear++; }
+        renderAssetHeader();
+    });
+}
+
+// 탭 클릭 전환
 const assetTabContainer = document.getElementById('assetTabs');
 if (assetTabContainer) {
     const tabs = assetTabContainer.querySelectorAll('button:not(:last-child)');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // 모든 탭 초기화
             tabs.forEach(t => {
-                t.className = "px-4 py-2 rounded-lg text-[13px] font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap";
+                t.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-sub hover:bg-black/5 whitespace-nowrap";
             });
-            // 클릭된 탭 활성화 (흰색 배경, 테두리, 퍼스널 컬러 적용)
-            tab.className = "px-4 py-2 rounded-lg text-[13px] font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap";
+            tab.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-personal shadow-sm border border-slate-200/80 whitespace-nowrap";
         });
     });
 }
 
-// ==========================================
-// 8. 연간 리포트 우측 연도 컨트롤러 & 차트 렌더링
-// ==========================================
-let currentYear = 2026;
+// 초기 자산현황 렌더링 호출
+renderAssetHeader();
+renderAssetTable();
 
+// ==========================================================
+// 6. [연간 리포트] 차트 렌더링 (기존 안정 코드 유지)
+// ==========================================================
+let currentYear = 2026;
 const yearlyData = {
     2025: {
         income: "49,200,000", savings: "19,800,000", expense: "17,600,000",
         savingsRate: "40%", expenseRate: "36%",
-        bars: [
-            { inc: 420, exp: 200 }, { inc: 450, exp: 210 }, { inc: 410, exp: 230 },
-            { inc: 510, exp: 180 }, { inc: 430, exp: 240 }, { inc: 400, exp: 210 },
-            { inc: 460, exp: 220 }, { inc: 390, exp: 190 }, { inc: 420, exp: 210 },
-            { inc: 440, exp: 230 }, { inc: 470, exp: 250 }, { inc: 520, exp: 260 }
-        ]
+        bars: [{ inc: 420, exp: 200 }, { inc: 450, exp: 210 }, { inc: 410, exp: 230 }, { inc: 510, exp: 180 }, { inc: 430, exp: 240 }, { inc: 400, exp: 210 }, { inc: 460, exp: 220 }, { inc: 390, exp: 190 }, { inc: 420, exp: 210 }, { inc: 440, exp: 230 }, { inc: 470, exp: 250 }, { inc: 520, exp: 260 }]
     },
     2026: {
         income: "52,400,000", savings: "21,000,000", expense: "18,500,000",
         savingsRate: "40%", expenseRate: "35%",
-        bars: [
-            { inc: 480, exp: 210 }, { inc: 510, exp: 240 }, { inc: 430, exp: 290 },
-            { inc: 590, exp: 190 }, { inc: 460, exp: 260 }, { inc: 410, exp: 220 },
-            { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 },
-            { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }
-        ]
-    },
-    2027: {
-        income: "0", savings: "0", expense: "0",
-        savingsRate: "0%", expenseRate: "0%",
-        bars: Array(12).fill({ inc: 0, exp: 0 })
+        bars: [{ inc: 480, exp: 210 }, { inc: 510, exp: 240 }, { inc: 430, exp: 290 }, { inc: 590, exp: 190 }, { inc: 460, exp: 260 }, { inc: 410, exp: 220 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }, { inc: 0, exp: 0 }]
     }
 };
 
@@ -183,11 +327,7 @@ const renderYearData = (year) => {
     if (currentYearDisplay) currentYearDisplay.textContent = `${year}년`;
     if (accumYearDisplay) accumYearDisplay.textContent = `(${year}년)`;
 
-    const data = yearlyData[year] || {
-        income: "0", savings: "0", expense: "0", savingsRate: "0%", expenseRate: "0%",
-        bars: Array(12).fill({ inc: 0, exp: 0 })
-    };
-
+    const data = yearlyData[year] || { income: "0", savings: "0", expense: "0", savingsRate: "0%", expenseRate: "0%", bars: Array(12).fill({ inc: 0, exp: 0 }) };
     const yIncome = document.getElementById("y-income");
     const ySavings = document.getElementById("y-savings");
     const yExpense = document.getElementById("y-expense");
@@ -233,37 +373,36 @@ const renderYearData = (year) => {
 };
 
 if (prevYearBtn) {
-    prevYearBtn.addEventListener("click", () => {
-        currentYear--;
-        renderYearData(currentYear);
-    });
+    prevYearBtn.addEventListener("click", () => { currentYear--; renderYearData(currentYear); });
 }
-
 if (nextYearBtn) {
-    nextYearBtn.addEventListener("click", () => {
-        currentYear++;
-        renderYearData(currentYear);
-    });
+    nextYearBtn.addEventListener("click", () => { currentYear++; renderYearData(currentYear); });
 }
-
 renderYearData(currentYear);
 
-// ==========================================
-// 9. 하단 위젯 바로가기 라우팅
-// ==========================================
-const ddayItems = document.querySelectorAll(".dday-item");
-ddayItems.forEach(item => {
-    item.addEventListener("click", () => {
-        const targetNavId = item.getAttribute("data-goto");
-        const targetBtn = document.getElementById(targetNavId);
-        if (targetBtn) targetBtn.click();
+// 설정 토글 & 엑셀 백업
+const toggleConfigs = [
+    { checkboxId: 'toggle-cards', liId: 'li-cards', key: 'onlybank_cfg_cards' },
+    { checkboxId: 'toggle-tax', liId: 'li-tax', key: 'onlybank_cfg_tax' }
+];
+toggleConfigs.forEach(item => {
+    const checkbox = document.getElementById(item.checkboxId);
+    const liElement = document.getElementById(item.liId);
+    if (!checkbox || !liElement) return;
+    checkbox.addEventListener('change', () => {
+        liElement.style.setProperty("display", checkbox.checked ? "block" : "none", "important");
     });
 });
 
-const summaryMoimTile = document.getElementById("summary-moim-tile");
-if (summaryMoimTile) {
-    summaryMoimTile.addEventListener("click", () => {
-        const groupBtn = document.getElementById("nav-group1");
-        if (groupBtn) groupBtn.click();
+const exportCsvBtn = document.getElementById('exportCsvBtn');
+if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+        const csvContent = "data:text/csv;charset=utf-8,\uFEFF날짜,계좌명,금액\n2026-11-01,우리은행,16954200";
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(csvContent));
+        link.setAttribute("download", "onlybank_assets_backup.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 }
