@@ -1,6 +1,5 @@
 let assetYear = 2026;
 let currentTab = "bank"; // 기본 탭: 금융권
-let currentRange = "all"; // all: 1~12월, h1: 1~6월, h2: 7~12월
 
 // 1. 상단 차트 데이터 (1~12월 연간 순자산 추이)
 const assetYearlyData = {
@@ -18,24 +17,24 @@ const assetYearlyData = {
     ]
 };
 
-// 2. 4대 자산군 계좌별 1~12월 잔액 데이터 (1원 단위)
+// 2. 4대 자산군 계좌별 1~12월 잔액 데이터 (1원 단위 및 고유 ID 관리)
 const accountDatabase = {
     bank: [
-        { name: "우리은행 (급여통장)", dot: "bg-blue-500", values: { 1: 9500000, 2: 9800000, 3: 9700000, 4: 9900000, 5: 10050000, 6: 10140000, 7: 9440000, 8: 19070000, 9: 16750000, 10: 16750000, 11: 16954200, 12: 0 } },
-        { name: "카카오뱅크 (생활비)", dot: "bg-yellow-400", values: { 1: 5100000, 2: 5200000, 3: 5200000, 4: 5250000, 5: 5250000, 6: 5250000, 7: 5250000, 8: 5260000, 9: 5270000, 10: 5270000, 11: 5270000, 12: 0 } },
-        { name: "토스뱅크 (비상금)", dot: "bg-indigo-500", values: { 1: 23500000, 2: 23800000, 3: 23900000, 4: 24000000, 5: 24000000, 6: 24080000, 7: 24570000, 8: 24600000, 9: 25150000, 10: 25150000, 11: 25308500, 12: 0 } },
-        { name: "신한은행 (청년적금)", dot: "bg-sky-500", values: { 1: 1000000, 2: 2000000, 3: 3000000, 4: 4000000, 5: 5000000, 6: 5000000, 7: 25000000, 8: 25000000, 9: 55000000, 10: 55000000, 11: 60000000, 12: 0 } }
+        { id: "b_1", name: "우리은행 (급여통장)", dot: "bg-blue-500", values: { 1: 9500000, 2: 9800000, 3: 9700000, 4: 9900000, 5: 10050000, 6: 10140000, 7: 9440000, 8: 19070000, 9: 16750000, 10: 16750000, 11: 16954200, 12: 0 } },
+        { id: "b_2", name: "카카오뱅크 (생활비)", dot: "bg-yellow-400", values: { 1: 5100000, 2: 5200000, 3: 5200000, 4: 5250000, 5: 5250000, 6: 5250000, 7: 5250000, 8: 5260000, 9: 5270000, 10: 5270000, 11: 5270000, 12: 0 } },
+        { id: "b_3", name: "토스뱅크 (비상금)", dot: "bg-indigo-500", values: { 1: 23500000, 2: 23800000, 3: 23900000, 4: 24000000, 5: 24000000, 6: 24080000, 7: 24570000, 8: 24600000, 9: 25150000, 10: 25150000, 11: 25308500, 12: 0 } },
+        { id: "b_4", name: "신한은행 (청년적금)", dot: "bg-sky-500", values: { 1: 1000000, 2: 2000000, 3: 3000000, 4: 4000000, 5: 5000000, 6: 5000000, 7: 25000000, 8: 25000000, 9: 55000000, 10: 55000000, 11: 60000000, 12: 0 } }
     ],
     invest: [
-        { name: "미래에셋 (국내주식)", dot: "bg-amber-500", values: { 1: 15000000, 2: 15800000, 3: 15200000, 4: 16000000, 5: 16500000, 6: 16800000, 7: 17100000, 8: 18200000, 9: 17900000, 10: 19500000, 11: 20100000, 12: 0 } },
-        { name: "토스증권 (해외주식)", dot: "bg-blue-600", values: { 1: 8000000, 2: 8500000, 3: 8900000, 4: 9200000, 5: 9400000, 6: 9800000, 7: 10200000, 8: 10500000, 9: 10800000, 10: 11400000, 11: 12000000, 12: 0 } }
+        { id: "i_1", name: "미래에셋 (국내주식)", dot: "bg-amber-500", values: { 1: 15000000, 2: 15800000, 3: 15200000, 4: 16000000, 5: 16500000, 6: 16800000, 7: 17100000, 8: 18200000, 9: 17900000, 10: 19500000, 11: 20100000, 12: 0 } },
+        { id: "i_2", name: "토스증권 (해외주식)", dot: "bg-blue-600", values: { 1: 8000000, 2: 8500000, 3: 8900000, 4: 9200000, 5: 9400000, 6: 9800000, 7: 10200000, 8: 10500000, 9: 10800000, 10: 11400000, 11: 12000000, 12: 0 } }
     ],
     debt: [
-        { name: "신한은행 마이너스통장", dot: "bg-rose-500", values: { 1: 5000000, 2: 4500000, 3: 4000000, 4: 3500000, 5: 3000000, 6: 2500000, 7: 2000000, 8: 1500000, 9: 1000000, 10: 500000, 11: 0, 12: 0 } }
+        { id: "d_1", name: "신한은행 마이너스통장", dot: "bg-rose-500", values: { 1: 5000000, 2: 4500000, 3: 4000000, 4: 3500000, 5: 3000000, 6: 2500000, 7: 2000000, 8: 1500000, 9: 1000000, 10: 500000, 11: 0, 12: 0 } }
     ],
     etc: [
-        { name: "주택청약종합저축", dot: "bg-emerald-500", values: { 1: 7200000, 2: 7300000, 3: 7400000, 4: 7500000, 5: 7600000, 6: 7700000, 7: 7800000, 8: 7900000, 9: 8000000, 10: 8100000, 11: 8200000, 12: 0 } },
-        { name: "오피스텔 임대보증금", dot: "bg-slate-500", values: { 1: 10000000, 2: 10000000, 3: 10000000, 4: 10000000, 5: 10000000, 6: 10000000, 7: 10000000, 8: 10000000, 9: 10000000, 10: 10000000, 11: 10000000, 12: 0 } }
+        { id: "e_1", name: "주택청약종합저축", dot: "bg-emerald-500", values: { 1: 7200000, 2: 7300000, 3: 7400000, 4: 7500000, 5: 7600000, 6: 7700000, 7: 7800000, 8: 7900000, 9: 8000000, 10: 8100000, 11: 8200000, 12: 0 } },
+        { id: "e_2", name: "오피스텔 임대보증금", dot: "bg-slate-500", values: { 1: 10000000, 2: 10000000, 3: 10000000, 4: 10000000, 5: 10000000, 6: 10000000, 7: 10000000, 8: 10000000, 9: 10000000, 10: 10000000, 11: 10000000, 12: 0 } }
     ]
 };
 
@@ -99,39 +98,34 @@ export const renderAssetYearChart = (year) => {
     });
 };
 
-// 2. 월간 결산 시트 (1~12월 + 분기구분선 + 하단 계좌추가 버튼 행)
-export const renderAssetTable = () => {
+// 2. 월간 결산 시트 (1~12월 균등 너비, 당월 문구 제거, 인라인 계좌/항목명 편집)
+export const renderAssetTable = (focusNewId = null) => {
     const thead = document.getElementById("assetTableHead");
     const tbody = document.getElementById("assetTableBody");
     const tfoot = document.getElementById("assetTableFoot");
     if (!thead || !tbody || !tfoot) return;
 
-    // 표시할 월 범위 결정
-    let activeMonths = [];
-    if (currentRange === "h1") activeMonths = [1, 2, 3, 4, 5, 6];
-    else if (currentRange === "h2") activeMonths = [7, 8, 9, 10, 11, 12];
-    else activeMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const allMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-    // 헤더(Thead) 렌더링
+    // 헤더(Thead): 항목 + 1~12월 (당월 문구 제거, 7% 균등 분할)
     let headHtml = `
         <tr class="bg-slate-50/80 border-b border-brand-border/60 text-xs text-brand-sub">
-            <th class="p-3 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 w-[200px]">항목 (계좌명)</th>
+            <th class="p-2.5 font-semibold sticky-col bg-slate-50 border-r border-brand-border/40 w-[16%]">항목</th>
     `;
-    activeMonths.forEach(m => {
+    allMonths.forEach(m => {
         const isCurrent = m === 11;
-        // 분기 경계(3월, 6월, 9월) 뒤에 굵은 구분선 적용
         const isQuarterEnd = (m === 3 || m === 6 || m === 9);
         const borderCls = isQuarterEnd ? "quarter-divider" : "";
         headHtml += `
-            <th class="p-2.5 font-medium text-center min-w-[95px] ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-bold' : ''} ${borderCls}">
-                ${m}월 ${isCurrent ? '<span class="text-[10px] block font-normal">(당월)</span>' : ''}
+            <th class="p-2 font-medium text-center w-[7%] ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-bold' : ''} ${borderCls}">
+                ${m}월
             </th>
         `;
     });
     headHtml += `</tr>`;
     thead.innerHTML = headHtml;
 
-    // 본문(Tbody) 렌더링
+    // 본문(Tbody): 항목명 및 금액 모두 input 필드로 직접 편집
     const currentAccounts = accountDatabase[currentTab] || [];
     tbody.innerHTML = "";
 
@@ -140,13 +134,16 @@ export const renderAssetTable = () => {
         tr.className = "hover:bg-black/[0.015] transition-colors";
 
         let rowHtml = `
-            <td class="p-3 font-medium text-brand-ink sticky-col bg-white border-r border-brand-border/40 flex items-center space-x-2">
-                <span class="w-2.5 h-2.5 rounded-full ${acc.dot} shrink-0"></span>
-                <span class="truncate">${acc.name}</span>
+            <td class="p-1 sticky-col bg-white border-r border-brand-border/40">
+                <div class="flex items-center space-x-1.5 px-1.5 py-0.5">
+                    <span class="w-2 h-2 rounded-full ${acc.dot} shrink-0"></span>
+                    <input type="text" data-id="${acc.id}" value="${acc.name}" 
+                        class="account-name-input w-full bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1.5 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition" />
+                </div>
             </td>
         `;
 
-        activeMonths.forEach(m => {
+        allMonths.forEach(m => {
             const val = acc.values[m] || 0;
             const isCurrent = m === 11;
             const isQuarterEnd = (m === 3 || m === 6 || m === 9);
@@ -154,8 +151,8 @@ export const renderAssetTable = () => {
 
             rowHtml += `
                 <td class="p-1 text-center ${isCurrent ? 'bg-brand-personal/5' : ''} ${borderCls}">
-                    <input type="text" data-acc="${acc.name}" data-month="${m}" value="${formatWon(val)}" 
-                        class="asset-input w-full text-right bg-transparent hover:bg-white focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-2 py-1 tabular-nums text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-personal transition-all shadow-2xs" />
+                    <input type="text" data-acc-id="${acc.id}" data-month="${m}" value="${formatWon(val)}" 
+                        class="asset-input w-full text-right bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1 py-1 tabular-nums text-xs font-medium focus:outline-none focus:ring-1 focus:ring-brand-personal transition-all shadow-2xs" />
                 </td>
             `;
         });
@@ -164,35 +161,35 @@ export const renderAssetTable = () => {
         tbody.appendChild(tr);
     });
 
-    // 항목(계좌명) 바로 아래 '+ 계좌 추가' 행 추가
+    // '+ 계좌 추가' 행
     const addRow = document.createElement("tr");
     addRow.className = "hover:bg-brand-personal/[0.02] border-t border-brand-border/40";
     addRow.innerHTML = `
-        <td class="p-2.5 sticky-col bg-white border-r border-brand-border/40">
-            <button id="addAccountBtn" class="flex items-center text-xs font-bold text-brand-personal hover:text-sky-800 transition px-1 py-0.5 rounded hover:bg-black/5">
+        <td class="p-2 sticky-col bg-white border-r border-brand-border/40">
+            <button id="addAccountBtn" class="flex items-center text-xs font-bold text-brand-personal hover:text-sky-800 transition px-2 py-1 rounded hover:bg-black/5">
                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                 계좌 추가
             </button>
         </td>
-        <td colspan="${activeMonths.length}" class="bg-slate-50/30"></td>
+        <td colspan="12" class="bg-slate-50/20"></td>
     `;
     tbody.appendChild(addRow);
 
-    // 하단 푸터(합계) 렌더링
+    // 푸터(합계) 렌더링
     let footHtml = `
         <tr>
-            <td class="p-3 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5">
+            <td class="p-2.5 sticky-col bg-slate-100 border-r border-brand-border/40 flex items-center space-x-1.5">
                 <span>📌</span><span>합계</span>
             </td>
     `;
-    activeMonths.forEach(m => {
+    allMonths.forEach(m => {
         const total = currentAccounts.reduce((sum, a) => sum + (a.values[m] || 0), 0);
         const isCurrent = m === 11;
         const isQuarterEnd = (m === 3 || m === 6 || m === 9);
         const borderCls = isQuarterEnd ? "quarter-divider" : "";
 
         footHtml += `
-            <td class="p-2.5 text-right tabular-nums ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-extrabold text-[13px]' : 'text-slate-600'} ${borderCls}">
+            <td class="p-2 text-right tabular-nums ${isCurrent ? 'bg-brand-personal/5 text-brand-personal font-extrabold text-[12px]' : 'text-slate-600 text-xs'} ${borderCls}">
                 ${total > 0 ? formatWon(total) : '-'}
             </td>
         `;
@@ -200,9 +197,19 @@ export const renderAssetTable = () => {
     footHtml += `</tr>`;
     tfoot.innerHTML = footHtml;
 
-    // input 값 편집 리스너 (1원 단위 자동 포맷팅)
-    const inputs = tbody.querySelectorAll('.asset-input');
-    inputs.forEach(input => {
+    // 1) 항목(계좌명) 수정 리스너
+    tbody.querySelectorAll('.account-name-input').forEach(nameInput => {
+        nameInput.addEventListener('blur', (e) => {
+            const accId = e.target.getAttribute('data-id');
+            const targetAcc = currentAccounts.find(a => a.id === accId);
+            if (targetAcc && e.target.value.trim()) {
+                targetAcc.name = e.target.value.trim();
+            }
+        });
+    });
+
+    // 2) 금액 수정 리스너 (1원 단위 포맷팅)
+    tbody.querySelectorAll('.asset-input').forEach(input => {
         input.addEventListener('focus', (e) => {
             const raw = e.target.value.replace(/,/g, '');
             e.target.value = raw === "0" ? "" : raw;
@@ -210,9 +217,9 @@ export const renderAssetTable = () => {
         input.addEventListener('blur', (e) => {
             const num = Number(e.target.value.replace(/,/g, '')) || 0;
             e.target.value = formatWon(num);
-            const accName = e.target.getAttribute('data-acc');
+            const accId = e.target.getAttribute('data-acc-id');
             const m = parseInt(e.target.getAttribute('data-month'), 10);
-            const targetAcc = currentAccounts.find(a => a.name === accName);
+            const targetAcc = currentAccounts.find(a => a.id === accId);
             if (targetAcc) {
                 targetAcc.values[m] = num;
                 renderAssetTable(); // 합계 재계산
@@ -220,22 +227,31 @@ export const renderAssetTable = () => {
         });
     });
 
-    // 계좌 추가 버튼 클릭 리스너
+    // 3) '+ 계좌 추가' 클릭 리스너 (팝업 없이 즉시 행 추가)
     document.getElementById("addAccountBtn")?.addEventListener("click", () => {
-        const newName = prompt("추가할 계좌(항목)명을 입력해 주세요:\n(예: 카카오뱅크 모임통장, 삼성증권 ISA 등)");
-        if (newName && newName.trim()) {
-            currentAccounts.push({
-                name: newName.trim(),
-                dot: "bg-emerald-500",
-                values: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
-            });
-            renderAssetTable();
-        }
+        const newId = "acc_" + Date.now();
+        currentAccounts.push({
+            id: newId,
+            name: "새 항목",
+            dot: "bg-emerald-500",
+            values: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0 }
+        });
+        renderAssetTable(newId);
     });
+
+    // 새 계좌 추가 직후 해당 입력창에 자동 포커스
+    if (focusNewId) {
+        setTimeout(() => {
+            const target = tbody.querySelector(`input[data-id="${focusNewId}"]`);
+            if (target) {
+                target.focus();
+                target.select();
+            }
+        }, 50);
+    }
 };
 
 export const initAssetsModule = () => {
-    // 연도 이동
     document.getElementById("prevAssetYearBtn")?.addEventListener("click", () => {
         assetYear--;
         renderAssetYearChart(assetYear);
@@ -245,7 +261,7 @@ export const initAssetsModule = () => {
         renderAssetYearChart(assetYear);
     });
 
-    // 4대 자산군 탭 클릭 리스너 (금융권 / 증권사 / 부채·대출 / 기타)
+    // 4대 탭 전환 리스너
     const assetTabs = document.querySelectorAll('#assetTabs button[data-tab]');
     assetTabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -254,34 +270,6 @@ export const initAssetsModule = () => {
             currentTab = tab.getAttribute('data-tab');
             renderAssetTable();
         });
-    });
-
-    // 반기 분할 필터 칩 리스너 (1~12월 / 상반기 / 하반기)
-    const rangeBtns = document.querySelectorAll('.range-btn');
-    const updateRangeBtnStyle = (activeId) => {
-        rangeBtns.forEach(b => {
-            if (b.id === activeId) {
-                b.className = "range-btn px-2.5 py-0.5 rounded-md bg-white text-brand-personal shadow-xs transition";
-            } else {
-                b.className = "range-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition";
-            }
-        });
-    };
-
-    document.getElementById("filter-range-all")?.addEventListener("click", () => {
-        currentRange = "all";
-        updateRangeBtnStyle("filter-range-all");
-        renderAssetTable();
-    });
-    document.getElementById("filter-range-h1")?.addEventListener("click", () => {
-        currentRange = "h1";
-        updateRangeBtnStyle("filter-range-h1");
-        renderAssetTable();
-    });
-    document.getElementById("filter-range-h2")?.addEventListener("click", () => {
-        currentRange = "h2";
-        updateRangeBtnStyle("filter-range-h2");
-        renderAssetTable();
     });
 
     renderAssetYearChart(assetYear);
