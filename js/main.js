@@ -1,7 +1,7 @@
-import { initAuthModule } from "./auth.js?v=20261111_menu_fix";
-import { initNavigationModule } from "./navigation.js?v=20261111_menu_fix";
-import { initReportModule } from "./report.js?v=20261111_menu_fix";
-import { initAssetsModule } from "./assets.js?v=20261111_menu_fix";
+import { initAuthModule } from "./auth.js?v=20261111_side_income_v1";
+import { initNavigationModule } from "./navigation.js?v=20261111_side_income_v1";
+import { initReportModule } from "./report.js?v=20261111_side_income_v1";
+import { initAssetsModule } from "./assets.js?v=20261111_side_income_v1";
 
 const startSystem = () => {
     initAuthModule();
