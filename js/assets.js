@@ -1,7 +1,7 @@
 let assetYear = 2026;
 let currentTab = "bank"; 
 let showHiddenAccounts = false; 
-let activeMenuAccountId = null; // 현재 메뉴가 열린 계좌 ID
+let activeMenuAccountId = null; // 현재 팝오버 메뉴가 열린 계좌 ID
 
 const currentSystemMonth = new Date().getMonth() + 1;
 let currentRange = currentSystemMonth <= 6 ? "h1" : "h2"; 
@@ -46,7 +46,7 @@ const saveAccounts = () => {
 
 const formatWon = (val) => (!val || isNaN(val) ? "0" : Number(val).toLocaleString());
 
-// 1. 상단 순자산 추이 차트 (단위: 천원 + 툴팁)
+// 1. 상단 순자산 추이 차트
 const assetYearlyData = {
     2025: [
         { m: 1, net: 9800, diff: 0 }, { m: 2, net: 10100, diff: 300 }, { m: 3, net: 10450, diff: 350 },
@@ -145,7 +145,7 @@ export const renderAssetYearChart = (year) => {
     });
 };
 
-// 2. 더보기(⋮) 팝오버 제어 함수
+// 2. 팝오버 메뉴 제어
 const openPopoverMenu = (buttonEl, accId) => {
     const popover = document.getElementById("accountActionPopover");
     if (!popover) return;
@@ -154,7 +154,7 @@ const openPopoverMenu = (buttonEl, accId) => {
     const rect = buttonEl.getBoundingClientRect();
 
     popover.style.top = `${rect.bottom + 4}px`;
-    popover.style.left = `${rect.left - 90}px`; // 버튼 좌측 정렬되도록 오프셋
+    popover.style.left = `${rect.left - 85}px`;
     popover.classList.remove("hidden");
     popover.classList.add("flex");
 };
@@ -168,7 +168,7 @@ const hidePopoverMenu = () => {
     activeMenuAccountId = null;
 };
 
-// 3. 월간 결산 시트 (인라인 입력 복원 + 우측 ⋮ 더보기 버튼)
+// 3. 월간 결산 시트 (항목 열 내부 min-w-0 적용으로 1월 침범 원천 차단)
 export const renderAssetTable = (focusNewId = null) => {
     hidePopoverMenu();
 
@@ -222,19 +222,17 @@ export const renderAssetTable = (focusNewId = null) => {
 
     tbody.innerHTML = "";
 
-    // [A] 활성 계좌: 인라인 타이핑 입력 + 우측 ⋮ 더보기 버튼
+    // [A] 활성 계좌 렌더링 (min-w-0 및 overflow-hidden으로 1월 침범 완전 해결)
     activeAccounts.forEach(acc => {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-black/[0.015] transition-colors group";
 
         let rowHtml = `
-            <td class="p-1 sticky-col bg-white border-r border-brand-border/40 ${colNameWidth}">
-                <div class="flex items-center space-x-1 px-1 py-0.5">
-                    <!-- 칸 안에서 바로 타이핑 수정하는 인라인 인풋 -->
+            <td class="p-1 sticky-col bg-white border-r border-brand-border/40 ${colNameWidth} overflow-hidden">
+                <div class="flex items-center justify-between w-full h-full px-1 py-0.5 space-x-1">
                     <input type="text" data-id="${acc.id}" value="${acc.name}" 
-                        class="account-name-input flex-1 bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-2 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition" />
-                    <!-- 우측 단정한 ⋮ 더보기 버튼 -->
-                    <button data-action="toggle-menu" data-id="${acc.id}" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-ink hover:bg-slate-100 rounded-md transition text-xs font-bold shrink-0" title="계좌 관리">
+                        class="account-name-input flex-1 min-w-0 bg-transparent hover:bg-slate-50 focus:bg-white border border-transparent hover:border-slate-300 focus:border-brand-personal rounded px-1.5 py-1 text-xs font-semibold text-brand-ink focus:outline-none transition truncate" />
+                    <button type="button" data-action="toggle-menu" data-id="${acc.id}" class="w-5 h-6 flex items-center justify-center text-slate-400 hover:text-brand-ink hover:bg-slate-100 rounded transition text-xs font-bold shrink-0" title="계좌 관리">
                         ⋮
                     </button>
                 </div>
@@ -270,7 +268,7 @@ export const renderAssetTable = (focusNewId = null) => {
         tbody.appendChild(tr);
     });
 
-    // [B] '+ 계좌 추가' 행 (인라인)
+    // [B] '+ 계좌 추가'
     const addRow = document.createElement("tr");
     addRow.className = "hover:bg-brand-personal/[0.02] border-t border-brand-border/40";
     addRow.innerHTML = `
@@ -284,7 +282,7 @@ export const renderAssetTable = (focusNewId = null) => {
     `;
     tbody.appendChild(addRow);
 
-    // [C] '해지 보관함' 접이식 영역
+    // [C] '해지 보관함'
     if (hiddenAccounts.length > 0) {
         const toggleRow = document.createElement("tr");
         toggleRow.className = "border-t border-dashed border-slate-300 bg-slate-50/60";
@@ -307,10 +305,10 @@ export const renderAssetTable = (focusNewId = null) => {
                 hTr.className = "bg-slate-100/50 hover:bg-slate-100 transition-colors opacity-75";
 
                 let hRowHtml = `
-                    <td class="p-1 sticky-col bg-slate-100 border-r border-brand-border/40 ${colNameWidth}">
-                        <div class="flex items-center justify-between px-2 py-1">
-                            <span class="text-xs font-medium text-slate-500 line-through truncate flex-1 pr-1">${acc.name}</span>
-                            <button data-action="restore" data-id="${acc.id}" title="활성 목록으로 복원" class="text-[10px] font-bold text-brand-personal bg-white border border-slate-200 px-2 py-1 rounded-md hover:bg-brand-personal hover:text-white transition shadow-3xs shrink-0">복원</button>
+                    <td class="p-1 sticky-col bg-slate-100 border-r border-brand-border/40 ${colNameWidth} overflow-hidden">
+                        <div class="flex items-center justify-between w-full px-2 py-1 space-x-1">
+                            <span class="text-xs font-medium text-slate-500 line-through truncate flex-1 min-w-0">${acc.name}</span>
+                            <button data-action="restore" data-id="${acc.id}" title="활성 목록으로 복원" class="text-[10px] font-bold text-brand-personal bg-white border border-slate-200 px-2 py-0.5 rounded hover:bg-brand-personal hover:text-white transition shadow-3xs shrink-0">복원</button>
                         </div>
                     </td>
                 `;
@@ -362,11 +360,7 @@ export const renderAssetTable = (focusNewId = null) => {
     footHtml += `</tr>`;
     tfoot.innerHTML = footHtml;
 
-    // ==========================================
-    // 리스너 연결 (인라인 입력 실시간 영구저장)
-    // ==========================================
-
-    // 1) 항목 이름 인라인 수정 -> 즉시 localStorage 저장
+    // 리스너 연결
     tbody.querySelectorAll('.account-name-input').forEach(nameInput => {
         nameInput.addEventListener('blur', (e) => {
             const accId = e.target.getAttribute('data-id');
@@ -378,7 +372,6 @@ export const renderAssetTable = (focusNewId = null) => {
         });
     });
 
-    // 2) 금액 인라인 수정 -> 저장 및 합계 재계산
     tbody.querySelectorAll('.asset-input').forEach(input => {
         input.addEventListener('focus', (e) => {
             const raw = e.target.value.replace(/,/g, '');
@@ -397,7 +390,6 @@ export const renderAssetTable = (focusNewId = null) => {
         });
     });
 
-    // 3) '+ 계좌 추가' 클릭 -> 새 행 생성 및 이름 입력칸 자동 포커스
     document.getElementById("addAccountBtn")?.addEventListener("click", () => {
         const newId = "acc_" + Date.now();
         allTabAccounts.push({
@@ -410,7 +402,6 @@ export const renderAssetTable = (focusNewId = null) => {
         renderAssetTable(newId);
     });
 
-    // 4) 항목 우측 [⋮] 버튼 클릭 -> 팝오버 메뉴 띄우기
     tbody.querySelectorAll('button[data-action="toggle-menu"]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -423,7 +414,6 @@ export const renderAssetTable = (focusNewId = null) => {
         });
     });
 
-    // 5) 보관함 복원 클릭
     tbody.querySelectorAll('button[data-action="restore"]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -436,13 +426,11 @@ export const renderAssetTable = (focusNewId = null) => {
         });
     });
 
-    // 6) 보관함 접기/펼치기
     document.getElementById("toggleHiddenSectionBtn")?.addEventListener("click", () => {
         showHiddenAccounts = !showHiddenAccounts;
         renderAssetTable();
     });
 
-    // 새 계좌 추가 직후 해당 행의 이름 입력창으로 커서 자동 이동
     if (focusNewId) {
         setTimeout(() => {
             const target = tbody.querySelector(`input[data-id="${focusNewId}"]`);
@@ -457,7 +445,6 @@ export const renderAssetTable = (focusNewId = null) => {
 export const initAssetsModule = () => {
     loadAccounts();
 
-    // 팝오버 메뉴 클릭 액션
     document.getElementById('popoverHideBtn')?.addEventListener('click', () => {
         if (!activeMenuAccountId) return;
         const targetAcc = accountDatabase[currentTab]?.find(a => a.id === activeMenuAccountId);
@@ -494,12 +481,10 @@ export const initAssetsModule = () => {
         hidePopoverMenu();
     });
 
-    // 화면 아무 곳이나 클릭 시 팝오버 닫기
     document.addEventListener('click', () => {
         hidePopoverMenu();
     });
 
-    // 차트 연도 컨트롤
     document.getElementById("prevAssetYearBtn")?.addEventListener("click", () => {
         assetYear--;
         renderAssetYearChart(assetYear);
@@ -509,7 +494,6 @@ export const initAssetsModule = () => {
         renderAssetYearChart(assetYear);
     });
 
-    // 4대 탭 전환
     const assetTabs = document.querySelectorAll('#assetTabs button[data-tab]');
     assetTabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -520,7 +504,6 @@ export const initAssetsModule = () => {
         });
     });
 
-    // 반기/전체 칩 UI
     const updateRangeBtnUI = () => {
         const h1Btn = document.getElementById("filter-range-h1");
         const h2Btn = document.getElementById("filter-range-h2");
