@@ -1,7 +1,7 @@
-import { initAuthModule } from "./auth.js?v=20261111_asset_storage_v3";
-import { initNavigationModule } from "./navigation.js?v=20261111_asset_storage_v3";
-import { initReportModule } from "./report.js?v=20261111_asset_storage_v3";
-import { initAssetsModule } from "./assets.js?v=20261111_asset_storage_v3";
+import { initAuthModule } from "./auth.js?v=20261111_popover_action";
+import { initNavigationModule } from "./navigation.js?v=20261111_popover_action";
+import { initReportModule } from "./report.js?v=20261111_popover_action";
+import { initAssetsModule } from "./assets.js?v=20261111_popover_action";
 
 const startSystem = () => {
     initAuthModule();
