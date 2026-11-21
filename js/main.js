@@ -1,15 +1,15 @@
-import { initAuthModule } from "./auth.js?v=20261111_cards_v1";
+import { initAuthModule } from "./auth.js?v=20261121_nav_fix";
 
 const startSystem = async () => {
-    // 1. 로그인 모듈은 다른 파일 오류와 무관하게 최우선 실행
+    // 1. 로그인 모듈 최우선 실행
     initAuthModule();
 
-    // 2. 화면 모듈은 개별 로드하여 격리 처리
+    // 2. 각 기능 모듈 독립 로드
     const modules = [
-        { path: "./navigation.js?v=20261111_cards_v1", fn: "initNavigationModule" },
-        { path: "./report.js?v=20261111_cards_v1", fn: "initReportModule" },
-        { path: "./assets.js?v=20261111_cards_v1", fn: "initAssetsModule" },
-        { path: "./cards.js?v=20261111_cards_v1", fn: "initCardsModule" }
+        { path: "./navigation.js?v=20261121_nav_fix", fn: "initNavigationModule" },
+        { path: "./report.js?v=20261121_nav_fix", fn: "initReportModule" },
+        { path: "./assets.js?v=20261121_nav_fix", fn: "initAssetsModule" },
+        { path: "./cards.js?v=20261121_nav_fix", fn: "initCardsModule" }
     ];
 
     for (const mod of modules) {
