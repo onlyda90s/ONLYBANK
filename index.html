@@ -134,9 +134,7 @@
         <!-- 우측 메인 본문 -->
         <main class="flex-1 overflow-y-auto px-10 pt-8 pb-10 bg-brand-cream/30 custom-scrollbar relative">
             
-            <!-- ============================================== -->
-            <!-- 1. 뷰: 연간 리포트 (부수입 카드 + 항목별 세부 실적 적용) -->
-            <!-- ============================================== -->
+            <!-- 1. 뷰: 연간 리포트 -->
             <div id="view-home" class="view-section space-y-7 max-w-7xl mx-auto h-full flex flex-col">
                 <header class="flex justify-between items-end pb-1 border-b border-brand-border/50 shrink-0">
                     <div>
@@ -151,29 +149,24 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 shrink-0">
-                    <!-- [A] 이달의 현황 (11월) -->
                     <div class="space-y-2.5">
                         <div class="flex items-center px-1">
                             <span class="w-2 h-2 rounded-full bg-brand-personal mr-2"></span>
                             <h3 class="text-sm font-bold text-brand-ink tracking-tight">이달의 현황 <span class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(11월)</span></h3>
                         </div>
                         <div class="grid grid-cols-2 gap-3.5">
-                            <!-- 1. 이달 총수입 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">이달 총 수입</p>
                                 <p id="m-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">4,800,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 2. 이달 저축·투자 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">이달 저축·투자</p>
                                 <p id="m-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">2,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 3. 이달 지출 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">이달 총 지출</p>
                                 <p id="m-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">1,900,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 4. ★ 이달 부수입 (게이지바 제거 -> 부수입 + 항목별 세부 실적) ★ -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
                                 <div class="flex justify-between items-start">
                                     <p class="text-xs text-brand-sub font-medium flex items-center">
@@ -200,29 +193,24 @@
                         </div>
                     </div>
 
-                    <!-- [B] 올해 누적 (2026년) -->
                     <div class="space-y-2.5">
                         <div class="flex items-center px-1">
                             <span class="w-2 h-2 rounded-full bg-brand-ink mr-2"></span>
                             <h3 class="text-sm font-bold text-brand-ink tracking-tight">올해 누적 <span id="accumYearDisplay" class="font-medium text-slate-400 font-sans text-[12px] ml-1.5">(2026년)</span></h3>
                         </div>
                         <div class="grid grid-cols-2 gap-3.5">
-                            <!-- 1. 올해 총 수입 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 수입</p>
                                 <p id="y-income" class="text-xl font-serif font-bold text-brand-positive text-right tabular-nums">52,400,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 2. 올해 저축·투자 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">올해 저축·투자</p>
                                 <p id="y-savings" class="text-xl font-serif font-bold text-brand-personal text-right tabular-nums">21,000,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 3. 올해 총 지출 -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs">
                                 <p class="text-xs text-brand-sub font-medium mb-1.5">올해 총 지출</p>
                                 <p id="y-expense" class="text-xl font-serif font-bold text-brand-negative text-right tabular-nums">18,500,000<span class="text-xs font-sans ml-1 text-brand-ink">원</span></p>
                             </div>
-                            <!-- 4. ★ 올해 누적 부수입 (항목별 누적 세부 실적) ★ -->
                             <div class="bg-brand-surface border border-brand-border/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
                                 <div class="flex justify-between items-start">
                                     <p class="text-xs text-brand-sub font-medium flex items-center">
@@ -250,7 +238,6 @@
                     </div>
                 </div>
 
-                <!-- 월별 수입·지출 현황 차트 -->
                 <div class="space-y-2.5 shrink-0">
                     <div class="flex justify-between items-center px-1">
                         <div class="flex items-center">
@@ -267,7 +254,6 @@
                     </div>
                 </div>
 
-                <!-- 하단 4대 위젯 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
                     <div class="space-y-2.5 h-full flex flex-col">
                         <div class="flex items-center px-1"><h3 class="text-sm font-bold text-brand-ink">다가오는 일정</h3></div>
@@ -382,7 +368,90 @@
                 </div>
             </div>
 
-            <!-- 3. 뷰: 설정 화면 -->
+            <!-- ★ 3. 뷰: 카드관리 (신설: 상단 컴팩트 바 + 탭 전환 + 탭 1 기본관리 그리드) ★ -->
+            <div id="view-cards" class="view-section space-y-5 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
+                <header class="pb-1 border-b border-brand-border/50 shrink-0">
+                    <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">카드관리</h2>
+                    <p class="text-sm text-brand-sub mt-1.5">보유 카드 현황 및 발급·해지 스케줄, 리워드 혜택 관리</p>
+                </header>
+
+                <!-- 상단 1줄 컴팩트 대시보드 바 -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-brand-surface border border-brand-border/80 rounded-2xl p-4 shadow-xs shrink-0">
+                    <div class="border-r border-brand-border/40 pr-2">
+                        <p class="text-[11px] text-brand-sub font-medium mb-0.5">보유 카드</p>
+                        <p class="text-base font-bold text-brand-ink tracking-tight">
+                            <span id="card-stat-total" class="font-serif text-lg">5</span>개 
+                            <span class="text-xs font-normal text-slate-400 font-sans ml-1">(신용 <span id="card-stat-credit">4</span> · 체크 <span id="card-stat-check">1</span>)</span>
+                        </p>
+                    </div>
+                    <div class="border-r border-brand-border/40 pr-2 pl-1">
+                        <p class="text-[11px] text-brand-sub font-medium mb-0.5">예상 혜택</p>
+                        <p class="text-base font-bold text-brand-ink tracking-tight">
+                            월 <span id="card-stat-expected" class="font-serif text-lg tabular-nums">65,000</span>원
+                        </p>
+                    </div>
+                    <div class="border-r border-brand-border/40 pr-2 pl-1">
+                        <p class="text-[11px] text-brand-sub font-medium mb-0.5">올해 받은 혜택 (리워드+할인)</p>
+                        <p class="text-base font-bold text-brand-positive tracking-tight">
+                            <span id="card-stat-benefit" class="font-serif text-lg tabular-nums">632,500</span>원
+                        </p>
+                    </div>
+                    <div class="pl-1">
+                        <p class="text-[11px] text-brand-sub font-medium mb-0.5">연간 연회비 합계</p>
+                        <p class="text-base font-bold text-slate-700 tracking-tight">
+                            <span id="card-stat-fee" class="font-serif text-lg tabular-nums">145,000</span>원
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 탭 전환 및 필터 바 -->
+                <div class="flex items-center justify-between shrink-0 pt-1">
+                    <div class="flex items-center space-x-1.5 bg-slate-200/60 p-1 rounded-xl">
+                        <button id="cardTabBtn-basic" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-brand-personal shadow-sm transition">카드 기본 관리</button>
+                        <button id="cardTabBtn-usage" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-brand-sub hover:text-brand-ink transition">월별 이용 내역</button>
+                    </div>
+
+                    <div class="flex items-center space-x-2.5">
+                        <div class="flex items-center bg-slate-200/60 p-0.5 rounded-lg text-[11px] font-semibold text-brand-sub">
+                            <button data-filter="all" class="card-filter-btn px-2.5 py-0.5 rounded-md bg-white text-brand-personal shadow-xs transition">전체</button>
+                            <button data-filter="active" class="card-filter-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition">이용중</button>
+                            <button data-filter="canceled" class="card-filter-btn px-2.5 py-0.5 rounded-md hover:text-brand-ink transition">해지완료</button>
+                        </div>
+                        <button id="addCardBtn" class="bg-brand-personal text-white font-semibold px-3 py-1.5 rounded-xl hover:bg-sky-800 transition text-xs flex items-center shadow-xs">
+                            <span class="mr-1 text-sm font-bold">+</span> 카드 추가
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 하단 탭 1 컨텐츠: 카드 기본 관리 그리드 -->
+                <div id="cardContent-basic" class="flex-1 flex flex-col bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs overflow-hidden">
+                    <div class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
+                        <table class="w-full table-fixed text-left border-collapse min-w-[860px]">
+                            <thead class="bg-slate-50 border-b border-brand-border/60 text-xs text-brand-sub">
+                                <tr>
+                                    <th class="p-2.5 pl-4 font-semibold w-[10%]">카드사</th>
+                                    <th class="p-2.5 font-semibold w-[18%]">카드명 / 구분</th>
+                                    <th class="p-2.5 font-semibold w-[10%]">발급처</th>
+                                    <th class="p-2.5 font-semibold w-[11%]">발급일</th>
+                                    <th class="p-2.5 font-semibold w-[14%]">지급일 (수령확인)</th>
+                                    <th class="p-2.5 font-semibold w-[14%]">해지일 (해지확인)</th>
+                                    <th class="p-2.5 font-semibold w-[17%]">리워드 조건 및 메모</th>
+                                    <th class="p-2.5 pr-4 text-center font-semibold w-[6%]">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cardTableBody" class="text-xs divide-y divide-brand-border/30"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 하단 탭 2 컨텐츠 (다음 단계 연결 준비용) -->
+                <div id="cardContent-usage" class="flex-1 flex flex-col bg-brand-surface border border-brand-border/80 rounded-2xl shadow-xs p-10 items-center justify-center text-center" style="display: none;">
+                    <p class="text-sm font-semibold text-brand-ink mb-1">월별 이용 내역 결산 시트</p>
+                    <p class="text-xs text-brand-sub">기본 관리 설계 완료 후, 2단계에서 월별 이용액/할인액 시트를 순차 구축할 예정입니다.</p>
+                </div>
+            </div>
+
+            <!-- 4. 뷰: 설정 화면 -->
             <div id="view-settings" class="view-section space-y-7 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
                 <header class="pb-1 border-b border-brand-border/50 shrink-0">
                     <h2 class="text-2xl font-bold font-serif text-brand-ink tracking-tight">설정 · 계정</h2>
@@ -431,6 +500,6 @@
     </div>
 
     <!-- 캐시 갱신 버전 적용 -->
-    <script type="module" src="js/main.js?v=20261111_side_income_v1"></script>
+    <script type="module" src="js/main.js?v=20261111_cards_v1"></script>
 </body>
 </html>
