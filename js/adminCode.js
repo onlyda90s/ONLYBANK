@@ -1,9 +1,11 @@
 const ADMIN_HASH_KEY = "onlybank_admin_code_hash_v1";
-const ADMIN_SESSION_KEY = "onlybank_admin_session_active";
+const ADMIN_SESSION_KEY = "onlybank_admin_session_v2";
 const FAIL_COUNT_KEY = "onlybank_admin_fail_count";
 const LOCKED_KEY = "onlybank_admin_locked";
 
 const MAX_ATTEMPTS = 5;
+const SESSION_DURATION_MS = 7 * 60 * 60 * 1000; // 7시간 세션 만료
+let sessionCheckTimer = null;
 
 const ADMIN_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#1E3A5F"/><text x="16" y="21" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFFDF8" text-anchor="middle">관</text></svg>`
@@ -75,9 +77,66 @@ const clearFailedAttempts = () => {
     if (loginMsg) loginMsg.classList.add("hidden");
 };
 
-// 관리자 모드 진입 (현재 브라우저 탭 세션 동안만 유지 -> 탭 종료/로그아웃 시 자동 만료)
-const unlockAdminDashboard = () => {
-    sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+const showFeedback = (el, text, isError = false) => {
+    if (!el) return;
+    el.textContent = text;
+    el.className = `text-xs font-medium pt-0.5 leading-relaxed ${isError ? "text-rose-600" : "text-emerald-700"}`;
+    el.classList.remove("hidden");
+};
+
+// 유효한 관리자 세션인지 확인 (7시간 만료 체크)
+const getValidAdminSession = () => {
+    try {
+        const raw = localStorage.getItem(ADMIN_SESSION_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed.active || !parsed.expiresAt) return null;
+
+        if (Date.now() >= parsed.expiresAt) {
+            localStorage.removeItem(ADMIN_SESSION_KEY);
+            return { expired: true };
+        }
+        return { valid: true, expiresAt: parsed.expiresAt };
+    } catch (e) {
+        localStorage.removeItem(ADMIN_SESSION_KEY);
+        return null;
+    }
+};
+
+// 세션 만료 및 강제 로그아웃 처리
+const expireAdminSession = (reasonMessage = "로그인 후 7시간이 경과하여 자동 로그아웃되었습니다.") => {
+    localStorage.removeItem(ADMIN_SESSION_KEY);
+    if (sessionCheckTimer) {
+        clearInterval(sessionCheckTimer);
+        sessionCheckTimer = null;
+    }
+
+    const loginScreen = document.getElementById("loginScreen");
+    const dashboardScreen = document.getElementById("dashboardScreen");
+    const loginMsg = document.getElementById("codeLoginMsg");
+
+    if (dashboardScreen) dashboardScreen.style.display = "none";
+    if (loginScreen) loginScreen.style.display = "flex";
+    if (reasonMessage) {
+        showFeedback(loginMsg, reasonMessage, true);
+    }
+};
+
+// 7시간 만료 감시 타이머 시작
+const startSessionWatcher = () => {
+    if (sessionCheckTimer) clearInterval(sessionCheckTimer);
+    sessionCheckTimer = setInterval(() => {
+        const status = getValidAdminSession();
+        if (!status || status.expired) {
+            expireAdminSession("로그인 후 7시간이 경과하여 자동 로그아웃되었습니다.");
+        }
+    }, 60 * 1000); // 1분마다 만료 여부 점검
+};
+
+// 관리자 모드 진입 (7시간 타이머 설정)
+const unlockAdminDashboard = (existingExpiresAt = null) => {
+    const expiresAt = existingExpiresAt || (Date.now() + SESSION_DURATION_MS);
+    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ active: true, expiresAt }));
 
     const loginScreen = document.getElementById("loginScreen");
     const dashboardScreen = document.getElementById("dashboardScreen");
@@ -90,6 +149,8 @@ const unlockAdminDashboard = () => {
     if (userNameEl) userNameEl.textContent = "관리자 모드";
     if (userAvatarEl) userAvatarEl.src = ADMIN_AVATAR_SVG;
     if (groupMoimEl) groupMoimEl.style.display = "block";
+
+    startSessionWatcher();
 };
 
 // 설정 탭 UI 상태 갱신
@@ -112,16 +173,8 @@ const refreshSettingsUI = () => {
     }
 };
 
-const showFeedback = (el, text, isError = false) => {
-    if (!el) return;
-    el.textContent = text;
-    el.className = `text-xs font-medium pt-0.5 leading-relaxed ${isError ? "text-rose-600" : "text-emerald-700"}`;
-    el.classList.remove("hidden");
-};
-
 // Google 로그인 감지 시 잠금 자동 해제 리스너 등록
 const bindGoogleUnlockListener = async () => {
-    // 1) Firebase Auth 상태 감지 (Google 로그인 완료 시 user 객체 생성됨)
     try {
         const fb = await import("./firebase.js");
         const authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
@@ -135,11 +188,11 @@ const bindGoogleUnlockListener = async () => {
         }
     } catch (e) {}
 
-    // 2) 보조 감지: 대시보드 화면이 열렸는데 관리자 코드 세션이 아니면(Google 로그인 등) 잠금 해제
     const dashboardScreen = document.getElementById("dashboardScreen");
     if (dashboardScreen) {
         const observer = new MutationObserver(() => {
-            if (dashboardScreen.style.display !== "none" && sessionStorage.getItem(ADMIN_SESSION_KEY) !== "true") {
+            const sessionStatus = getValidAdminSession();
+            if (dashboardScreen.style.display !== "none" && (!sessionStatus || !sessionStatus.valid)) {
                 clearFailedAttempts();
             }
         });
@@ -148,13 +201,19 @@ const bindGoogleUnlockListener = async () => {
 };
 
 export const initAdminCodeModule = async () => {
-    // 이전 버전 영구 유지 키가 남아있다면 제거하여 기본 세션 만료 규칙 준수
+    // 이전 버전 세션 키 정리
+    sessionStorage.removeItem("onlybank_admin_session_active");
     localStorage.removeItem("onlybank_admin_session_persist");
     localStorage.removeItem("onlybank_admin_lock_until");
 
-    // 1. 현재 탭 세션이 유효한 경우에만 대시보드 유지
-    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true" && Boolean(localStorage.getItem(ADMIN_HASH_KEY))) {
-        unlockAdminDashboard();
+    const loginMsg = document.getElementById("codeLoginMsg");
+
+    // 1. 기존 7시간 세션 유효성 확인
+    const sessionStatus = getValidAdminSession();
+    if (sessionStatus?.valid && Boolean(localStorage.getItem(ADMIN_HASH_KEY))) {
+        unlockAdminDashboard(sessionStatus.expiresAt);
+    } else if (sessionStatus?.expired) {
+        showFeedback(loginMsg, "로그인 후 7시간이 경과하여 자동 로그아웃되었습니다.", true);
     }
 
     // Google 로그인 시 잠금 해제 감지기 연결
@@ -165,9 +224,8 @@ export const initAdminCodeModule = async () => {
 
     const codeInput = document.getElementById("inviteCodeInput");
     const enterBtn = document.getElementById("enterCodeBtn");
-    const loginMsg = document.getElementById("codeLoginMsg");
 
-    // 초기 진입 시 이미 5회 잠금 상태라면 안내 메시지 노출
+    // 이미 5회 잠금 상태라면 안내 메시지 노출
     if (isCodeLocked()) {
         showFeedback(loginMsg, "5회 연속 오입력으로 코드 로그인이 차단되었습니다. 'Google로 계속하기'로 로그인하면 잠금이 해제됩니다.", true);
     }
@@ -218,13 +276,9 @@ export const initAdminCodeModule = async () => {
         }
     }, true);
 
-    // 3. 로그아웃 시 세션 정리 (기존 auth.js 로그아웃과 함께 동작)
+    // 3. 수동 로그아웃 시 즉시 세션 정리
     document.getElementById("logoutBtn")?.addEventListener("click", () => {
-        sessionStorage.removeItem(ADMIN_SESSION_KEY);
-        const loginScreen = document.getElementById("loginScreen");
-        const dashboardScreen = document.getElementById("dashboardScreen");
-        if (dashboardScreen) dashboardScreen.style.display = "none";
-        if (loginScreen) loginScreen.style.display = "flex";
+        expireAdminSession(null);
     }, true);
 
     // 4. 설정 탭: 관리자 코드 저장 / 해제 이벤트
@@ -264,9 +318,9 @@ export const initAdminCodeModule = async () => {
         if (!confirm("등록된 개인 관리자 코드를 해제하시겠습니까?\n해제 후에는 Google 로그인만 사용할 수 있습니다.")) return;
 
         localStorage.removeItem(ADMIN_HASH_KEY);
-        sessionStorage.removeItem(ADMIN_SESSION_KEY);
         clearFailedAttempts();
         await syncHashWithFirestore("remove");
+        expireAdminSession(null);
 
         refreshSettingsUI();
         showFeedback(settingsMsg, "관리자 코드가 해제되었습니다.", false);
